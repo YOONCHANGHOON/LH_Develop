@@ -57,6 +57,12 @@ body {
   background: var(--color-accent-light);
   clip-path: polygon(100% 0, 0 0, 100% 100%);
   opacity: 0.6;
+  animation: float-accent 9s ease-in-out infinite;
+}
+
+@keyframes float-accent {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  50% { transform: translate(-10px, 12px); opacity: 0.75; }
 }
 
 .hero .eyebrow {
@@ -185,12 +191,32 @@ body {
   border-radius: var(--radius);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.reason::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease;
 }
 
 .reason:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-light);
+}
+
+.reason:hover::before {
+  transform: scaleY(1);
 }
 
 .reason h3 {
@@ -335,5 +361,132 @@ body {
   }
   .reason-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Animations ─── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero entrance */
+  .hero .eyebrow,
+  .hero h1,
+  .hero .lede {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .hero .eyebrow { animation-delay: 0.1s; }
+  .hero h1 { animation-delay: 0.25s; }
+  .hero .lede { animation-delay: 0.45s; }
+
+  @keyframes hero-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scroll-reveal base */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger children (reason cards) */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal-stagger.is-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0.00s; }
+  .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 0.10s; }
+  .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 0.20s; }
+  .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 0.30s; }
+
+  /* Map image gentle zoom-in when revealed */
+  .map-figure {
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease;
+  }
+  .map-figure:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Nav link underline slide */
+  .tabs a {
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  .tabs a::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    bottom: 14px;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .tabs a:hover {
+    border-bottom-color: transparent;
+  }
+  .tabs a:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Card (contact) subtle lift */
+  .card {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(31, 74, 58, 0.16);
+  }
+
+  /* Contact link underline slide */
+  .card-info a {
+    position: relative;
+    display: inline-block;
+  }
+  .card-info a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-info a:hover {
+    text-decoration: none;
+  }
+  .card-info a:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero::after { animation: none; }
+  .reveal, .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
   }
 }
