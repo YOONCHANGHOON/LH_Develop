@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>디자인 초안 비교 — 화곡1동 도심복합사업</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Pretendard", sans-serif; background: #0f1115; color: #e5e7eb; padding: 48px 24px; line-height: 1.6; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1 { margin: 0 0 8px; font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+.sub { margin: 0 0 40px; color: #9ca3af; font-size: 15px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { display: block; background: #1a1d24; border: 1px solid #2a2e38; border-radius: 14px; padding: 24px; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s, background 0.2s; }
+.card:hover { transform: translateY(-3px); border-color: #4b5563; background: #20242d; }
+.num { display: inline-block; padding: 4px 10px; background: #374151; border-radius: 6px; font-size: 11px; font-weight: 600; color: #d1d5db; letter-spacing: 0.05em; margin-bottom: 14px; }
+.name { margin: 0 0 6px; font-size: 18px; font-weight: 700; color: #f9fafb; }
+.tagline { margin: 0 0 12px; font-size: 13px; color: #9ca3af; }
+.palette { display: flex; gap: 6px; margin-bottom: 14px; }
+.dot { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); }
+.desc { margin: 0; font-size: 13px; color: #9ca3af; line-height: 1.6; }
+.arrow { margin-top: 16px; font-size: 13px; color: #60a5fa; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>디자인 초안 비교</h1>
+  <p class="sub">같은 콘텐츠를 4가지 시각 방향으로 구성했습니다. 각 카드를 눌러 실제 페이지를 확인해 보세요.</p>
+
+  <div class="grid">
+    <a href="01-trust/index.html" class="card">
+      <span class="num">01</span>
+      <p class="name">신뢰 · 공공기관형</p>
+      <p class="tagline">LH/SH 공식 포털 톤</p>
+      <div class="palette">
+        <span class="dot" style="background:#0f2a52"></span>
+        <span class="dot" style="background:#b89860"></span>
+        <span class="dot" style="background:#f5f6f9"></span>
+      </div>
+      <p class="desc">네이비 + 골드, 세리프 제목. 권위·안정감 있는 정부·기관 인상.</p>
+      <p class="arrow">보기 →</p>
+    </a>
+
+    <a href="02-community/index.html" class="card">
+      <span class="num">02</span>
+      <p class="name">따뜻한 · 커뮤니티형</p>
+      <p class="tagline">세이지 그린 + 크림 + 테라코타</p>
+      <div class="palette">
+        <span class="dot" style="background:#6b7d5a"></span>
+        <span class="dot" style="background:#c97b5a"></span>
+        <span class="dot" style="background:#faf6ee"></span>
+      </div>
+      <p class="desc">부드러운 곡선과 따뜻한 톤. 주민 친화적, 공동체감 강조.</p>
+      <p class="arrow">보기 →</p>
+    </a>
+
+    <a href="03-dashboard/index.html" class="card">
+      <span class="num">03</span>
+      <p class="name">투명성 · 대시보드형</p>
+      <p class="tagline">화이트 + 블루 + 모노폰트</p>
+      <div class="palette">
+        <span class="dot" style="background:#2563eb"></span>
+        <span class="dot" style="background:#0b1220"></span>
+        <span class="dot" style="background:#f7f8fb"></span>
+      </div>
+      <p class="desc">사이드바 내비게이션, 통계 카드, 테이블 구조. 데이터 중심 현대 행정 인상.</p>
+      <p class="arrow">보기 →</p>
+    </a>
+
+    <a href="04-minimal/index.html" class="card">
+      <span class="num">04</span>
+      <p class="name">모던 · 미니멀 (Swiss)</p>
+      <p class="tagline">블랙 + 화이트 + 크림슨</p>
+      <div class="palette">
+        <span class="dot" style="background:#0a0a0a"></span>
+        <span class="dot" style="background:#dc2626"></span>
+        <span class="dot" style="background:#fafafa"></span>
+      </div>
+      <p class="desc">큰 타이포그래피와 여백. 매거진·갤러리 톤의 단순·세련.</p>
+      <p class="arrow">보기 →</p>
+    </a>
+  </div>
+</div>
+</body>
+</html>

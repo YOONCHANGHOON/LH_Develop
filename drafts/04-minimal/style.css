@@ -1,0 +1,65 @@
+:root {
+  --bg: #fafafa;
+  --ink: #0a0a0a;
+  --muted: #71717a;
+  --line: #e4e4e7;
+  --accent: #dc2626;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Pretendard", sans-serif; line-height: 1.55; word-break: keep-all; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 48px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(250, 250, 250, 0.92); backdrop-filter: blur(6px); z-index: 10; }
+.nav-brand { color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+.nav nav { display: flex; gap: 24px; }
+.nav nav a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; transition: color 0.15s; }
+.nav nav a:hover { color: var(--accent); }
+
+.hero { padding: 120px 48px 80px; max-width: 1280px; margin: 0 auto; border-bottom: 1px solid var(--line); }
+.hero-meta { margin: 0 0 40px; font-size: 11px; color: var(--muted); letter-spacing: 0.24em; text-transform: uppercase; font-weight: 600; }
+.hero h1 { margin: 0; font-size: clamp(48px, 12vw, 160px); font-weight: 900; line-height: 0.92; letter-spacing: -0.05em; }
+.hero h1 span { display: block; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-sub { margin: 40px 0 0; font-size: 14px; color: var(--muted); letter-spacing: 0.06em; }
+.hero-rule { margin-top: 60px; height: 1px; background: var(--ink); width: 80px; }
+
+.sec { padding: 100px 48px; max-width: 1280px; margin: 0 auto; border-bottom: 1px solid var(--line); }
+.sec-grid { display: grid; grid-template-columns: 1fr 2.2fr; gap: 80px; align-items: start; }
+.sec-side { position: sticky; top: 100px; }
+.sec-num { margin: 0 0 18px; font-size: 11px; color: var(--muted); letter-spacing: 0.2em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sec-side h2 { margin: 0; font-size: clamp(36px, 5vw, 64px); font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+
+.lede { margin: 0 0 40px; font-size: clamp(18px, 2vw, 22px); line-height: 1.5; max-width: 640px; letter-spacing: -0.01em; }
+.micro { margin-top: 40px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; padding-top: 20px; border-top: 1px solid var(--line); max-width: 520px; }
+
+.map { margin: 0; }
+.map img { width: 100%; display: block; border: 1px solid var(--line); }
+.map figcaption { margin-top: 14px; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+
+.list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.list li { display: grid; grid-template-columns: 56px 1fr; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--line); transition: padding 0.25s; }
+.list li:hover { padding-left: 12px; }
+.list .mark { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.04em; padding-top: 4px; }
+.list h3 { margin: 0 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.list p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 580px; }
+
+.contact { border: 1px solid var(--ink); padding: 32px; max-width: 520px; background: #fff; }
+.contact-org { margin: 0 0 6px; font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+.contact-name { margin: 0 0 24px; font-size: clamp(28px, 4vw, 40px); font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+.contact-name span { font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0.02em; margin-left: 8px; }
+.contact-lines { list-style: none; padding: 20px 0 0; margin: 0; border-top: 1px solid var(--line); }
+.contact-lines li { display: grid; grid-template-columns: 60px 1fr; gap: 16px; padding: 10px 0; align-items: baseline; }
+.contact-lines span { font-size: 11px; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+.contact-lines a { color: var(--ink); text-decoration: none; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+.contact-lines a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+.foot { padding: 48px 48px 64px; max-width: 1280px; margin: 0 auto; color: var(--muted); font-size: 12px; }
+.foot p { margin: 0 0 6px; }
+.foot .disc { max-width: 540px; line-height: 1.6; font-size: 11.5px; }
+
+@media (max-width: 900px) {
+  .nav { padding: 18px 24px; }
+  .hero { padding: 72px 24px 56px; }
+  .sec { padding: 64px 24px; }
+  .sec-grid { grid-template-columns: 1fr; gap: 32px; }
+  .sec-side { position: static; }
+}
