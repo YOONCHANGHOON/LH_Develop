@@ -3,145 +3,646 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>화곡1동 민간 도심복합사업 추진위</title>
-  <meta name="description" content="화곡1동 민간 도심복합사업 추진위원회 안내 페이지" />
+  <title>화곡1동 도심 공공주택 복합사업 추진위원회</title>
+  <meta name="description" content="화곡1동 도심 공공주택 복합사업 공모 안내. 접수 장소, 제출 서류, 자주 묻는 질문, 주민 카톡방 참여 경로를 한곳에서 확인하세요." />
+  <meta name="theme-color" content="#0e2e24" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <!-- Open Graph / KakaoTalk / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="화곡1동 도심 공공주택 복합사업 추진위원회" />
+  <meta property="og:description" content="공모 일정, 접수 장소, 제출 서류, FAQ를 한곳에서. 주민 여러분의 참여가 가장 중요합니다." />
+  <meta property="og:image" content="assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:site_name" content="화곡1동 도심 공공주택 복합사업" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="화곡1동 도심 공공주택 복합사업" />
+  <meta name="twitter:description" content="공모 일정, 접수 장소, 제출 서류, FAQ를 한곳에서 확인하세요." />
+  <meta name="twitter:image" content="assets/og-image.jpg" />
+
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Hero -->
   <header class="hero">
     <div class="container">
-      <p class="eyebrow">민간 도심복합사업 추진위</p>
-      <h1>화곡1동<br/>민간 도심복합사업</h1>
-      <p class="lede">주민 여러분께 사업 구역과 동의 절차를 안내드립니다.</p>
+      <p class="eyebrow">역세권 도심 공공주택 복합사업</p>
+      <h1>화곡1동<br/>도심 공공주택 복합사업</h1>
+      <p class="lede">
+        우리 동네의 공모 일정과 접수 절차를 한눈에 안내드립니다.
+        주민 여러분의 협력으로 함께 만들어갑니다.
+      </p>
+      <div class="hero-actions">
+        <a class="hero-kakao" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">
+          <svg class="kakao-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.84 5.3 4.6 6.73-.2.7-.72 2.58-.83 2.98-.14.5.18.49.38.36.16-.1 2.54-1.72 3.56-2.42.75.11 1.5.17 2.29.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
+          </svg>
+          주민 카톡방 참여하기
+          <span class="arrow">→</span>
+        </a>
+        <button type="button" class="hero-share" id="share-btn" aria-label="페이지 공유하기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          <span class="share-label">공유</span>
+        </button>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite">링크가 복사되었습니다</div>
     </div>
   </header>
 
+  <!-- Status bar -->
+  <section class="status-bar">
+    <div class="container status-inner">
+      <div class="status-main">
+        <span class="pill-live">● 공모 진행 중</span>
+        <div class="status-dates">
+          <strong>2026. 4. 1 &mdash; 5. 8</strong>
+          <span>집중 접수 4/30까지 · 최종 제출 5/7</span>
+        </div>
+      </div>
+      <div class="dday" id="dday" aria-live="polite">
+        <span class="dday-label" id="dday-label">마감까지</span>
+        <span class="dday-value" id="dday-value">D-&ndash;</span>
+        <span class="dday-date" id="dday-date">&mdash;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky nav -->
   <nav class="tabs">
     <div class="container">
+      <a href="#notice">공지</a>
+      <a href="#overview">사업 개요</a>
       <a href="#map">구역도</a>
-      <a href="#consent">동의서 안내</a>
+      <a href="#submit">접수</a>
+      <a href="#documents">제출 서류</a>
+      <a href="#consent">지장 안내</a>
+      <a href="#faq">FAQ</a>
+      <a href="#volunteer">봉사</a>
+      <a href="#donation">후원</a>
       <a href="#contact">연락처</a>
     </div>
   </nav>
 
   <main>
+
+    <!-- 중요 공지 -->
+    <section id="notice" class="section">
+      <div class="container">
+        <h2 class="reveal">중요 공지</h2>
+
+        <div class="alert alert-red reveal">
+          <div class="alert-badge">긴급</div>
+          <div class="alert-body">
+            <h3>서명만 하신 분들은 지장 날인 재방문 부탁드립니다</h3>
+            <p>
+              추진위의 초기 안내 착오로 서명만 받은 분들이 계십니다.
+              관련 법령상 <strong>지장(무인) 날인</strong>이 반드시 필요하며, 도장은 인정되지 않습니다.
+              번거로우시더라도 <strong>주민등록증</strong>을 지참하고 접수 장소로 재방문 부탁드립니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="alert alert-amber reveal">
+          <div class="alert-badge">안내</div>
+          <div class="alert-body">
+            <h3>동의율 확보가 사업 선정의 열쇠입니다</h3>
+            <p>
+              공모 신청은 <strong>동의율 10% 이상</strong>이면 가능하지만,
+              <strong>30% 이상 확보 시 가산점</strong>을 받아 사업 선정에 훨씬 유리합니다.
+              이번 기회를 놓치면 오랜 기간 노후 주택가로 남을 수 있습니다.
+              주위에 널리 알려주시고 한 분도 빠짐없이 참여 부탁드립니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 사업 개요 -->
+    <section id="overview" class="section alt">
+      <div class="container">
+        <h2 class="reveal">사업 개요</h2>
+        <p class="section-lede reveal">
+          화곡1동에서 추진 중인 도심 공공주택 복합사업의 기본 정보입니다.
+        </p>
+
+        <div class="overview-grid reveal-stagger">
+          <div class="overview-item">
+            <span class="overview-label">사업 유형</span>
+            <span class="overview-value">역세권 도심 공공주택 복합사업</span>
+            <span class="overview-note">도심 복합사업 3유형 중 혜택이 가장 큰 유형</span>
+          </div>
+          <div class="overview-item">
+            <span class="overview-label">근거 법령</span>
+            <span class="overview-value">공공주택 특별법</span>
+            <span class="overview-note">국토계획법·건축법 등 복합 적용</span>
+          </div>
+          <div class="overview-item">
+            <span class="overview-label">시행자</span>
+            <span class="overview-value">LH · SH 등 공공</span>
+            <span class="overview-note">서울시 주관, 시행자는 선정 후 확정</span>
+          </div>
+          <div class="overview-item">
+            <span class="overview-label">규모</span>
+            <span class="overview-value">약 1,600세대</span>
+            <span class="overview-note">단일 구역 · 확장구역 포함</span>
+          </div>
+          <div class="overview-item">
+            <span class="overview-label">공모 기간</span>
+            <span class="overview-value">4월 1일 &mdash; 5월 8일</span>
+            <span class="overview-note">집중 접수 4/30 · 최종 5/7</span>
+          </div>
+          <div class="overview-item">
+            <span class="overview-label">동의율 기준</span>
+            <span class="overview-value">10% 이상 신청 가능</span>
+            <span class="overview-note">30% 이상 확보 시 가산점</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 구역도 -->
     <section id="map" class="section">
       <div class="container">
-        <h2 class="reveal">1. 사업 구역도</h2>
+        <h2 class="reveal">사업 구역도</h2>
         <p class="section-lede reveal">
           붉은 점선 안쪽이 본 사업의 대상 구역입니다. 지번 단위로 표시되어 있으니,
           본인 주소의 지번이 구역 내에 포함되는지 확인해 보실 수 있습니다.
         </p>
         <figure class="map-figure reveal">
-          <img src="assets/district-map.jpg" alt="화곡1동 민간 도심복합사업 구역도" />
-          <figcaption>
-            구역 경계 및 주변 지형 (자료 제공: 추진위원회)
-          </figcaption>
+          <img src="assets/district-map.jpg" alt="화곡1동 도심 공공주택 복합사업 구역도" />
+          <figcaption>구역 경계 및 주변 지형 (자료 제공: 추진위원회)</figcaption>
         </figure>
         <p class="note reveal">
           본인 필지가 구역에 포함되는지 불분명하시면 아래 연락처로 문의해 주시기 바랍니다.
+          큰 지번에 가려 표기가 안 된 경우도 포함된 구역일 수 있습니다.
         </p>
       </div>
     </section>
 
+    <!-- 접수 안내 -->
+    <section id="submit" class="section alt">
+      <div class="container">
+        <h2 class="reveal">접수 장소 · 시간</h2>
+        <p class="section-lede reveal">
+          방문 전 반드시 <strong>전화 예약</strong> 부탁드립니다. 예약 없이 방문 시 대기가 길어질 수 있습니다.
+        </p>
+
+        <div class="venue-grid reveal-stagger">
+          <!-- 팔팔부동산 -->
+          <article class="venue-card">
+            <div class="venue-tag">협력사</div>
+            <h3>팔팔부동산</h3>
+            <p class="venue-addr">서울 강서구 화곡동 421-7 · 1층</p>
+            <p class="venue-landmark">백구사 사거리 · 백구사 미용실 옆</p>
+            <a class="venue-map" href="https://naver.me/GTn9pZUk" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/>
+              </svg>
+              지도에서 보기
+            </a>
+            <ul class="venue-hours">
+              <li><span>운영</span> 매일 10:00 &mdash; 19:00</li>
+              <li><span>토요일</span> 정상 운영</li>
+              <li><span>담당</span> 류형태 이사</li>
+            </ul>
+            <a class="venue-phone" href="tel:010-3734-8758">
+              <span>예약 문의</span>
+              010-3734-8758
+            </a>
+          </article>
+
+          <!-- 일등부동산 -->
+          <article class="venue-card">
+            <div class="venue-tag">협력사</div>
+            <h3>일등부동산</h3>
+            <p class="venue-addr">까치산역 주변</p>
+            <p class="venue-landmark">화곡사거리 방향</p>
+            <a class="venue-map" href="https://naver.me/FvEDOQMh" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/>
+              </svg>
+              지도에서 보기
+            </a>
+            <ul class="venue-hours">
+              <li><span>운영</span> 평일 중</li>
+              <li><span>휴일</span> 전화 확인 필요</li>
+              <li><span>담당</span> 이은미 팀장</li>
+            </ul>
+            <a class="venue-phone" href="tel:010-2487-2934">
+              <span>예약 문의</span>
+              010-2487-2934
+            </a>
+          </article>
+
+          <!-- 일요일 교회 -->
+          <article class="venue-card venue-sun">
+            <div class="venue-tag venue-tag-sub">일요일</div>
+            <h3>화곡동 교회</h3>
+            <p class="venue-addr">구. 치유하는 교회</p>
+            <p class="venue-landmark">일요일에만 운영</p>
+            <ul class="venue-hours">
+              <li><span>일요일</span> 14:40 &mdash; 16:00</li>
+              <li><span>방문 전</span> 반드시 전화 필수</li>
+            </ul>
+            <a class="venue-phone" href="tel:010-8367-2346">
+              <span>위원장</span>
+              010-8367-2346
+            </a>
+          </article>
+        </div>
+
+        <!-- 우편 접수 -->
+        <div class="mail-box reveal">
+          <div class="mail-icon" aria-hidden="true">✉</div>
+          <div>
+            <h3>우편 접수</h3>
+            <p>완성된 서류를 아래 주소로 발송하시면 됩니다.</p>
+            <p class="mail-addr"><strong>서울 강서구 화곡동 421-7 1층 · 팔팔부동산</strong></p>
+            <p class="mail-note">우편 접수 시 <strong>주민등록증 앞뒤 사본</strong>을 반드시 함께 동봉해 주세요.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제출 서류 -->
+    <section id="documents" class="section">
+      <div class="container">
+        <h2 class="reveal">제출 서류</h2>
+        <p class="section-lede reveal">
+          접수 시 필요한 서류입니다. 방문 시에는 서류가 현장에 준비되어 있으니
+          <strong>주민등록증과 등기부등본만 지참</strong>하시면 됩니다.
+        </p>
+
+        <ul class="doc-list reveal-stagger">
+          <li>
+            <span class="doc-check">✓</span>
+            <div>
+              <h3>공모 참여 의향서</h3>
+              <p>현장에서 작성 가능 · 원본 수기 작성만 인정 (복사본 불가)</p>
+            </div>
+          </li>
+          <li>
+            <span class="doc-check">✓</span>
+            <div>
+              <h3>개인정보 수집 동의서</h3>
+              <p>현장에서 작성 · 공모 신청 목적 외 사용되지 않음</p>
+            </div>
+          </li>
+          <li>
+            <span class="doc-check">✓</span>
+            <div>
+              <h3>주민등록증 사본 (앞뒤)</h3>
+              <p>뒷자리는 가려도 무관 · 우편 시 앞뒤 모두 동봉</p>
+            </div>
+          </li>
+          <li>
+            <span class="doc-check">✓</span>
+            <div>
+              <h3>등기부등본 (확인용)</h3>
+              <p>발행일자 무관 · 제출 아닌 확인용 · 개인 카톡 사진 전송도 가능</p>
+            </div>
+          </li>
+          <li>
+            <span class="doc-check doc-check-opt">○</span>
+            <div>
+              <h3>대표자 선임 동의서 <em class="doc-cond">(공동명의인 경우)</em></h3>
+              <p>두 명 모두 제출하거나, 대표 1인 선임 후 다른 명의자 신분증 사본 첨부</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="doc-warn reveal">
+          <strong>서명이 아닌 지장 날인이 필요합니다.</strong>
+          법령상 본인 확인과 위·변조 방지를 위해 서명이 아닌 <strong>지장(무인)</strong>을 찍으셔야 합니다.
+          도장은 인정되지 않습니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 지장 날인 필요한 이유 -->
     <section id="consent" class="section alt">
       <div class="container">
-        <h2 class="reveal">2. 동의서에 주민등록과 지장 날인이 필요한 이유</h2>
+        <h2 class="reveal">동의서에 주민등록과 지장 날인이 필요한 이유</h2>
         <p class="section-lede reveal">
-          동의서를 제출하실 때 주민등록증(또는 신분증 사본)과 지장 날인을 함께 요청드리는 이유를
-          간단히 설명드립니다.
+          번거로우실 수 있지만, 다음 네 가지 이유로 반드시 필요합니다.
         </p>
 
         <div class="reason-grid reveal-stagger">
           <article class="reason">
             <h3>본인 확인</h3>
-            <p>
-              동의 의사가 실제 토지·건물 소유자 본인의 것임을 확인하기 위함입니다.
-              주민등록상 성명·주소와 등기부상 명의가 일치해야 동의서로서 효력을 가집니다.
-            </p>
+            <p>동의 의사가 실제 토지·건물 소유자 본인의 것임을 확인합니다. 주민등록상 성명·주소와 등기부상 명의가 일치해야 효력을 가집니다.</p>
           </article>
-
           <article class="reason">
             <h3>위·변조 방지</h3>
-            <p>
-              서명만으로는 제3자가 모방하거나 위조하기가 비교적 쉽습니다.
-              지장(무인) 날인은 지문이 함께 남기 때문에 나중에 본인 동의 여부를 다투는 분쟁이
-              생겼을 때 객관적인 증거가 됩니다.
-            </p>
+            <p>서명만으로는 제3자 위조 가능성이 있어 지문이 남는 지장으로 보완합니다. 훗날 동의 여부 분쟁 시 객관적 증거가 됩니다.</p>
           </article>
-
           <article class="reason">
             <h3>법적 효력 확보</h3>
-            <p>
-              도심복합사업의 주민 동의 요건은 관련 법령에서 정해진 절차를 따라야 하며,
-              그 과정에서 본인 확인과 날인 방식이 함께 요구됩니다.
-              요건을 갖춘 동의서만이 사업 추진의 근거로 인정됩니다.
-            </p>
+            <p>도심 공공주택 복합사업의 주민 동의 요건은 관련 법령의 절차를 따라야 하며, 본인 확인과 날인이 요구됩니다.</p>
           </article>
-
           <article class="reason">
             <h3>향후 분쟁 예방</h3>
-            <p>
-              사업은 장기간 진행되기 때문에, 중간에 "나는 동의한 적 없다"는 이의가 제기될 수 있습니다.
-              본인 확인 자료와 지장이 남아 있어야 추진위가 절차적 정당성을 입증할 수 있고,
-              결과적으로 사업 전체의 안정성이 높아집니다.
-            </p>
+            <p>장기간 진행되는 사업 특성상, 절차적 정당성을 입증할 자료가 보존되어야 사업 전체의 안정성이 확보됩니다.</p>
           </article>
         </div>
 
         <div class="callout reveal">
           <strong>개인정보 보호 관련 안내</strong>
           <p>
-            제출하신 신분증 사본과 동의서는 사업 동의 확인 목적 외에는 사용되지 않으며,
-            관련 법령에 따라 안전하게 보관·관리됩니다. 보관 기간과 파기 시점, 열람 권한 등에 대한
-            자세한 내용은 추진위원회로 문의해 주시기 바랍니다.
+            제출하신 신분증 사본과 동의서는 공모 신청 목적 외에는 사용되지 않으며,
+            관련 법령에 따라 안전하게 보관·관리됩니다. 보관 기간·파기 시점·열람 권한 등
+            자세한 사항은 추진위원회로 문의해 주시기 바랍니다.
           </p>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="section">
+    <!-- FAQ -->
+    <section id="faq" class="section">
       <div class="container">
-        <h2 class="reveal">3. 추진위원회 연락처</h2>
+        <h2 class="reveal">자주 묻는 질문</h2>
         <p class="section-lede reveal">
-          궁금한 점이나 동의서 제출 관련 문의는 아래로 연락 주시면 안내해 드립니다.
+          주민분들께서 실제로 문의하신 내용을 모아 정리했습니다. 항목을 누르시면 내용이 펼쳐집니다.
         </p>
 
-        <div class="card reveal">
-          <div class="card-header">
-            <span class="card-label">화곡1동 민간 도심복합사업 추진위</span>
+        <!-- 사업 범위 -->
+        <div class="faq-group reveal">
+          <h3 class="faq-group-title">사업 범위 · 구역</h3>
+
+          <details class="faq-item">
+            <summary>346-89는 구역도에 잘 안 보이는데 제외된 건가요?</summary>
+            <div class="faq-answer">포함되어 있습니다. 큰 지번에 가려 표기가 되지 않았을 뿐입니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>C확장 346-89도 포함되나요?</summary>
+            <div class="faq-answer">본 단톡방과 사업 구역은 확장구역까지 포함합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>347-9처럼 비거주자도 참여 가능한가요?</summary>
+            <div class="faq-answer">건물 소유주라면 거주 여부와 무관하게 참여 가능합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>346 구역 중 일부가 제외된 이유는 무엇인가요?</summary>
+            <div class="faq-answer">1종 상가 중 사업에 반대하시는 건물이 제외되었습니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>구역은 정확히 어디부터 어디까지인가요?</summary>
+            <div class="faq-answer">화곡1동 422 일대로, 확장구역(347·423·426 등 일부 포함) 약 1,600세대 규모입니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>이전 모아타운·모아주택과는 어떤 관계인가요?</summary>
+            <div class="faq-answer">이전에는 모아주택으로 58% 동의를 받았던 이력이 있으며, 현재는 도심 공공주택 복합사업 공모로 전환하여 진행 중입니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>기사에 나온 화곡2동 사업과 같은 것인가요?</summary>
+            <div class="faq-answer">다릅니다. 본 구역은 공모 신청 방식으로 진행 중이며, 지정 방식의 타 구역과는 별개입니다.</div>
+          </details>
+        </div>
+
+        <!-- 제출 서류 -->
+        <div class="faq-group reveal">
+          <h3 class="faq-group-title">제출 서류</h3>
+
+          <details class="faq-item">
+            <summary>서류를 개인이 프린트해서 작성해도 되나요?</summary>
+            <div class="faq-answer">가능합니다. 다만 반드시 <strong>수기로 작성한 원본</strong>만 유효하며, 이미 작성된 원본의 복사본은 인정되지 않습니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>세대주만 제출 가능한가요?</summary>
+            <div class="faq-answer">세대주가 아닌 <strong>소유자 이름</strong>으로 접수해야 합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>주민등록증 뒷자리를 가려도 되나요?</summary>
+            <div class="faq-answer">가능합니다. 사진을 찍으시거나 사본을 뜨실 때 뒷자리를 가리셔도 무관합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>우편 접수 시 신분증은 어떻게 보내야 하나요?</summary>
+            <div class="faq-answer">주민등록증 <strong>앞뒤 사본</strong>을 함께 첨부해 주세요.</div>
+          </details>
+          <details class="faq-item">
+            <summary>등기부등본은 제출해야 하나요, 확인만 하나요?</summary>
+            <div class="faq-answer">확인용입니다. 방문이 어려운 경우 개인 카톡으로 사진을 전송하셔도 됩니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>등기부등본은 최근 발행분이어야 하나요?</summary>
+            <div class="faq-answer">상관없습니다. 예전 발행본도 괜찮습니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>공동명의일 경우 어떻게 처리하나요?</summary>
+            <div class="faq-answer">
+              두 가지 방법이 있습니다.
+              <ol>
+                <li>공동명의자 두 분 모두의 서류를 함께 제출</li>
+                <li>대표자 선임 동의서를 작성한 뒤, 선임된 대표 한 분이 서명 날인 (이때 위임자의 신분증 사본을 함께 첨부)</li>
+              </ol>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>주민등록번호 뒷자리를 가려도 되나요?</summary>
+            <div class="faq-answer">가능합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>의향서 양식에는 생년월일을 적는데, 주민등록번호가 필요한가요?</summary>
+            <div class="faq-answer">생년월일 기재로 충분하며, 신분증 사본에서 뒷자리를 가리셔도 무관합니다.</div>
+          </details>
+        </div>
+
+        <!-- 접수 방법 -->
+        <div class="faq-group reveal">
+          <h3 class="faq-group-title">접수 방법 · 장소 · 시간</h3>
+
+          <details class="faq-item">
+            <summary>주말에도 접수가 가능한가요?</summary>
+            <div class="faq-answer">
+              <ul>
+                <li><strong>토요일:</strong> 팔팔부동산 10:00 &mdash; 19:00</li>
+                <li><strong>일요일:</strong> 화곡동 교회 14:40 &mdash; 16:00 (방문 전 반드시 전화)</li>
+                <li><strong>평일:</strong> 팔팔부동산 · 일등부동산</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>팔팔부동산의 정확한 위치는 어디인가요?</summary>
+            <div class="faq-answer">서울 강서구 화곡동 421-7, 1층입니다. 백구사 사거리 · 백구사 미용실 옆 코너에 있습니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>일등부동산의 정확한 위치는 어디인가요?</summary>
+            <div class="faq-answer">까치산역 주변의 화곡사거리 방향에 있습니다. 이은미 팀장님께 문의 (010-2487-2934).</div>
+          </details>
+          <details class="faq-item">
+            <summary>반드시 예약해야 하나요?</summary>
+            <div class="faq-answer">예약 없이 방문 시 대기가 길고, 부동산 영업에도 지장이 될 수 있어 <strong>사전 예약 필수</strong>입니다. 팔팔부동산 류형태 이사 010-3734-8758.</div>
+          </details>
+          <details class="faq-item">
+            <summary>의향서의 '구역' 항목은 어떻게 기재하나요?</summary>
+            <div class="faq-answer"><strong>"서울특별시 강서구 화곡1동 422 일대"</strong> 로 기재합니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>등기부등본이 확인용이라면 사진만 보내도 되나요?</summary>
+            <div class="faq-answer">추진위원(최은정 010-2008-4040)에게 개인 카톡으로 사진을 보내셔도 됩니다.</div>
+          </details>
+          <details class="faq-item">
+            <summary>직접 방문이 어려울 때는 어떻게 하나요?</summary>
+            <div class="faq-answer">우편 접수가 가능합니다. 또는 미리 전화를 주시면 시간을 맞춰 추진위원이 별도로 방문 드립니다.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 자원봉사자 모집 -->
+    <section id="volunteer" class="section alt">
+      <div class="container">
+        <h2 class="reveal">자원봉사자 모집</h2>
+        <p class="section-lede reveal">
+          짧은 공모 기간 안에 주민 동의를 확보하려면 많은 손길이 필요합니다.
+          아래 분야 중 가능한 것으로 도움 주시면 큰 힘이 됩니다. (중복 지원 가능)
+        </p>
+
+        <div class="vol-grid reveal-stagger">
+          <article class="vol-card">
+            <div class="vol-num">01</div>
+            <h3>전화 · 전단 홍보팀</h3>
+            <p>주민분들께 사업을 알리고 참여를 독려하는 업무. 퇴근 후 전화 봉사도 가능합니다.</p>
+          </article>
+          <article class="vol-card">
+            <div class="vol-num">02</div>
+            <h3>거점 접수팀</h3>
+            <p>팔팔·일등부동산에서 방문하시는 분들의 동의서 접수 및 안내를 돕는 업무입니다.</p>
+          </article>
+          <article class="vol-card">
+            <div class="vol-num">03</div>
+            <h3>가가호호 방문팀</h3>
+            <p>직접 세대를 방문하여 동의서를 수령하고 설명드리는 업무입니다.</p>
+          </article>
+        </div>
+
+        <p class="vol-cta reveal">
+          <strong>활동 기간</strong> &middot; 지금부터 5월 8일까지 &nbsp;·&nbsp;
+          <strong>문의</strong> &middot; 최고야 위원장 <a href="tel:010-8367-2346">010-8367-2346</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 후원금 -->
+    <section id="donation" class="section">
+      <div class="container">
+        <h2 class="reveal">후원금 안내</h2>
+        <p class="section-lede reveal">
+          홍보물 인쇄·우편비, 설명회 대관료, 사무용품 등 운영 실비를 위한 자발적 후원입니다.
+        </p>
+
+        <div class="donation-card reveal">
+          <div class="donation-row">
+            <span class="donation-k">금액</span>
+            <span class="donation-v">가구당 1만원 <em>(자발적)</em></span>
           </div>
-          <div class="card-body">
-            <p class="card-name">최은정 <span class="card-role">추진위원</span></p>
-            <ul class="card-info">
-              <li>
-                <span class="info-label">전화</span>
-                <a href="tel:010-2008-4040">010-2008-4040</a>
-              </li>
-              <li>
-                <span class="info-label">이메일</span>
-                <a href="mailto:ej6916@naver.com">ej6916@naver.com</a>
-              </li>
-            </ul>
+          <div class="donation-row">
+            <span class="donation-k">입금 계좌</span>
+            <span class="donation-v donation-account">
+              3333-28-9823965
+              <small>예금주: 최고야</small>
+            </span>
+          </div>
+          <div class="donation-row">
+            <span class="donation-k">용도</span>
+            <span class="donation-v">
+              <ul class="donation-use">
+                <li>홍보물 인쇄비 및 우편 발송비</li>
+                <li>주민 설명회 등 장소 대관료</li>
+                <li>사무용품 및 소모품비</li>
+                <li>자원봉사자 음료 및 식대 등 실비</li>
+              </ul>
+            </span>
+          </div>
+          <div class="donation-row">
+            <span class="donation-k">회계 투명성</span>
+            <span class="donation-v">
+              카카오뱅크 모임통장을 통해 수입·지출 내역을 실시간으로 투명하게 공개합니다.
+              주민 누구나 정산 내역을 확인하실 수 있도록 정기적으로 공지됩니다.
+            </span>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- 연락처 -->
+    <section id="contact" class="section alt">
+      <div class="container">
+        <h2 class="reveal">연락처</h2>
+        <p class="section-lede reveal">
+          궁금한 점은 아래 중 편한 곳으로 문의해 주시기 바랍니다.
+        </p>
+
+        <div class="contact-grid reveal-stagger">
+          <article class="contact-item">
+            <p class="contact-role">추진위원장</p>
+            <p class="contact-name">최고야</p>
+            <a href="tel:010-8367-2346">010-8367-2346</a>
+          </article>
+          <article class="contact-item">
+            <p class="contact-role">추진위원 (422-3)</p>
+            <p class="contact-name">최은정</p>
+            <a href="tel:010-2008-4040">010-2008-4040</a>
+            <a class="contact-mail" href="mailto:ej6916@naver.com">ej6916@naver.com</a>
+          </article>
+          <article class="contact-item">
+            <p class="contact-role">협력사 · 팔팔부동산</p>
+            <p class="contact-name">류형태 이사</p>
+            <a href="tel:010-3734-8758">010-3734-8758</a>
+            <a href="tel:02-2693-8758">02-2693-8758</a>
+          </article>
+          <article class="contact-item">
+            <p class="contact-role">협력사 · 일등부동산</p>
+            <p class="contact-name">이은미 팀장</p>
+            <a href="tel:010-2487-2934">010-2487-2934</a>
+          </article>
+        </div>
+
+        <a class="kakao-cta reveal" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">
+          <div class="kakao-cta-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.84 5.3 4.6 6.73-.2.7-.72 2.58-.83 2.98-.14.5.18.49.38.36.16-.1 2.54-1.72 3.56-2.42.75.11 1.5.17 2.29.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
+            </svg>
+          </div>
+          <div class="kakao-cta-body">
+            <p class="kakao-cta-title">주민 단톡방 참여하기</p>
+            <p class="kakao-cta-sub">최신 공지, 접수 현황, 질문과 답변을 실시간으로 받아보실 수 있습니다.</p>
+          </div>
+          <span class="kakao-cta-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
     <div class="container">
-      <p>© 화곡1동 민간 도심복합사업 추진위원회</p>
+      <p>© 화곡1동 도심 공공주택 복합사업 추진위원회</p>
       <p class="disclaimer">
-        본 페이지의 내용은 주민 안내를 위한 요약 자료이며, 공식 공고·법령과 차이가 있을 경우
-        공식 자료가 우선합니다.
+        본 페이지의 내용은 주민 안내를 위한 요약이며, 공식 공고·법령과 차이가 있을 경우
+        공식 자료가 우선합니다. 접수 장소·시간은 변동될 수 있으니 방문 전 전화 확인 부탁드립니다.
       </p>
     </div>
   </footer>
 
   <script>
+    // Scroll reveal
     (function () {
       if (!('IntersectionObserver' in window)) {
         document.querySelectorAll('.reveal, .reveal-stagger').forEach(function (el) {
@@ -157,8 +658,109 @@
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
       targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Share button
+    (function () {
+      var btn = document.getElementById('share-btn');
+      var toast = document.getElementById('toast');
+      if (!btn) return;
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function () { toast.classList.remove('show'); }, 2200);
+      }
+
+      btn.addEventListener('click', async function () {
+        var shareData = {
+          title: document.title,
+          text: '화곡1동 도심 공공주택 복합사업 안내',
+          url: window.location.href.split('#')[0]
+        };
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+          } catch (e) {
+            /* user cancelled or failed — fall through to copy */
+            if (e && e.name === 'AbortError') return;
+            copyLink(shareData.url);
+          }
+        } else {
+          copyLink(shareData.url);
+        }
+      });
+
+      function copyLink(url) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(
+            function () { showToast('링크가 복사되었습니다'); },
+            function () { fallbackCopy(url); }
+          );
+        } else {
+          fallbackCopy(url);
+        }
+      }
+
+      function fallbackCopy(url) {
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast('링크가 복사되었습니다');
+        } catch (e) {
+          showToast('복사 실패 — 주소창에서 직접 복사해 주세요');
+        }
+        document.body.removeChild(ta);
+      }
+    })();
+
+    // D-day counter (다가오는 가장 중요한 마감일 자동 표시)
+    (function () {
+      var deadlines = [
+        { date: '2026-04-30', label: '집중 접수 마감', short: '4월 30일' },
+        { date: '2026-05-07', label: '최종 제출 마감', short: '5월 7일' },
+        { date: '2026-05-08', label: '공모 기간 종료', short: '5월 8일' }
+      ];
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      var next = null;
+      for (var i = 0; i < deadlines.length; i++) {
+        var target = new Date(deadlines[i].date + 'T00:00:00');
+        var diff = Math.ceil((target - today) / 86400000);
+        if (diff >= 0) {
+          next = { ...deadlines[i], diff: diff };
+          break;
+        }
+      }
+
+      var labelEl = document.getElementById('dday-label');
+      var valueEl = document.getElementById('dday-value');
+      var dateEl = document.getElementById('dday-date');
+      var ddayEl = document.getElementById('dday');
+
+      if (!next) {
+        labelEl.textContent = '공모 종료';
+        valueEl.textContent = 'END';
+        dateEl.textContent = '접수 마감';
+        ddayEl.classList.add('dday-end');
+        return;
+      }
+
+      labelEl.textContent = next.label;
+      valueEl.textContent = next.diff === 0 ? 'D-DAY' : 'D-' + next.diff;
+      dateEl.textContent = next.short;
+
+      if (next.diff <= 3) ddayEl.classList.add('dday-critical');
+      else if (next.diff <= 10) ddayEl.classList.add('dday-urgent');
     })();
   </script>
 </body>

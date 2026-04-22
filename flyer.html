@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>화곡1동 도심 공공주택 복합사업 안내 전단</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root {
+    --navy: #0e2e24;
+    --navy-light: #1f4a3a;
+    --gold: #b89860;
+    --ink: #1a1f2c;
+    --muted: #5b6275;
+    --line: #dfe3ec;
+    --bg-soft: #f5f6f9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Pretendard", sans-serif;
+    color: var(--ink);
+    background: #e5e7eb;
+    word-break: keep-all;
+    line-height: 1.5;
+    padding: 24px 12px;
+  }
+
+  /* A4 size: 210x297mm, print at actual size */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .hdr {
+    background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy) 100%);
+    color: #fff;
+    padding: 20mm 18mm 16mm;
+    position: relative;
+  }
+  .hdr::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 80mm; height: 35mm;
+    background: rgba(255, 255, 255, 0.05);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+  .hdr::before {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3mm;
+    background: var(--gold);
+  }
+  .hdr-eyebrow {
+    margin: 0 0 4mm;
+    font-size: 10pt;
+    color: #8ee0b9;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .hdr-title {
+    margin: 0;
+    font-size: 30pt;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .hdr-lede {
+    margin: 6mm 0 0;
+    font-size: 11pt;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 130mm;
+    line-height: 1.6;
+  }
+
+  /* ── Key info strip ── */
+  .strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 10mm 18mm;
+    gap: 10mm;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .strip-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .strip-k {
+    font-size: 8pt;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+  .strip-v {
+    font-size: 13pt;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .strip-sub {
+    font-size: 8.5pt;
+    color: var(--muted);
+    margin-top: 1mm;
+  }
+
+  /* ── QR section ── */
+  .qr-section {
+    padding: 12mm 18mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10mm;
+  }
+  .qr-card {
+    border: 2px solid var(--navy);
+    border-radius: 4mm;
+    padding: 8mm 6mm 6mm;
+    text-align: center;
+    background: #fff;
+  }
+  .qr-card h3 {
+    margin: 0 0 4mm;
+    font-size: 12pt;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+  .qr-card .qr-img {
+    width: 58mm;
+    height: 58mm;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid var(--line);
+    padding: 2mm;
+    background: #fff;
+  }
+  .qr-card .qr-caption {
+    margin: 4mm 0 0;
+    font-size: 9pt;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .qr-card .qr-url {
+    margin-top: 2mm;
+    font-size: 8pt;
+    color: var(--navy-light);
+    word-break: break-all;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── How-to-apply ── */
+  .how {
+    padding: 8mm 18mm 10mm;
+    border-top: 1px solid var(--line);
+  }
+  .section-title {
+    margin: 0 0 4mm;
+    font-size: 11pt;
+    font-weight: 800;
+    color: var(--navy);
+    padding-left: 4mm;
+    border-left: 3px solid var(--gold);
+    line-height: 1;
+  }
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4mm;
+    margin-top: 3mm;
+  }
+  .how-step {
+    background: var(--bg-soft);
+    padding: 5mm 5mm;
+    border-radius: 3mm;
+    position: relative;
+  }
+  .how-num {
+    font-size: 8pt;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 1mm;
+  }
+  .how-step h4 {
+    margin: 0 0 2mm;
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .how-step p {
+    margin: 0;
+    font-size: 8.5pt;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* ── Locations ── */
+  .locations {
+    padding: 8mm 18mm 6mm;
+    border-top: 1px solid var(--line);
+  }
+  .loc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    margin-top: 3mm;
+  }
+  .loc-card {
+    padding: 4mm 5mm;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 2mm;
+  }
+  .loc-name {
+    margin: 0 0 1mm;
+    font-size: 10pt;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .loc-addr {
+    margin: 0 0 1mm;
+    font-size: 9pt;
+    color: var(--ink);
+  }
+  .loc-tel {
+    margin: 0;
+    font-size: 9pt;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .loc-tel strong { color: var(--navy); }
+
+  /* ── Footer ── */
+  .ftr {
+    margin-top: auto;
+    padding: 6mm 18mm 8mm;
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.85);
+    border-top: 3px solid var(--gold);
+  }
+  .ftr-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3mm;
+  }
+  .ftr-seal {
+    margin: 0;
+    font-size: 10pt;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .ftr-call {
+    font-size: 9pt;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .ftr-contacts {
+    display: flex;
+    gap: 6mm;
+    font-size: 8.5pt;
+    flex-wrap: wrap;
+  }
+  .ftr-contacts span {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .ftr-contacts strong {
+    color: #fff;
+    margin-left: 1mm;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .ftr-disc {
+    margin: 3mm 0 0;
+    padding-top: 3mm;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 7.5pt;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.55;
+  }
+
+  /* ── Print settings ── */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+    html, body { margin: 0; padding: 0; background: #fff; }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      box-shadow: none;
+      margin: 0;
+      page-break-after: always;
+    }
+    .no-print { display: none !important; }
+  }
+
+  /* Preview helper */
+  .preview-note {
+    max-width: 210mm;
+    margin: 0 auto 16px;
+    padding: 10px 14px;
+    background: #fff7e8;
+    border: 1px solid #f5d88a;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #8a5a00;
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-note no-print">
+  이 페이지를 <strong>Ctrl+P</strong> 로 인쇄하면 A4 한 장에 맞게 출력됩니다.
+  <strong>"배경 그래픽" 옵션을 반드시 켜주세요.</strong>
+  PDF로 저장하실 때는 "대상 → PDF로 저장" 선택.
+</div>
+
+<div class="page">
+  <!-- Header -->
+  <header class="hdr">
+    <p class="hdr-eyebrow">역세권 도심 공공주택 복합사업 · 공모 안내</p>
+    <h1 class="hdr-title">
+      화곡1동의 새로운 출발,<br/>
+      주민 한 분 한 분의 동의가 필요합니다.
+    </h1>
+    <p class="hdr-lede">
+      우리 동네가 오래도록 기다려온 공공주택 복합사업이 공모 단계에 들어갔습니다.
+      주민 여러분의 참여로 사업 선정을 함께 만들어 주세요.
+    </p>
+  </header>
+
+  <!-- Key info strip -->
+  <section class="strip">
+    <div class="strip-item">
+      <span class="strip-k">공모 기간</span>
+      <span class="strip-v">2026. 4. 1 &mdash; 5. 8</span>
+      <span class="strip-sub">최종 제출 5월 7일</span>
+    </div>
+    <div class="strip-item">
+      <span class="strip-k">집중 접수</span>
+      <span class="strip-v">4월 30일까지</span>
+      <span class="strip-sub">30% 동의율 목표</span>
+    </div>
+    <div class="strip-item">
+      <span class="strip-k">동의율 기준</span>
+      <span class="strip-v">10% 이상 신청</span>
+      <span class="strip-sub">30% 이상 확보 시 가산점</span>
+    </div>
+  </section>
+
+  <!-- QR codes -->
+  <section class="qr-section">
+    <div class="qr-card">
+      <h3>안내 사이트</h3>
+      <img class="qr-img" src="assets/qr-website.jpg" alt="안내 사이트 QR" />
+      <p class="qr-caption">
+        접수 장소, 서류, FAQ, 실시간 안내<br/>
+        휴대폰 카메라로 비춰주세요
+      </p>
+      <p class="qr-url">hwagok-c-zone.hwagok1.workers.dev</p>
+    </div>
+    <div class="qr-card" style="border-color: #E0A500; background: #fffbea;">
+      <h3 style="color: #8a5a00;">주민 카톡방</h3>
+      <img class="qr-img" src="assets/qr-kakao.jpg" alt="주민 카톡방 QR" />
+      <p class="qr-caption">
+        공지, 질문·답변, 동의서 접수 현황<br/>
+        카카오톡으로 QR을 스캔하세요
+      </p>
+      <p class="qr-url">open.kakao.com/o/gW0je9He</p>
+    </div>
+  </section>
+
+  <!-- How to apply -->
+  <section class="how">
+    <h3 class="section-title">동의서 제출 방법</h3>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">STEP 01</div>
+        <h4>신분증 준비</h4>
+        <p>주민등록증 지참 · 우편 접수 시 앞뒤 사본 (뒷자리 가려도 무관)</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">STEP 02</div>
+        <h4>등기부등본 준비</h4>
+        <p>확인용 · 발행일 무관 · 개인 카톡 사진 전송도 가능</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">STEP 03</div>
+        <h4>방문 또는 우편 접수</h4>
+        <p>반드시 예약 후 방문 · 지장(무인) 날인 필수, 도장 불가</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Locations -->
+  <section class="locations">
+    <h3 class="section-title">접수 장소 (협력사)</h3>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <p class="loc-name">팔팔부동산</p>
+        <p class="loc-addr">서울 강서구 화곡동 421-7 · 1층 (백구사 사거리)</p>
+        <p class="loc-tel">매일 10:00 &mdash; 19:00 · <strong>류형태 이사 010-3734-8758</strong></p>
+      </div>
+      <div class="loc-card">
+        <p class="loc-name">일등부동산</p>
+        <p class="loc-addr">까치산역 주변 · 화곡사거리 방향</p>
+        <p class="loc-tel">평일 운영 · <strong>이은미 팀장 010-2487-2934</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="ftr">
+    <div class="ftr-top">
+      <p class="ftr-seal">화곡1동 도심 공공주택 복합사업 추진위원회</p>
+      <span class="ftr-call">주민 참여가 사업 선정의 열쇠입니다</span>
+    </div>
+    <div class="ftr-contacts">
+      <span>추진위원장 <strong>최고야 010-8367-2346</strong></span>
+      <span>추진위원 <strong>최은정 010-2008-4040</strong></span>
+    </div>
+    <p class="ftr-disc">
+      본 안내는 주민 안내를 위한 요약이며, 공식 공고·법령과 차이가 있을 경우 공식 자료가 우선합니다.
+      접수 장소·시간은 변동될 수 있으므로 방문 전 전화 확인 부탁드립니다.
+    </p>
+  </footer>
+</div>
+
+</body>
+</html>
