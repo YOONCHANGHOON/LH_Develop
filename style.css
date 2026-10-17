@@ -1354,39 +1354,44 @@ body {
 /* ─── Notice summary ─── */
 .notice-summary {
   margin: 0 0 20px;
-  padding: 22px 24px;
-  background: #fff;
-  border: 1px solid var(--color-accent);
+  padding: 24px 24px 12px;
+  background: #f1f7f3;
+  border: 2px solid var(--color-accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
 }
 .notice-summary h3 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 700;
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--color-accent);
 }
 .notice-summary ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 .notice-summary li {
-  position: relative;
-  padding-left: 58px;
-  font-size: 15px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(31, 74, 58, 0.18);
+  font-size: 17px;
   line-height: 1.5;
+  color: var(--color-text);
 }
 .notice-summary li span {
-  position: absolute;
-  left: 0;
-  font-size: 12px;
+  flex: 0 0 52px;
+  padding: 3px 0;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--color-muted);
-  padding-top: 3px;
+  text-align: center;
+  color: #fff;
+  background: var(--color-accent);
+  border-radius: 6px;
 }
+.notice-summary li:nth-child(2) span { background: #c98a1e; }
+.notice-summary li strong { color: var(--color-accent); font-weight: 800; }
 .fold-notices { margin-top: 8px; }
 .fold-notices .alert { margin-bottom: 14px; }
