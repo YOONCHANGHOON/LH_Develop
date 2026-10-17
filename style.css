@@ -1579,3 +1579,47 @@ body {
   .nb-key li.must { padding: 40px 12px 12px; }
   .nb-key li.must span { top: 12px; }
 }
+
+/* ─── Hero quick answers ─── */
+.quick {
+  margin-top: 28px;
+  max-width: 540px;
+  background: #fff;
+  color: #1c2b25;
+  border-radius: 14px;
+  padding: 18px 20px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.quick-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+.quick-list { margin: 0; }
+.quick-list > div {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 11px 0;
+  border-top: 1px solid #e3e8e5;
+}
+.quick-list dt {
+  flex: 0 0 56px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-accent);
+  border-radius: 6px;
+  text-align: center;
+  padding: 3px 0;
+}
+.quick-list dd { margin: 0; font-size: 16px; line-height: 1.5; }
+.quick-list dd span { font-size: 14px; color: #4a5a53; }
+.quick-warn dt { background: #7a4b00; }
+.quick-warn dd { color: #7a4b00; }
+@media (max-width: 480px) {
+  .quick { padding: 16px 16px 6px; }
+  .quick-list > div { flex-direction: column; gap: 6px; }
+  .quick-list dt { flex: none; align-self: flex-start; padding: 3px 10px; }
+}
