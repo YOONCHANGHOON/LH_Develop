@@ -1373,7 +1373,7 @@ body {
 }
 .notice-summary li {
   position: relative;
-  padding: 14px 0 14px 68px;
+  padding: 14px 0 14px 74px;
   border-top: 1px solid rgba(31, 74, 58, 0.18);
   font-size: 17px;
   line-height: 1.5;
@@ -1383,7 +1383,7 @@ body {
   position: absolute;
   left: 0;
   top: 16px;
-  width: 52px;
+  width: 58px;
   padding: 3px 0;
   font-size: 13px;
   font-weight: 700;
@@ -1400,12 +1400,12 @@ body {
 /* ─── Must bring ─── */
 .notice-summary li.must {
   margin: 4px -12px;
-  padding: 14px 12px 14px 80px;
+  padding: 14px 12px 14px 86px;
   background: #fff3d6;
   border-radius: 8px;
   border-top: none;
 }
-.notice-summary li.must span { left: 12px; background: #7a4b00; }
+.notice-summary li.must span { left: 12px; width: 58px; background: #7a4b00; }
 .notice-summary li.must strong { color: #7a4b00; }
 .must-bring {
   margin: 0 0 24px;
