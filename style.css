@@ -1498,7 +1498,7 @@ body {
   font-weight: 700;
   color: var(--color-accent);
 }
-.nblock[open] > summary::after { content: '2'; }
+.nblock[open] > summary::after { content: '−'; }
 .nb-num { font-size: 20px; font-weight: 800; color: var(--color-accent); }
 .nb-title { font-size: 20px; font-weight: 800; color: var(--color-accent); }
 .nb-meta { flex-basis: 100%; font-size: 16px; font-weight: 700; color: #7a4b00; padding-left: 32px; }
@@ -1546,8 +1546,8 @@ body {
   padding: 6px 0;
 }
 .nb-more > summary::-webkit-details-marker { display: none; }
-.nb-more > summary::before { content: 'B6 a0'; font-size: 12px; }
-.nb-more[open] > summary::before { content: 'BC a0'; }
+.nb-more > summary::before { content: '▶ '; font-size: 12px; }
+.nb-more[open] > summary::before { content: '▼ '; }
 .nb-detail li { padding: 8px 0; font-size: 16px; line-height: 1.6; }
 .nb-detail li strong { display: inline-block; min-width: 64px; color: var(--color-accent); }
 .nb-alerts { margin-top: 12px; }
