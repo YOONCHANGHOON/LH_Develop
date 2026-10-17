@@ -1372,17 +1372,18 @@ body {
   padding: 0;
 }
 .notice-summary li {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  padding: 14px 0;
+  position: relative;
+  padding: 14px 0 14px 68px;
   border-top: 1px solid rgba(31, 74, 58, 0.18);
   font-size: 17px;
   line-height: 1.5;
   color: var(--color-text);
 }
 .notice-summary li span {
-  flex: 0 0 52px;
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 52px;
   padding: 3px 0;
   font-size: 13px;
   font-weight: 700;
