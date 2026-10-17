@@ -1396,3 +1396,46 @@ body {
 .notice-summary li strong { color: var(--color-accent); font-weight: 800; }
 .fold-notices { margin-top: 8px; }
 .fold-notices .alert { margin-bottom: 14px; }
+
+/* ─── Must bring ─── */
+.notice-summary li.must {
+  margin: 4px -12px;
+  padding: 14px 12px 14px 80px;
+  background: #fff3d6;
+  border-radius: 8px;
+  border-top: none;
+}
+.notice-summary li.must span { left: 12px; background: #c98a1e; }
+.notice-summary li.must strong { color: #7a4b00; }
+.must-bring {
+  margin: 0 0 24px;
+  padding: 22px 24px;
+  background: #fff3d6;
+  border: 2px solid #c98a1e;
+  border-radius: var(--radius);
+  color: #3b2a00;
+}
+.must-bring h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #7a4b00;
+}
+.must-bring ul {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.must-bring li {
+  padding: 8px 16px;
+  font-size: 18px;
+  background: #fff;
+  border: 1px solid #c98a1e;
+  border-radius: 999px;
+}
+.must-bring li em { font-size: 13px; font-style: normal; color: #6b5a3a; }
+.must-bring p { margin: 0; font-size: 16px; line-height: 1.6; }
+.must-bring p strong { color: #7a4b00; }
