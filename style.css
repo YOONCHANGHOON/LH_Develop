@@ -666,7 +666,7 @@ body {
   letter-spacing: 0.02em;
 }
 .alert-red .alert-badge { background: #d93a2a; color: #fff; }
-.alert-amber .alert-badge { background: #c98a1e; color: #fff; }
+.alert-amber .alert-badge { background: #7a4b00; color: #fff; }
 .alert-body h3 {
   margin: 0 0 6px;
   font-size: 16px;
@@ -1392,7 +1392,7 @@ body {
   background: var(--color-accent);
   border-radius: 6px;
 }
-.notice-summary li:first-child span { background: #c98a1e; }
+.notice-summary li:first-child span { background: #7a4b00; }
 .notice-summary li strong { color: var(--color-accent); font-weight: 800; }
 .fold-notices { margin-top: 8px; }
 .fold-notices .alert { margin-bottom: 14px; }
@@ -1405,7 +1405,7 @@ body {
   border-radius: 8px;
   border-top: none;
 }
-.notice-summary li.must span { left: 12px; background: #c98a1e; }
+.notice-summary li.must span { left: 12px; background: #7a4b00; }
 .notice-summary li.must strong { color: #7a4b00; }
 .must-bring {
   margin: 0 0 24px;
