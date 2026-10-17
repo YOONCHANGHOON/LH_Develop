@@ -1392,7 +1392,7 @@ body {
   background: var(--color-accent);
   border-radius: 6px;
 }
-.notice-summary li:nth-child(2) span { background: #c98a1e; }
+.notice-summary li:first-child span { background: #c98a1e; }
 .notice-summary li strong { color: var(--color-accent); font-weight: 800; }
 .fold-notices { margin-top: 8px; }
 .fold-notices .alert { margin-bottom: 14px; }
