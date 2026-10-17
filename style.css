@@ -1449,7 +1449,13 @@ body {
   color: #7a4b00;
 }
 .notice-summary .summary-sub {
-  margin: 0 0 6px;
-  font-size: 14px;
-  color: var(--color-muted);
+  margin: 4px 0 10px;
+  padding: 10px 14px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: rgba(31, 74, 58, 0.08);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 6px;
 }
