@@ -6,7 +6,10 @@
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": ".",
+    // 없는 경로는 404 대신 index.html을 그대로 돌려준다.
+    // 유입 채널용 경로(/k, /s, /f)와 추적용 가상 경로가 주소를 유지한 채 동작하게 하기 위함.
+    "not_found_handling": "single-page-application"
   },
   "compatibility_flags": [
     "nodejs_compat"
