@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#0e2e24" />
+  <title>봉사자용 동의 현황</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="volunteer.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <p class="eyebrow">봉사자 전용 · 외부 공유 금지</p>
+      <h1>번지별 동의 현황</h1>
+      <p class="updated" id="updated">불러오는 중…</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="summary" aria-label="전체 요약">
+      <div class="tile"><span class="tile-label">전체 동의율</span><strong id="total-rate">–</strong></div>
+      <div class="tile"><span class="tile-label">동의 / 전체</span><strong id="total-count">–</strong></div>
+      <div class="tile"><span class="tile-label">30%까지</span><strong id="to-target">–</strong></div>
+    </section>
+
+    <section class="card">
+      <h2>구역도</h2>
+      <div class="map-box">
+        <img id="map-img" src="../assets/district-map.jpg" alt="구역도" width="960" height="720" />
+        <svg id="map-svg" viewBox="0 0 960 720" role="img" aria-label="번지별 동의율 지도"></svg>
+      </div>
+      <ul class="legend">
+        <li><i style="background:var(--c-none)"></i>자료 없음</li>
+        <li><i style="background:var(--c-low)"></i>10% 미만</li>
+        <li><i style="background:var(--c-mid)"></i>10~30%</li>
+        <li><i style="background:var(--c-high)"></i>30% 이상</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>이번 주 우선순위 <small>동의율 낮은 순</small></h2>
+      <ol class="rank" id="rank"></ol>
+    </section>
+
+    <p class="note">
+      필지 수는 구역도에서 센 <strong>추정치</strong>입니다. 실제와 다르면 시트의 &lsquo;전체필지&rsquo;를 고치면 됩니다.
+      이 화면에는 개인정보(성명·연락처·필지별 동의 여부)를 넣지 않습니다.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
