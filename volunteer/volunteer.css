@@ -9,6 +9,10 @@
   --c-low: #c2452d;
   --c-mid: #d98e1f;
   --c-high: #2f7d4f;
+  --b-none: #4f5a56;
+  --b-low: #a8321e;
+  --b-mid: #9a5f08;
+  --b-high: #1f6a40;
 }
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
@@ -41,8 +45,9 @@ body {
 .area { stroke: #fff; stroke-width: 1.5; fill-opacity: 0.62; transition: fill-opacity .15s; }
 .area:hover, .area.on { fill-opacity: 0.85; }
 .excluded { fill: none; }
-.lbl { font-size: 17px; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 4px; fill: #1a1f1c; pointer-events: none; }
-.lbl-sub { font-size: 14px; font-weight: 700; }
+.badge rect { stroke: #fff; stroke-width: 2; }
+.lbl { font-size: 16px; font-weight: 800; text-anchor: middle; fill: #fff; pointer-events: none; }
+.lbl-sub { font-size: 13px; font-weight: 700; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; list-style: none; padding: 0; margin: 12px 0 0; font-size: 13px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }

@@ -22,6 +22,7 @@ function applyDemo(rows) {
 
 const color = (r) => (r.total === 0 || r.agree === 0 && !r.date && !DEMO ? "var(--c-none)"
   : pct(r) < MIN_RATE ? "var(--c-low)" : pct(r) < TARGET ? "var(--c-mid)" : "var(--c-high)");
+const badgeColor = (r) => color(r).replace("--c-", "--b-");
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -43,12 +44,18 @@ function drawMap(blocks, byId) {
     p.addEventListener("click", () => highlight(a.id));
     svg.appendChild(p);
   });
+  // 라벨은 색 바탕 + 흰 글씨 배지로 그려 밝은/어두운 테마 어디서나 읽히게 한다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
-    svg.append(
-      el("text", { class: "lbl", x, y: y - 2 }, id),
-      el("text", { class: "lbl lbl-sub", x, y: y + 16 }, r && (r.date || DEMO) ? fmt(pct(r)) : "–")
+    const g = el("g", { class: "badge" });
+    const bg = el("rect", { x: x - 28, y: y - 20, width: 56, height: 40, rx: 8 });
+    bg.style.fill = r ? badgeColor(r) : "var(--b-none)";
+    g.append(
+      bg,
+      el("text", { class: "lbl", x, y: y - 3 }, id),
+      el("text", { class: "lbl lbl-sub", x, y: y + 13 }, r && (r.date || DEMO) ? fmt(pct(r)) : "–")
     );
+    svg.appendChild(g);
   });
 }
 
