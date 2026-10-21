@@ -48,19 +48,21 @@ body {
 .zoom-hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
 .map-box img { display: block; width: 100%; height: auto; }
 .map-box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.grp { fill-opacity: 0.6; stroke-width: 3.5; stroke-linejoin: round; transition: fill-opacity .15s; cursor: pointer; }
+.grp { fill-opacity: 0.55; stroke-width: 3.5; stroke-linejoin: round; transition: fill-opacity .15s; cursor: pointer; }
 .grp:hover, .grp.on { fill-opacity: 0.85; stroke-width: 4.5; }
-.badge rect { stroke: #fff; stroke-width: 2; }
-.lbl { font-size: 16px; font-weight: 800; text-anchor: middle; fill: #fff; pointer-events: none; }
+.badge rect { fill: #1f6a40; stroke: #fff; stroke-width: 2; }
+.lbl { font-size: 15px; font-weight: 800; text-anchor: middle; fill: #fff; pointer-events: none; }
 .lbl-sub { font-size: 13px; font-weight: 700; }
+.badge circle { stroke: #fff; stroke-width: 1.5; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; list-style: none; padding: 0; margin: 12px 0 0; font-size: 13px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
 
 .rank { list-style: none; margin: 0; padding: 0; }
-.rank li { display: grid; grid-template-columns: 56px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--border); }
+.rank li { display: grid; grid-template-columns: 96px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--border); }
 .rank li:first-child { border-top: 0; }
-.rank .no { font-weight: 800; font-size: 18px; }
+.rank .no { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+.rank .no i { width: 14px; height: 14px; border-radius: 4px; flex: none; }
 .bar { height: 10px; background: #e9eeeb; border-radius: 99px; overflow: hidden; position: relative; }
 .bar b { display: block; height: 100%; border-radius: 99px; }
 .bar::after { content: ""; position: absolute; left: 30%; top: 0; bottom: 0; width: 2px; background: #1a1f1c55; }

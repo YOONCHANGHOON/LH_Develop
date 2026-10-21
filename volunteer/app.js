@@ -20,9 +20,11 @@ function applyDemo(rows) {
   return rows.map((r, i) => ({ ...r, agree: Math.round(r.total * seed[i % seed.length]), memo: "데모 값" }));
 }
 
+// 동의율 상태색: 막대·배지 점에 쓴다. 지도 면 색은 번지 구분용(blocks.colors)이다.
 const color = (r) => (r.total === 0 || r.agree === 0 && !r.date && !DEMO ? "var(--c-none)"
   : pct(r) < MIN_RATE ? "var(--c-low)" : pct(r) < TARGET ? "var(--c-mid)" : "var(--c-high)");
-const badgeColor = (r) => color(r).replace("--c-", "--b-");
+const name = (id) => id.replace("-", " ");
+let COLORS = {};
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -42,22 +44,22 @@ function drawMap(blocks, byId) {
     const r = byId[gp.id];
     const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
     const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd" });
-    path.style.fill = r ? color(r) : "var(--c-none)";
-    path.style.stroke = r ? badgeColor(r) : "var(--b-none)";
+    path.style.fill = path.style.stroke = COLORS[gp.id] || "#999";
     path.addEventListener("click", () => highlight(gp.id));
     svg.appendChild(path);
   });
-  // 라벨은 색 바탕 + 흰 글씨 배지로 그려 밝은/어두운 테마 어디서나 읽히게 한다.
+  // 라벨: 진한 배지에 번지 이름과 동의율, 동의율 상태는 색 점으로 표시한다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
     const g = el("g", { class: "badge" });
-    const bg = el("rect", { x: x - 28, y: y - 20, width: 56, height: 40, rx: 8 });
-    bg.style.fill = r ? badgeColor(r) : "var(--b-none)";
-    g.append(
-      bg,
-      el("text", { class: "lbl", x, y: y - 3 }, id),
-      el("text", { class: "lbl lbl-sub", x, y: y + 13 }, r && (r.date || DEMO) ? fmt(pct(r)) : "–")
-    );
+    const label = name(id);
+    const wd = Math.max(54, label.length * 9 + 22);
+    g.append(el("rect", { x: x - wd / 2, y: y - 21, width: wd, height: 42, rx: 8 }));
+    g.append(el("text", { class: "lbl", x, y: y - 4 }, label));
+    const has = r && (r.date || DEMO);
+    const dot = el("circle", { cx: x - 20, cy: y + 11, r: 5 });
+    dot.style.fill = has ? color(r) : "var(--c-none)";
+    g.append(dot, el("text", { class: "lbl lbl-sub", x: x + 6, y: y + 16 }, has ? fmt(pct(r)) : "–"));
     svg.appendChild(g);
   });
 }
@@ -74,7 +76,9 @@ function drawRank(rows) {
   rows.slice().sort((a, b) => pct(a) - pct(b)).forEach((r) => {
     const li = document.createElement("li");
     li.dataset.id = r.id;
-    const no = document.createElement("span"); no.className = "no"; no.textContent = r.id;
+    const no = document.createElement("span"); no.className = "no";
+    const sw = document.createElement("i"); sw.style.background = COLORS[r.id] || "#999";
+    no.append(sw, name(r.id));
     const mid = document.createElement("div");
     const bar = document.createElement("div"); bar.className = "bar";
     const fill = document.createElement("b"); fill.style.width = Math.min(100, pct(r)) + "%"; fill.style.background = color(r);
@@ -106,14 +110,15 @@ function drawSummary(rows) {
 async function load() {
   try {
     const [blocks, csv] = await Promise.all([
-      fetch("blocks.json").then((r) => r.json()),
-      fetch(SHEET_CSV_URL ? `${SHEET_CSV_URL}${SHEET_CSV_URL.includes("?") ? "&" : "?"}t=${Date.now()}` : "data.csv").then((r) => {
+      fetch("blocks.json", { cache: "no-cache" }).then((r) => r.json()),
+      fetch(SHEET_CSV_URL ? `${SHEET_CSV_URL}${SHEET_CSV_URL.includes("?") ? "&" : "?"}t=${Date.now()}` : `data.csv?t=${Date.now()}`).then((r) => {
         if (!r.ok) throw new Error(r.status);
         return r.text();
       }),
     ]);
     let rows = parseCsv(csv);
     if (DEMO) rows = applyDemo(rows);
+    COLORS = blocks.colors;
     const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
     drawSummary(rows);
     drawMap(blocks, byId);
