@@ -825,7 +825,7 @@ body {
   color: var(--color-text);
   gap: 8px;
 }
-.venue-hours li span {
+.venue-hours li > span:first-child {
   font-size: 12px;
   color: var(--color-muted);
   font-weight: 500;
@@ -1379,7 +1379,7 @@ body {
   line-height: 1.5;
   color: var(--color-text);
 }
-.notice-summary li span {
+.notice-summary li > span:not(.tel) {
   position: absolute;
   left: 0;
   top: 16px;
@@ -1518,17 +1518,18 @@ body {
 .nb-key, .nb-detail { list-style: none; margin: 0; padding: 0; }
 .nb-key li {
   position: relative;
-  padding: 12px 0 12px 74px;
+  padding: 12px 0 12px 96px;
   border-top: 1px solid rgba(31, 74, 58, 0.18);
   font-size: 17px;
   line-height: 1.55;
 }
-.nb-key li span {
+.nb-key li > span:not(.tel) {
   position: absolute;
   left: 0;
   top: 14px;
-  width: 62px;
+  width: 84px;
   padding: 3px 0;
+  white-space: nowrap;
   font-size: 13px;
   font-weight: 700;
   text-align: center;
@@ -1538,12 +1539,12 @@ body {
 }
 .nb-key li.must {
   margin: 4px -12px;
-  padding: 12px 12px 12px 86px;
+  padding: 12px 12px 12px 108px;
   background: #fff3d6;
   border-radius: 8px;
   border-top: none;
 }
-.nb-key li.must span { left: 12px; background: #7a4b00; }
+.nb-key li.must > span:not(.tel) { left: 12px; background: #7a4b00; }
 .nb-key li.must strong { color: #7a4b00; }
 .nb-key li strong, .nb-body p strong { color: var(--color-accent); font-weight: 800; }
 .nb-key li a { color: var(--color-accent); font-weight: 700; text-decoration: underline; }
@@ -1571,13 +1572,22 @@ body {
 .nb-alerts { margin-top: 12px; }
 .nb-alerts .alert { margin-bottom: 14px; }
 @media (max-width: 480px) {
-  .nb-meta { padding-left: 0; }
-  .nblock > summary { padding-right: 112px; }
-  .nblock > summary::after { right: 12px; padding: 6px 10px; font-size: 13px; }
-  .nb-key li { padding-left: 0; padding-top: 38px; }
-  .nb-key li span { top: 10px; }
-  .nb-key li.must { padding: 40px 12px 12px; }
-  .nb-key li.must span { top: 12px; }
+  .nblock > summary { padding: 16px 100px 16px 16px; gap: 4px 8px; }
+  .nblock > summary::after { right: 12px; top: 14px; padding: 6px 10px; font-size: 13px; }
+  .nb-num, .nb-title { font-size: 18px; }
+  /* 날짜 줄은 버튼 아래라서 오른쪽 여백까지 써서 덜 줄바꿈되게 */
+  .nb-meta { padding-left: 0; flex-basis: calc(100% + 84px); margin-right: -84px; }
+  .nb-body { padding: 0 16px 16px; }
+  /* 라벨을 글 위에 따로 놓아서, 라벨이 길어져도 본문과 겹치지 않게 */
+  .nb-key li, .nb-key li.must { padding-left: 0; }
+  .nb-key li.must { padding: 12px; }
+  .nb-key li > span:not(.tel) {
+    position: static;
+    display: block;
+    width: fit-content;
+    padding: 3px 10px;
+    margin-bottom: 6px;
+  }
 }
 
 /* ─── Hero quick answers ─── */
@@ -1623,3 +1633,6 @@ body {
   .quick-list > div { flex-direction: column; gap: 6px; }
   .quick-list dt { flex: none; align-self: flex-start; padding: 3px 10px; }
 }
+
+/* 전화번호가 줄 끝에서 "010-" / "8367-2346"처럼 쪼개지지 않게 */
+.tel, a[href^="tel:"] { white-space: nowrap; }
