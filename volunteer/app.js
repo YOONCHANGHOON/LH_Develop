@@ -26,15 +26,6 @@ const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
 
-function centroid(pts) {
-  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-  return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
-}
-const area = (pts) => {
-  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-  return (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
-};
-
 function el(tag, attrs = {}, text) {
   const e = document.createElementNS(NS, tag);
   for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -52,15 +43,12 @@ function drawMap(blocks, byId) {
     p.addEventListener("click", () => highlight(a.id));
     svg.appendChild(p);
   });
-  const done = new Set();
-  blocks.areas.slice().sort((a, b) => area(b.pts) - area(a.pts)).forEach((a) => {
-    if (done.has(a.id)) return;
-    done.add(a.id);
-    const [x, y] = centroid(a.pts);
-    const r = byId[a.id];
-    const t = el("text", { class: "lbl", x, y: y - 2 }, a.id);
-    const s = el("text", { class: "lbl lbl-sub", x, y: y + 16 }, r && (r.date || DEMO) ? fmt(pct(r)) : "–");
-    svg.append(t, s);
+  Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
+    const r = byId[id];
+    svg.append(
+      el("text", { class: "lbl", x, y: y - 2 }, id),
+      el("text", { class: "lbl lbl-sub", x, y: y + 16 }, r && (r.date || DEMO) ? fmt(pct(r)) : "–")
+    );
   });
 }
 
