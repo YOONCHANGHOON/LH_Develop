@@ -37,19 +37,15 @@ function el(tag, attrs = {}, text) {
 function drawMap(blocks, byId) {
   const svg = $("map-svg");
   svg.replaceChildren();
-  // 같은 번지는 한 그룹으로 묶고, 테두리를 같은 색으로 두껍게 그려 도로 틈을 메운다.
-  // 투명도는 그룹에 한 번만 걸어서 겹쳐도 색이 진해지지 않는다.
-  const groups = {};
-  blocks.areas.forEach((a) => {
-    let g = groups[a.id];
-    if (!g) {
-      g = groups[a.id] = el("g", { class: "grp", "data-id": a.id });
-      const r = byId[a.id];
-      g.style.fill = g.style.stroke = r ? color(r) : "var(--c-none)";
-      g.addEventListener("click", () => highlight(a.id));
-      svg.appendChild(g);
-    }
-    g.appendChild(el("polygon", { points: a.pts.map((q) => q.join(",")).join(" ") }));
+  // 번지마다 외곽선 하나로 묶은 모양(blocks.json의 groups)을 한 덩어리로 그린다.
+  blocks.groups.forEach((gp) => {
+    const r = byId[gp.id];
+    const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
+    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd" });
+    path.style.fill = r ? color(r) : "var(--c-none)";
+    path.style.stroke = r ? badgeColor(r) : "var(--b-none)";
+    path.addEventListener("click", () => highlight(gp.id));
+    svg.appendChild(path);
   });
   // 라벨은 색 바탕 + 흰 글씨 배지로 그려 밝은/어두운 테마 어디서나 읽히게 한다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
