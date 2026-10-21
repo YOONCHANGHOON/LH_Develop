@@ -29,10 +29,18 @@
 
     <section class="card">
       <h2>구역도</h2>
-      <div class="map-box">
-        <img id="map-img" src="../assets/district-map.jpg" alt="구역도" width="960" height="720" />
-        <svg id="map-svg" viewBox="0 0 960 720" role="img" aria-label="번지별 동의율 지도"></svg>
+      <div class="map-view" id="map-view">
+        <div class="map-box" id="map-box">
+          <img id="map-img" src="../assets/district-map.jpg" alt="구역도" width="960" height="720" />
+          <svg id="map-svg" viewBox="0 0 960 720" role="img" aria-label="번지별 동의율 지도"></svg>
+        </div>
+        <div class="zoom-ctl">
+          <button type="button" id="zoom-in" aria-label="확대">+</button>
+          <button type="button" id="zoom-out" aria-label="축소">−</button>
+          <button type="button" id="zoom-reset" aria-label="원래 크기">⟲</button>
+        </div>
       </div>
+      <p class="zoom-hint">두 손가락(또는 마우스 휠)으로 확대, 끌어서 이동, 더블탭으로 확대</p>
       <ul class="legend">
         <li><i style="background:var(--c-none)"></i>자료 없음</li>
         <li><i style="background:var(--c-low)"></i>10% 미만</li>

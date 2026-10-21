@@ -123,4 +123,74 @@ async function load() {
     console.error(e);
   }
 }
+
+// 지도 확대/이동: 휠, 두 손가락 핀치, 끌기, 더블클릭, 버튼
+function setupZoom() {
+  const view = $("map-view"), box = $("map-box");
+  const MAX = 6;
+  let s = 1, x = 0, y = 0, moved = false;
+  const pts = new Map();
+  let pinch = null;
+
+  function apply() {
+    const W = view.clientWidth, H = view.clientHeight;
+    x = Math.min(0, Math.max(W - W * s, x));
+    y = Math.min(0, Math.max(H - H * s, y));
+    box.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+    view.classList.toggle("zoomed", s > 1.01);
+  }
+  function zoomAt(cx, cy, ns) {
+    ns = Math.min(MAX, Math.max(1, ns));
+    x = cx - ((cx - x) / s) * ns;
+    y = cy - ((cy - y) / s) * ns;
+    s = ns;
+    apply();
+  }
+  const local = (e) => { const r = view.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+
+  view.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const [cx, cy] = local(e);
+    zoomAt(cx, cy, s * (e.deltaY < 0 ? 1.2 : 1 / 1.2));
+  }, { passive: false });
+
+  view.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".zoom-ctl")) return;
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    moved = false;
+    if (pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s };
+    }
+  });
+  view.addEventListener("pointermove", (e) => {
+    if (!pts.has(e.pointerId)) return;
+    const prev = pts.get(e.pointerId);
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 2 && pinch) {
+      const [a, b] = [...pts.values()];
+      const r = view.getBoundingClientRect();
+      const cx = (a[0] + b[0]) / 2 - r.left, cy = (a[1] + b[1]) / 2 - r.top;
+      zoomAt(cx, cy, pinch.s * (Math.hypot(a[0] - b[0], a[1] - b[1]) / pinch.d));
+      moved = true;
+    } else if (pts.size === 1 && s > 1.01) {
+      const dx = e.clientX - prev[0], dy = e.clientY - prev[1];
+      if (Math.abs(dx) + Math.abs(dy) > 0) { x += dx; y += dy; moved = true; view.classList.add("dragging"); apply(); }
+    }
+  });
+  const up = (e) => { pts.delete(e.pointerId); if (pts.size < 2) pinch = null; if (!pts.size) view.classList.remove("dragging"); };
+  view.addEventListener("pointerup", up);
+  view.addEventListener("pointercancel", up);
+  // 끌고 난 뒤 손을 뗄 때 번지가 눌리지 않게 한다
+  view.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+  view.addEventListener("dblclick", (e) => { const [cx, cy] = local(e); zoomAt(cx, cy, s > 1.5 ? 1 : 2.5); });
+
+  const mid = () => [view.clientWidth / 2, view.clientHeight / 2];
+  $("zoom-in").addEventListener("click", () => zoomAt(...mid(), s * 1.5));
+  $("zoom-out").addEventListener("click", () => zoomAt(...mid(), s / 1.5));
+  $("zoom-reset").addEventListener("click", () => { s = 1; x = y = 0; apply(); });
+  window.addEventListener("resize", apply);
+}
+
+setupZoom();
 load();
