@@ -37,12 +37,19 @@ function el(tag, attrs = {}, text) {
 function drawMap(blocks, byId) {
   const svg = $("map-svg");
   svg.replaceChildren();
+  // 같은 번지는 한 그룹으로 묶고, 테두리를 같은 색으로 두껍게 그려 도로 틈을 메운다.
+  // 투명도는 그룹에 한 번만 걸어서 겹쳐도 색이 진해지지 않는다.
+  const groups = {};
   blocks.areas.forEach((a) => {
-    const r = byId[a.id];
-    const p = el("polygon", { class: "area", "data-id": a.id, points: a.pts.map((q) => q.join(",")).join(" ") });
-    p.style.fill = r ? color(r) : "var(--c-none)";
-    p.addEventListener("click", () => highlight(a.id));
-    svg.appendChild(p);
+    let g = groups[a.id];
+    if (!g) {
+      g = groups[a.id] = el("g", { class: "grp", "data-id": a.id });
+      const r = byId[a.id];
+      g.style.fill = g.style.stroke = r ? color(r) : "var(--c-none)";
+      g.addEventListener("click", () => highlight(a.id));
+      svg.appendChild(g);
+    }
+    g.appendChild(el("polygon", { points: a.pts.map((q) => q.join(",")).join(" ") }));
   });
   // 라벨은 색 바탕 + 흰 글씨 배지로 그려 밝은/어두운 테마 어디서나 읽히게 한다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
@@ -83,7 +90,7 @@ function drawRank(rows) {
     const p = document.createElement("span"); p.className = "pct"; p.textContent = fmt(pct(r));
     li.append(no, mid, p);
     li.addEventListener("click", () => {
-      document.querySelectorAll(".area").forEach((a) => a.classList.toggle("on", a.dataset.id === r.id));
+      document.querySelectorAll(".grp").forEach((a) => a.classList.toggle("on", a.dataset.id === r.id));
     });
     ol.appendChild(li);
   });
