@@ -35,8 +35,7 @@ const SMALL = 10;
 const shown = (r) => has(r) && !(r.total < SMALL && (r.agree === 0 || r.agree >= r.total));
 // 동의율은 초록 한 가지 색의 진하기로만 나타낸다.
 const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
-const level = (r) => (!shown(r) ? 0 : pct(r) < MIN_RATE ? 1 : pct(r) < TARGET ? 2 : 3);
-const rateText = (r) => (!has(r) ? "자료 없음" : !shown(r) ? "비공개" : fmt(pct(r)));
+const rateText = (r) => (!has(r) ? "–" : !shown(r) ? "비공개" : fmt(pct(r)));
 const name = (id) => id;
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
@@ -72,20 +71,16 @@ function drawMap(blocks, byId) {
   const ln = (cls, l) => el("line", { class: cls + " " + l.kind, x1: l.a[0], y1: l.a[1], x2: l.b[0], y2: l.b[1], "vector-effect": "non-scaling-stroke" });
   blocks.lines.forEach((l) => svg.appendChild(ln("bd-halo", l)));
   blocks.lines.forEach((l) => svg.appendChild(ln("bd", l)));
-  // 배지: 번지 이름과 동의율. 배지 바탕색이 동의율 단계를 나타낸다.
+  // 배지: 지도에 인쇄된 파란 번지 글자 위에 놓여 그 글자를 대신한다. 모든 배지는 같은 크기·같은 모양.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
-    const g = el("g", { class: "badge lv" + level(r), "data-id": id });
-    const label = name(id), sub = rateText(r);
+    const g = el("g", { class: "badge", "data-id": id });
     g.dataset.x = x; g.dataset.y = y;
-    const rect = el("rect", { y: -17, height: 34, rx: 8 });
-    const t1 = el("text", { class: "lbl-name", y: -5 }, label);
-    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 12.5 : 10 }, sub);
-    g.append(rect, t1, t2);
+    g.append(el("rect", { x: -BADGE[0] / 2, y: -BADGE[1] / 2, width: BADGE[0], height: BADGE[1], rx: 7 }),
+      el("text", { class: "lbl-name", y: -3 }, name(id)),
+      el("text", { class: "lbl-pct" + (shown(r) ? "" : " muted"), y: 14 }, rateText(r)));
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
-    const wd = Math.max(t1.getComputedTextLength(), t2.getComputedTextLength()) + 10;
-    rect.setAttribute("x", -wd / 2); rect.setAttribute("width", wd);
   });
   fitBadges(1);
 }
@@ -235,5 +230,6 @@ function setupZoom() {
 }
 
 const VB = [960, 720];
+const BADGE = [58, 36]; // 배지 크기(화면 px). 바꾸면 blocks.json 배지 위치도 다시 계산해야 겹치지 않는다.
 setupZoom();
 load();
