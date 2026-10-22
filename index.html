@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261021a" />
+  <link rel="stylesheet" href="style.css?v=20261022a" />
 </head>
 <body>
 
@@ -374,13 +374,67 @@
       <div class="container">
         <h2 class="reveal">사업 구역도</h2>
         <p class="section-lede reveal">
-          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 지번 단위로 표시되어 있으니,
-          본인 주소의 지번이 구역 내에 포함되는지 확인해 보실 수 있습니다.
+          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 아래 칸에 지번을 넣으시면
+          지도에서 위치를 찾아 구역 안인지 알려 드립니다.
         </p>
+
+        <!-- 우리 집 찾기 -->
+        <div class="finder reveal">
+          <form class="finder-form" id="finder-form" role="search">
+            <label for="finder-input" class="finder-label">우리 집 지번</label>
+            <div class="finder-row">
+              <input id="finder-input" type="text" inputmode="text" autocomplete="off"
+                     placeholder="예: 346-85" aria-describedby="finder-help" />
+              <button type="submit">찾기</button>
+            </div>
+            <p class="finder-help" id="finder-help">등기부등본이나 재산세 고지서의 지번(예: 화곡동 346-85)을 넣어 주세요.</p>
+          </form>
+          <div class="finder-result" id="finder-result" aria-live="polite" hidden></div>
+        </div>
+
         <figure class="map-figure reveal">
-          <img src="assets/district-map.jpg" alt="화곡1동 도심 공공주택 복합사업 구역도" />
-          <figcaption>구역 경계 및 주변 지형 (자료 제공: 추진위원회)</figcaption>
+          <div class="finder-map" id="finder-map">
+            <div class="finder-stage" id="finder-stage">
+              <picture>
+                <source srcset="assets/district-map-hd.webp" type="image/webp" />
+                <img src="assets/district-map-hd.jpg" width="1448" height="1086"
+                     alt="화곡1동 도심 공공주택 복합사업 구역도" />
+              </picture>
+              <svg viewBox="0 0 1448 1086" aria-hidden="true"><g id="finder-marks"></g></svg>
+            </div>
+            <button type="button" class="finder-reset" id="finder-reset" hidden>전체 보기</button>
+          </div>
+          <figcaption>
+            원본 구역도(자료 제공: 추진위원회)를 바탕으로 다시 그린 지도입니다.
+            <a href="assets/district-map.jpg" target="_blank" rel="noopener">원본 구역도 보기</a>
+          </figcaption>
         </figure>
+
+        <!-- 제출 3단계 -->
+        <ol class="steps reveal-stagger">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <h3>우리 집 확인</h3>
+              <p>위 칸에서 지번을 찾아 구역 안인지 확인합니다.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <h3>주민등록증 챙기기</h3>
+              <p>등기부등본은 확인용이라 없어도 됩니다. <a href="#documents">제출 서류 보기</a></p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <h3>유림부동산 방문</h3>
+              <p>현장에서 의향서와 동의서를 쓰고 지장을 찍습니다. <a href="#submit">위치·시간 보기</a></p>
+            </div>
+          </li>
+        </ol>
+
         <p class="note reveal">
           본인 필지가 구역에 포함되는지 불분명하시면 아래 연락처로 문의해 주시기 바랍니다.
           큰 지번에 가려 표기가 안 된 경우도 포함된 구역일 수 있습니다.
@@ -738,6 +792,109 @@
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
       targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // 우리 집 찾기: 지번을 넣으면 구역도에서 위치를 표시하고 구역 안/밖/제외를 알려 준다.
+    // 판정은 지도에 적힌 번호 기준이라, 못 찾은 번호를 '구역 밖'이라고 말하지 않는다.
+    (function () {
+      var form = document.getElementById('finder-form');
+      if (!form) return;
+      var input = document.getElementById('finder-input');
+      var result = document.getElementById('finder-result');
+      var map = document.getElementById('finder-map');
+      var stage = document.getElementById('finder-stage');
+      var marks = document.getElementById('finder-marks');
+      var reset = document.getElementById('finder-reset');
+      var W = 1448, H = 1086, ZOOM = 2.6;
+      var TEL = '<a href="tel:010-8367-2346" data-track="tel-chair-finder">010-8367-2346</a>';
+      var lots = null;
+
+      function load() {
+        if (lots) return Promise.resolve(lots);
+        return fetch('assets/lots.json').then(function (r) { return r.json(); }).then(function (rows) {
+          lots = rows.map(function (r) { return { id: r[0], x: r[1], y: r[2], s: r[3] }; });
+          return lots;
+        });
+      }
+
+      // "화곡동 346-85", "346번지 85", "３４６－８５" 모두 [346, 85]로
+      function parse(text) {
+        var t = text.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+        return t.match(/\d+/g) || [];
+      }
+
+      function zoomTo(pts) {
+        var cx = 0, cy = 0;
+        pts.forEach(function (p) { cx += p.x; cy += p.y; });
+        cx /= pts.length; cy /= pts.length;
+        var z = pts.length > 1 ? 1.6 : ZOOM;
+        var f = map.clientWidth / W, vw = map.clientWidth, vh = map.clientWidth * H / W;
+        var tx = Math.min(0, Math.max(vw - vw * z, vw / 2 - cx * f * z));
+        var ty = Math.min(0, Math.max(vh - vh * z, vh / 2 - cy * f * z));
+        stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + z + ')';
+        reset.hidden = false;
+      }
+
+      function unzoom() {
+        stage.style.transform = '';
+        marks.innerHTML = '';
+        reset.hidden = true;
+      }
+
+      function mark(pts) {
+        marks.innerHTML = pts.map(function (p) {
+          return '<circle class="finder-pin is-' + p.s + '" cx="' + p.x + '" cy="' + p.y + '" r="20"></circle>';
+        }).join('');
+      }
+
+      function say(html) {
+        result.innerHTML = html + '<p class="finder-foot">지도 기준 안내입니다. 정확한 포함 여부는 추진위원장님(' + TEL + ')께 확인해 주세요.</p>';
+        result.hidden = false;
+      }
+
+      var LABEL = {
+        i: '사업구역 <strong>안</strong>입니다. 동의서를 내실 수 있습니다.',
+        x: '사업구역에서 <strong>제외</strong>된 필지입니다.',
+        o: '지도상 사업구역 <strong>밖</strong>입니다.'
+      };
+
+      function show(id) {
+        var hits = lots.filter(function (l) { return l.id === id; });
+        if (!hits.length) {
+          unzoom();
+          say('<p class="finder-msg is-none">지도에서 <strong>' + id + '</strong> 번호를 찾지 못했습니다.</p>' +
+              '<p>큰 지번에 가려 번호가 보이지 않는 필지도 구역에 포함될 수 있습니다.</p>');
+          return;
+        }
+        mark(hits);
+        zoomTo(hits);
+        var msg = '<p class="finder-msg is-' + hits[0].s + '"><strong>' + id + '</strong> · ' + LABEL[hits[0].s] + '</p>';
+        if (hits.length > 1) msg += '<p>지도에 같은 번호가 ' + hits.length + '곳 있어 모두 표시했습니다.</p>';
+        say(msg);
+        map.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var nums = parse(input.value);
+        if (!nums.length) { input.focus(); return; }
+        load().then(function () {
+          if (nums.length >= 2) { show(nums[nums.length - 2] + '-' + nums[nums.length - 1]); return; }
+          // 부번만 넣은 경우: 본번이 다른 후보를 고르게 한다
+          var bu = '-' + nums[0];
+          var cands = lots.filter(function (l) { return l.id.slice(-bu.length) === bu; });
+          unzoom();
+          if (!cands.length) { show(nums[0]); return; }
+          say('<p>본번(앞 번호)까지 넣어 주세요. 이 중 하나인가요?</p><div class="finder-cands">' +
+              cands.map(function (c) { return '<button type="button" data-id="' + c.id + '">' + c.id + '</button>'; }).join('') + '</div>');
+        });
+      });
+
+      result.addEventListener('click', function (e) {
+        var id = e.target.getAttribute && e.target.getAttribute('data-id');
+        if (id) { input.value = id; show(id); }
+      });
+      reset.addEventListener('click', unzoom);
     })();
 
     // Share button
