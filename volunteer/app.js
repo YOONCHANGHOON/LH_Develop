@@ -29,9 +29,9 @@ const has = (r) => !!r && r.total > 0 && (!!r.date || DEMO);
 const shown = (r) => has(r) && r.total >= SMALL;
 // 동의율은 초록 한 가지 색의 진하기로만 나타낸다.
 const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
+const level = (r) => (!shown(r) ? 0 : pct(r) < MIN_RATE ? 1 : pct(r) < TARGET ? 2 : 3);
 const rateText = (r) => (!has(r) ? "자료 없음" : !shown(r) ? "소수 비공개" : fmt(pct(r)));
 const name = (id) => id.replace("-", " ");
-let ZOOM = null;
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -46,25 +46,22 @@ function el(tag, attrs = {}, text) {
 function drawMap(blocks, byId) {
   const svg = $("map-svg");
   svg.replaceChildren();
-  // 번지마다 외곽선 하나로 묶은 모양(blocks.json의 groups)을 한 덩어리로 그린다.
+  // 번지 윤곽(blocks.json의 groups)은 보이지 않게 깔아 두고 누르는 영역으로만 쓴다.
   blocks.groups.forEach((gp) => {
-    const r = byId[gp.id];
     const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
-    const path = el("path", { class: "grp" + (shown(r) ? "" : " none"), "data-id": gp.id, d, "fill-rule": "evenodd" });
-    path.style.fill = color(r);
+    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd" });
     path.addEventListener("click", () => select(gp.id));
     svg.appendChild(path);
-    BOX[gp.id] = gp.polys.flat();
   });
-  // 라벨: 흰 배지에 번지 이름과 동의율
+  // 배지: 번지 이름과 동의율. 배지 바탕색이 동의율 단계를 나타낸다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
-    const g = el("g", { class: "badge" });
+    const g = el("g", { class: "badge lv" + level(r), "data-id": id });
     const label = name(id), sub = rateText(r);
     g.dataset.x = x; g.dataset.y = y;
-    const rect = el("rect", { y: -15, height: 30, rx: 7 });
-    const t1 = el("text", { class: "lbl", y: -2 }, label);
-    const t2 = el("text", { class: "lbl lbl-sub" + (shown(r) ? "" : " muted"), y: 11 }, sub);
+    const rect = el("rect", { y: -18, height: 36, rx: 8 });
+    const t1 = el("text", { class: "lbl-name", y: -5 }, label);
+    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 13 : 11 }, sub);
     g.append(rect, t1, t2);
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
@@ -81,19 +78,12 @@ function fitBadges(s) {
     g.setAttribute("transform", `translate(${g.dataset.x} ${g.dataset.y}) scale(${q})`));
 }
 
-const BOX = {};
-// 지도에서 번지를 누르거나 목록을 누르면 그 번지로 확대하고 목록에 표시한다.
-function select(id, fromList) {
-  document.querySelectorAll(".grp").forEach((a) => a.classList.toggle("on", a.dataset.id === id));
-  if (ZOOM && BOX[id]) ZOOM.to(BOX[id]);
-  if (fromList) $("map-view").scrollIntoView({ behavior: "smooth", block: "center" });
-  else highlight(id);
-}
-
-function highlight(id) {
-  document.querySelectorAll(".rank li").forEach((li) => li.classList.toggle("hl", li.dataset.id === id));
-  const li = document.querySelector(`.rank li[data-id="${id}"]`);
-  if (li) li.scrollIntoView({ behavior: "smooth", block: "center" });
+// 지도 번지나 목록을 누르면 지도·배지·목록에서 그 번지만 강조한다. 다시 누르면 해제.
+let ACTIVE = null;
+function select(id) {
+  ACTIVE = ACTIVE === id ? null : id;
+  $("map-svg").classList.toggle("has-on", !!ACTIVE);
+  document.querySelectorAll(".grp, .badge, .rank li").forEach((e) => e.classList.toggle("on", e.dataset.id === ACTIVE));
 }
 
 function drawRank(rows) {
@@ -118,7 +108,7 @@ function drawRank(rows) {
     mid.append(bar, sub);
     const p = document.createElement("span"); p.className = "pct" + (shown(r) ? "" : " muted"); p.textContent = shown(r) ? fmt(pct(r)) : "–";
     li.append(no, mid, p);
-    li.addEventListener("click", () => select(r.id, true));
+    li.addEventListener("click", () => select(r.id));
     ol.appendChild(li);
   });
 }
@@ -216,29 +206,14 @@ function setupZoom() {
   view.addEventListener("pointercancel", up);
   // 끌고 난 뒤 손을 뗄 때 번지가 눌리지 않게 한다
   view.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
-  view.addEventListener("dblclick", (e) => { const [cx, cy] = local(e); zoomAt(cx, cy, s > 1.5 ? 1 : 2.5); });
-
-  // 번지 꼭짓점들(viewBox 좌표)을 받아 화면 가운데로 확대한다.
-  const to = (pts) => {
-    const k = view.clientWidth / VB[0];
-    const xs = pts.map((p) => p[0] * k), ys = pts.map((p) => p[1] * k);
-    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-    const W = view.clientWidth, H = view.clientHeight;
-    s = Math.min(MAX, Math.max(1, Math.min((W * 0.85) / (x1 - x0), (H * 0.85) / (y1 - y0))));
-    x = W / 2 - ((x0 + x1) / 2) * s;
-    y = H / 2 - ((y0 + y1) / 2) * s;
-    box.classList.add("glide"); apply();
-    setTimeout(() => box.classList.remove("glide"), 350);
-  };
 
   const mid = () => [view.clientWidth / 2, view.clientHeight / 2];
   $("zoom-in").addEventListener("click", () => zoomAt(...mid(), s * 1.5));
   $("zoom-out").addEventListener("click", () => zoomAt(...mid(), s / 1.5));
   $("zoom-reset").addEventListener("click", () => { s = 1; x = y = 0; apply(); });
   window.addEventListener("resize", apply);
-  return { to };
 }
 
 const VB = [960, 720];
-ZOOM = setupZoom();
+setupZoom();
 load();
