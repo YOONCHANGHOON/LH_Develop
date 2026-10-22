@@ -17,10 +17,13 @@ function parseCsv(text) {
 }
 
 // ?demo 로 열면 화면 확인용 임의 값을 채운다 (실제 데이터 아님).
+// 데모 소유자 수 = 구역 안 필지 수(대응표 기준)
+const DEMO_TOTAL = { "343": 30, "344": 14, "345": 15, "346-A": 29, "346-B": 33, "346-C": 21, "346-D": 16, "346-E": 15,
+  "347": 15, "348-A": 17, "348-B": 16, "422": 6, "426": 5, "423": 27 };
 function applyDemo(rows) {
   const seed = [0.05, 0.2, 0.35, 0.12, 0.4, 0.08, 0.5, 0.25, 0.0];
   return rows.map((r, i) => {
-    const total = r.total || 8 + ((i * 7) % 30);
+    const total = r.total || DEMO_TOTAL[r.id] || 10;
     return { ...r, total, agree: Math.round(total * seed[i % seed.length]), memo: "데모 값" };
   });
 }
