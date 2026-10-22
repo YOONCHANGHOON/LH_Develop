@@ -46,10 +46,15 @@ function el(tag, attrs = {}, text) {
 function drawMap(blocks, byId) {
   const svg = $("map-svg");
   svg.replaceChildren();
-  // 번지 윤곽(blocks.json의 groups)은 보이지 않게 깔아 두고 누르는 영역으로만 쓴다.
+  // 구역 사이 경계선: 이웃 구역이 공유하는 변(blocks.lines)만 한 번씩 그린다.
+  // 바깥 경계는 지도의 빨간 점선을 그대로 쓴다. 346 안의 작업 구분(sub)은 옅은 점선.
+  const ln = (cls, l) => el("line", { class: cls + " " + l.kind, x1: l.a[0], y1: l.a[1], x2: l.b[0], y2: l.b[1], "vector-effect": "non-scaling-stroke" });
+  blocks.lines.forEach((l) => svg.appendChild(ln("bd-halo", l)));
+  blocks.lines.forEach((l) => svg.appendChild(ln("bd", l)));
+  // 구역 윤곽: 평소엔 보이지 않는 누르는 영역, 선택하면 테두리만 굵게 표시
   blocks.groups.forEach((gp) => {
     const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
-    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd" });
+    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd", "vector-effect": "non-scaling-stroke" });
     path.addEventListener("click", () => select(gp.id));
     svg.appendChild(path);
   });
@@ -59,13 +64,13 @@ function drawMap(blocks, byId) {
     const g = el("g", { class: "badge lv" + level(r), "data-id": id });
     const label = name(id), sub = rateText(r);
     g.dataset.x = x; g.dataset.y = y;
-    const rect = el("rect", { y: -18, height: 36, rx: 8 });
-    const t1 = el("text", { class: "lbl-name", y: -5 }, label);
-    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 13 : 11 }, sub);
+    const rect = el("rect", { y: -15, height: 30, rx: 7 });
+    const t1 = el("text", { class: "lbl-name", y: -4 }, label);
+    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 11 : 9 }, sub);
     g.append(rect, t1, t2);
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
-    const wd = Math.max(t1.getComputedTextLength(), t2.getComputedTextLength()) + 12;
+    const wd = Math.max(t1.getComputedTextLength(), t2.getComputedTextLength()) + 10;
     rect.setAttribute("x", -wd / 2); rect.setAttribute("width", wd);
   });
   fitBadges(1);
