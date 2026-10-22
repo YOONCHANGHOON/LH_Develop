@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#0e2e24" />
+  <title>봉사자용 동의 현황</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="volunteer.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <p class="eyebrow">봉사자 전용 · 외부 공유 금지</p>
+      <h1>번지별 동의 현황</h1>
+      <p class="updated" id="updated">불러오는 중…</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="summary" aria-label="전체 요약">
+      <div class="tile"><span class="tile-label">전체 동의율</span><strong id="total-rate">–</strong></div>
+      <div class="tile"><span class="tile-label">동의 / 소유자</span><strong id="total-count">–</strong></div>
+      <div class="tile"><span class="tile-label">30%까지</span><strong id="to-target">–</strong></div>
+    </section>
+
+    <section class="card">
+      <h2>구역도</h2>
+      <div class="map-view" id="map-view">
+        <div class="map-box" id="map-box">
+          <picture>
+            <source srcset="../assets/district-map-hd.webp" type="image/webp" />
+            <img id="map-img" src="../assets/district-map-hd.jpg" alt="구역도" width="1448" height="1086" />
+          </picture>
+          <svg id="map-svg" viewBox="0 0 960 720" role="img" aria-label="번지별 동의율 지도"></svg>
+        </div>
+        <div class="zoom-ctl">
+          <button type="button" id="zoom-in" aria-label="확대">+</button>
+          <button type="button" id="zoom-out" aria-label="축소">−</button>
+          <button type="button" id="zoom-reset" aria-label="원래 크기">⟲</button>
+        </div>
+      </div>
+      <p class="zoom-hint">번지나 배지를 누르면 그 번지가 표시됩니다. 두 손가락이나 +/− 버튼으로 확대</p>
+      <ul class="legend">
+        <li>배지: 위 번지 · 아래 동의율 (– 는 자료 없음)</li>
+      </ul>
+      <ul class="legend">
+        <li><i class="lg-line"></i>번지 경계</li>
+        <li><i class="lg-sub"></i>같은 번지 안 A·B… 구분 (공식 구분 아님)</li>
+        <li><i class="lg-zone"></i>사업구역 경계</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>이번 주 우선순위 <small>동의율 낮은 순</small></h2>
+      <ol class="rank" id="rank"></ol>
+    </section>
+
+    <p class="note">
+      동의율 = 동의서 낸 소유자 ÷ 그 번지 전체 소유자입니다. 소유자 수가 아직 없는 번지는 &lsquo;자료 없음&rsquo;으로 나옵니다.
+      이 화면에는 개인정보(성명·연락처·집별 동의 여부)를 넣지 않습니다.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
