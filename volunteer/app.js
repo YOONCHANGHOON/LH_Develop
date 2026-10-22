@@ -3,6 +3,7 @@
 const SHEET_CSV_URL = "";
 const TARGET = 30;  // 목표 동의율(%) — 30% 이상 가산점
 const MIN_RATE = 10; // 신청 가능 기준(%)
+const SMALL = 10;    // 소유자가 이보다 적은 번지는 비율을 가린다(누가 냈는지 짐작되지 않게)
 
 const NS = "http://www.w3.org/2000/svg";
 const $ = (id) => document.getElementById(id);
@@ -17,14 +18,20 @@ function parseCsv(text) {
 // ?demo 로 열면 화면 확인용 임의 값을 채운다 (실제 데이터 아님).
 function applyDemo(rows) {
   const seed = [0.05, 0.2, 0.35, 0.12, 0.4, 0.08, 0.5, 0.25, 0.0];
-  return rows.map((r, i) => ({ ...r, agree: Math.round(r.total * seed[i % seed.length]), memo: "데모 값" }));
+  return rows.map((r, i) => {
+    const total = r.total || 8 + ((i * 7) % 30);
+    return { ...r, total, agree: Math.round(total * seed[i % seed.length]), memo: "데모 값" };
+  });
 }
 
-// 동의율 상태색: 막대·배지 점에 쓴다. 지도 면 색은 번지 구분용(blocks.colors)이다.
-const color = (r) => (r.total === 0 || r.agree === 0 && !r.date && !DEMO ? "var(--c-none)"
-  : pct(r) < MIN_RATE ? "var(--c-low)" : pct(r) < TARGET ? "var(--c-mid)" : "var(--c-high)");
+// 자료 있음 = 소유자 수가 있고 한 번이라도 갱신됨. 비율 공개 = 자료 있음 + 소유자 SMALL명 이상.
+const has = (r) => !!r && r.total > 0 && (!!r.date || DEMO);
+const shown = (r) => has(r) && r.total >= SMALL;
+// 동의율은 초록 한 가지 색의 진하기로만 나타낸다.
+const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
+const rateText = (r) => (!has(r) ? "자료 없음" : !shown(r) ? "소수 비공개" : fmt(pct(r)));
 const name = (id) => id.replace("-", " ");
-let COLORS = {};
+let ZOOM = null;
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -43,25 +50,44 @@ function drawMap(blocks, byId) {
   blocks.groups.forEach((gp) => {
     const r = byId[gp.id];
     const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
-    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd" });
-    path.style.fill = path.style.stroke = COLORS[gp.id] || "#999";
-    path.addEventListener("click", () => highlight(gp.id));
+    const path = el("path", { class: "grp" + (shown(r) ? "" : " none"), "data-id": gp.id, d, "fill-rule": "evenodd" });
+    path.style.fill = color(r);
+    path.addEventListener("click", () => select(gp.id));
     svg.appendChild(path);
+    BOX[gp.id] = gp.polys.flat();
   });
-  // 라벨: 진한 배지에 번지 이름과 동의율, 동의율 상태는 색 점으로 표시한다.
+  // 라벨: 흰 배지에 번지 이름과 동의율
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
     const g = el("g", { class: "badge" });
-    const label = name(id);
-    const wd = Math.max(54, label.length * 9 + 22);
-    g.append(el("rect", { x: x - wd / 2, y: y - 21, width: wd, height: 42, rx: 8 }));
-    g.append(el("text", { class: "lbl", x, y: y - 4 }, label));
-    const has = r && (r.date || DEMO);
-    const dot = el("circle", { cx: x - 20, cy: y + 11, r: 5 });
-    dot.style.fill = has ? color(r) : "var(--c-none)";
-    g.append(dot, el("text", { class: "lbl lbl-sub", x: x + 6, y: y + 16 }, has ? fmt(pct(r)) : "–"));
+    const label = name(id), sub = rateText(r);
+    g.dataset.x = x; g.dataset.y = y;
+    const rect = el("rect", { y: -15, height: 30, rx: 7 });
+    const t1 = el("text", { class: "lbl", y: -2 }, label);
+    const t2 = el("text", { class: "lbl lbl-sub" + (shown(r) ? "" : " muted"), y: 11 }, sub);
+    g.append(rect, t1, t2);
+    g.addEventListener("click", () => select(id));
     svg.appendChild(g);
+    const wd = Math.max(t1.getComputedTextLength(), t2.getComputedTextLength()) + 12;
+    rect.setAttribute("x", -wd / 2); rect.setAttribute("width", wd);
   });
+  fitBadges(1);
+}
+
+// 확대해도 배지 글씨는 화면에서 같은 크기로 보이게 한다.
+function fitBadges(s) {
+  const q = VB[0] / ($("map-view").clientWidth * s);
+  document.querySelectorAll(".badge").forEach((g) =>
+    g.setAttribute("transform", `translate(${g.dataset.x} ${g.dataset.y}) scale(${q})`));
+}
+
+const BOX = {};
+// 지도에서 번지를 누르거나 목록을 누르면 그 번지로 확대하고 목록에 표시한다.
+function select(id, fromList) {
+  document.querySelectorAll(".grp").forEach((a) => a.classList.toggle("on", a.dataset.id === id));
+  if (ZOOM && BOX[id]) ZOOM.to(BOX[id]);
+  if (fromList) $("map-view").scrollIntoView({ behavior: "smooth", block: "center" });
+  else highlight(id);
 }
 
 function highlight(id) {
@@ -73,35 +99,37 @@ function highlight(id) {
 function drawRank(rows) {
   const ol = $("rank");
   ol.replaceChildren();
-  rows.slice().sort((a, b) => pct(a) - pct(b)).forEach((r) => {
+  // 자료 있는 번지를 동의율 낮은 순으로, 자료 없는 번지는 뒤에 둔다.
+  rows.slice().sort((a, b) => (has(b) - has(a)) || pct(a) - pct(b)).forEach((r) => {
     const li = document.createElement("li");
     li.dataset.id = r.id;
     const no = document.createElement("span"); no.className = "no";
-    const sw = document.createElement("i"); sw.style.background = COLORS[r.id] || "#999";
-    no.append(sw, name(r.id));
+    no.append(name(r.id));
     const mid = document.createElement("div");
     const bar = document.createElement("div"); bar.className = "bar";
-    const fill = document.createElement("b"); fill.style.width = Math.min(100, pct(r)) + "%"; fill.style.background = color(r);
+    const fill = document.createElement("b"); fill.style.width = (shown(r) ? Math.min(100, pct(r)) : 0) + "%"; fill.style.background = color(r);
     bar.appendChild(fill);
     const sub = document.createElement("div"); sub.className = "sub";
     const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-    sub.textContent = `${r.agree} / ${r.total}필지 · 30%까지 ${need}필지 더` + (r.memo ? ` · ${r.memo}` : "");
+    const left = need ? `30%까지 ${need}명 더` : "30% 달성";
+    sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
+      : !shown(r) ? `소유자 ${r.total}명 · ${left}`
+      : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");
     mid.append(bar, sub);
-    const p = document.createElement("span"); p.className = "pct"; p.textContent = fmt(pct(r));
+    const p = document.createElement("span"); p.className = "pct" + (shown(r) ? "" : " muted"); p.textContent = shown(r) ? fmt(pct(r)) : "–";
     li.append(no, mid, p);
-    li.addEventListener("click", () => {
-      document.querySelectorAll(".grp").forEach((a) => a.classList.toggle("on", a.dataset.id === r.id));
-    });
+    li.addEventListener("click", () => select(r.id, true));
     ol.appendChild(li);
   });
 }
 
 function drawSummary(rows) {
+  rows = rows.filter(has);
   const total = rows.reduce((s, r) => s + r.total, 0);
   const agree = rows.reduce((s, r) => s + r.agree, 0);
   $("total-rate").textContent = total ? fmt((agree / total) * 100) : "–";
-  $("total-count").textContent = `${agree} / ${total}`;
-  $("to-target").textContent = `${Math.max(0, Math.ceil((total * TARGET) / 100) - agree)}필지`;
+  $("total-count").textContent = total ? `${agree} / ${total}` : "–";
+  $("to-target").textContent = total ? `${Math.max(0, Math.ceil((total * TARGET) / 100) - agree)}명` : "–";
   const dates = rows.map((r) => r.date).filter(Boolean).sort();
   $("updated").textContent = DEMO ? "데모 화면 · 실제 데이터가 아닙니다"
     : dates.length ? `마지막 갱신 ${dates[dates.length - 1]}` : "아직 입력된 동의 현황이 없습니다";
@@ -118,7 +146,6 @@ async function load() {
     ]);
     let rows = parseCsv(csv);
     if (DEMO) rows = applyDemo(rows);
-    COLORS = blocks.colors;
     const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
     drawSummary(rows);
     drawMap(blocks, byId);
@@ -143,6 +170,7 @@ function setupZoom() {
     y = Math.min(0, Math.max(H - H * s, y));
     box.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
     view.classList.toggle("zoomed", s > 1.01);
+    fitBadges(s);
   }
   function zoomAt(cx, cy, ns) {
     ns = Math.min(MAX, Math.max(1, ns));
@@ -190,12 +218,27 @@ function setupZoom() {
   view.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
   view.addEventListener("dblclick", (e) => { const [cx, cy] = local(e); zoomAt(cx, cy, s > 1.5 ? 1 : 2.5); });
 
+  // 번지 꼭짓점들(viewBox 좌표)을 받아 화면 가운데로 확대한다.
+  const to = (pts) => {
+    const k = view.clientWidth / VB[0];
+    const xs = pts.map((p) => p[0] * k), ys = pts.map((p) => p[1] * k);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const W = view.clientWidth, H = view.clientHeight;
+    s = Math.min(MAX, Math.max(1, Math.min((W * 0.85) / (x1 - x0), (H * 0.85) / (y1 - y0))));
+    x = W / 2 - ((x0 + x1) / 2) * s;
+    y = H / 2 - ((y0 + y1) / 2) * s;
+    box.classList.add("glide"); apply();
+    setTimeout(() => box.classList.remove("glide"), 350);
+  };
+
   const mid = () => [view.clientWidth / 2, view.clientHeight / 2];
   $("zoom-in").addEventListener("click", () => zoomAt(...mid(), s * 1.5));
   $("zoom-out").addEventListener("click", () => zoomAt(...mid(), s / 1.5));
   $("zoom-reset").addEventListener("click", () => { s = 1; x = y = 0; apply(); });
   window.addEventListener("resize", apply);
+  return { to };
 }
 
-setupZoom();
+const VB = [960, 720];
+ZOOM = setupZoom();
 load();

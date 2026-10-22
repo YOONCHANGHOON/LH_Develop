@@ -5,14 +5,11 @@
   --muted: #5a6560;
   --accent: #1f4a3a;
   --border: #e3e7e4;
-  --c-none: #9aa3a0;
-  --c-low: #c2452d;
-  --c-mid: #d98e1f;
-  --c-high: #2f7d4f;
-  --b-none: #4f5a56;
-  --b-low: #a8321e;
-  --b-mid: #9a5f08;
-  --b-high: #1f6a40;
+  /* 동의율: 초록 한 가지 색의 진하기 (g0 = 자료 없음) */
+  --g0: #ffffff;
+  --g1: #c7e9c0;
+  --g2: #6fbf73;
+  --g3: #1f7a3f;
 }
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
@@ -33,7 +30,7 @@ body {
 .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
 .tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
 .tile-label { display: block; font-size: 12px; color: var(--muted); }
-.tile strong { font-size: 22px; color: var(--accent); }
+.tile strong { font-size: 20px; color: var(--accent); white-space: nowrap; }
 
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
 .card h2 { margin: 0 0 12px; font-size: 18px; }
@@ -43,26 +40,29 @@ body {
 .map-view.zoomed { touch-action: none; cursor: grab; }
 .map-view.dragging { cursor: grabbing; }
 .map-box { position: relative; transform-origin: 0 0; will-change: transform; }
-.zoom-ctl { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.zoom-ctl { position: absolute; right: 8px; bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
 .zoom-ctl button { width: 36px; height: 36px; border: 1px solid #c9d1cd; border-radius: 8px; background: #fff; color: #1a1f1c; font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 .zoom-hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
-.map-box img { display: block; width: 100%; height: auto; }
+.map-box img { display: block; width: 100%; height: auto; filter: grayscale(1) contrast(.9) brightness(1.08); }
+.map-box.glide { transition: transform .3s ease; }
 .map-box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.grp { fill-opacity: 0.55; stroke-width: 3.5; stroke-linejoin: round; transition: fill-opacity .15s; cursor: pointer; }
-.grp:hover, .grp.on { fill-opacity: 0.85; stroke-width: 4.5; }
-.badge rect { fill: #1f6a40; stroke: #fff; stroke-width: 2; }
-.lbl { font-size: 15px; font-weight: 800; text-anchor: middle; fill: #fff; pointer-events: none; }
-.lbl-sub { font-size: 13px; font-weight: 700; }
-.badge circle { stroke: #fff; stroke-width: 1.5; }
+.grp { fill-opacity: 0.7; stroke: #1f4a3a; stroke-width: 2; stroke-linejoin: round; transition: fill-opacity .15s; cursor: pointer; }
+.grp.none { fill-opacity: 0.25; stroke: #7a8580; stroke-dasharray: 6 4; }
+.grp:hover, .grp.on { fill-opacity: 0.85; stroke-width: 4; stroke: #0e2e24; stroke-dasharray: none; }
+.badge { cursor: pointer; }
+.badge rect { fill: #fff; stroke: #1a1f1c; stroke-opacity: .35; stroke-width: 1.5; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+.lbl { font-size: 12px; font-weight: 800; text-anchor: middle; fill: #1a1f1c; pointer-events: none; }
+.lbl-sub { font-size: 11px; font-weight: 700; }
+.lbl.muted, .pct.muted { fill: var(--muted); color: var(--muted); font-weight: 600; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; list-style: none; padding: 0; margin: 12px 0 0; font-size: 13px; color: var(--muted); }
-.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1px solid #1f4a3a55; }
+.legend i.lg-none { background: #fff; border: 1px dashed #7a8580; }
 
 .rank { list-style: none; margin: 0; padding: 0; }
 .rank li { display: grid; grid-template-columns: 96px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--border); }
 .rank li:first-child { border-top: 0; }
 .rank .no { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 6px; }
-.rank .no i { width: 14px; height: 14px; border-radius: 4px; flex: none; }
 .bar { height: 10px; background: #e9eeeb; border-radius: 99px; overflow: hidden; position: relative; }
 .bar b { display: block; height: 100%; border-radius: 99px; }
 .bar::after { content: ""; position: absolute; left: 30%; top: 0; bottom: 0; width: 2px; background: #1a1f1c55; }

@@ -23,7 +23,7 @@
   <main class="wrap">
     <section class="summary" aria-label="전체 요약">
       <div class="tile"><span class="tile-label">전체 동의율</span><strong id="total-rate">–</strong></div>
-      <div class="tile"><span class="tile-label">동의 / 전체</span><strong id="total-count">–</strong></div>
+      <div class="tile"><span class="tile-label">동의 / 소유자</span><strong id="total-count">–</strong></div>
       <div class="tile"><span class="tile-label">30%까지</span><strong id="to-target">–</strong></div>
     </section>
 
@@ -31,7 +31,10 @@
       <h2>구역도</h2>
       <div class="map-view" id="map-view">
         <div class="map-box" id="map-box">
-          <img id="map-img" src="../assets/district-map.jpg" alt="구역도" width="960" height="720" />
+          <picture>
+            <source srcset="../assets/district-map-hd.webp" type="image/webp" />
+            <img id="map-img" src="../assets/district-map-hd.jpg" alt="구역도" width="1448" height="1086" />
+          </picture>
           <svg id="map-svg" viewBox="0 0 960 720" role="img" aria-label="번지별 동의율 지도"></svg>
         </div>
         <div class="zoom-ctl">
@@ -40,13 +43,12 @@
           <button type="button" id="zoom-reset" aria-label="원래 크기">⟲</button>
         </div>
       </div>
-      <p class="zoom-hint">두 손가락(또는 마우스 휠)으로 확대, 끌어서 이동, 더블탭으로 확대</p>
+      <p class="zoom-hint">번지를 누르면 그 번지로 확대됩니다. 두 손가락으로 확대, 끌어서 이동</p>
       <ul class="legend">
-        <li class="lg-title">배지의 점:</li>
-        <li><i style="background:var(--c-none)"></i>자료 없음</li>
-        <li><i style="background:var(--c-low)"></i>10% 미만</li>
-        <li><i style="background:var(--c-mid)"></i>10~30%</li>
-        <li><i style="background:var(--c-high)"></i>30% 이상</li>
+        <li><i class="lg-none"></i>자료 없음</li>
+        <li><i style="background:var(--g1)"></i>10% 미만</li>
+        <li><i style="background:var(--g2)"></i>10~30%</li>
+        <li><i style="background:var(--g3)"></i>30% 이상</li>
       </ul>
     </section>
 
@@ -56,8 +58,9 @@
     </section>
 
     <p class="note">
-      필지 수는 구역도에서 센 <strong>추정치</strong>입니다. 실제와 다르면 시트의 &lsquo;전체필지&rsquo;를 고치면 됩니다.
-      이 화면에는 개인정보(성명·연락처·필지별 동의 여부)를 넣지 않습니다.
+      동의율 = 동의서 낸 소유자 ÷ 그 번지 전체 소유자입니다. 소유자 수가 아직 없는 번지는 &lsquo;자료 없음&rsquo;으로 나옵니다.
+      소유자가 10명 미만인 번지는 누가 냈는지 짐작될 수 있어 비율을 가립니다.
+      이 화면에는 개인정보(성명·연락처·집별 동의 여부)를 넣지 않습니다.
     </p>
   </main>
 
