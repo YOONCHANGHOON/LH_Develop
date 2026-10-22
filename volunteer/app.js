@@ -74,9 +74,9 @@ function drawMap(blocks, byId) {
     const g = el("g", { class: "badge lv" + level(r), "data-id": id });
     const label = name(id), sub = rateText(r);
     g.dataset.x = x; g.dataset.y = y;
-    const rect = el("rect", { y: -15, height: 30, rx: 7 });
-    const t1 = el("text", { class: "lbl-name", y: -4 }, label);
-    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 11 : 9 }, sub);
+    const rect = el("rect", { y: -17, height: 34, rx: 8 });
+    const t1 = el("text", { class: "lbl-name", y: -5 }, label);
+    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 12.5 : 10 }, sub);
     g.append(rect, t1, t2);
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);

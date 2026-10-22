@@ -68,9 +68,9 @@ body {
 .badge.on rect { stroke: #0e2e24; stroke-opacity: 1; stroke-width: 3; stroke-dasharray: none; }
 /* 배지: 위는 번지 이름(작고 흐리게), 아래는 동의율(크고 굵게) */
 .badge text { text-anchor: middle; pointer-events: none; }
-.lbl-name { font-size: 9.5px; font-weight: 600; fill: var(--muted); }
-.lbl-pct { font-size: 13.5px; font-weight: 800; fill: #1a1f1c; letter-spacing: -.3px; }
-.lbl-none { font-size: 9.5px; font-weight: 500; fill: #8a938f; }
+.lbl-name { font-size: 10px; font-weight: 600; fill: var(--muted); }
+.lbl-pct { font-size: 17px; font-weight: 800; fill: #1a1f1c; letter-spacing: -.3px; }
+.lbl-none { font-size: 10px; font-weight: 500; fill: #8a938f; }
 .badge.lv2 .lbl-name { fill: #1f3a2c; }
 .badge.lv3 .lbl-name { fill: #d6ebdd; }
 .badge.lv3 .lbl-pct { fill: #fff; }
