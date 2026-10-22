@@ -102,11 +102,13 @@ function drawMap(blocks, byId) {
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
   });
-  fitBadges(1);
+  fitBadges(ZS);
 }
 
-// 확대해도 배지 글씨는 화면에서 같은 크기로 보이게 한다.
+// 확대해도 배지 글씨는 화면에서 같은 크기로 보이게 한다. ZS = 지금 확대 배율(다시 그릴 때 유지)
+let ZS = 1;
 function fitBadges(s) {
+  ZS = s;
   const q = VB[0] / ($("map-view").clientWidth * s);
   document.querySelectorAll(".badge").forEach((g) =>
     g.setAttribute("transform", `translate(${g.dataset.x} ${g.dataset.y}) scale(${q})`));
@@ -116,6 +118,9 @@ function fitBadges(s) {
 let ACTIVE = null;
 function select(id) {
   ACTIVE = ACTIVE === id ? null : id;
+  markActive();
+}
+function markActive() {
   $("map-svg").classList.toggle("has-on", !!ACTIVE);
   document.querySelectorAll(".grp, .badge, .rank li").forEach((e) => e.classList.toggle("on", e.dataset.id === ACTIVE));
 }
@@ -159,7 +164,7 @@ function drawSummary(rows) {
   $("updated").textContent = DEMO ? "데모 화면 · 실제 데이터가 아닙니다"
     : !rows.length ? "아직 입력된 동의 현황이 없습니다"
     : dates.length ? `마지막 갱신 ${dates[dates.length - 1]}`
-    : SHEET_CSV_URL ? "시트에 입력하면 새로고침할 때 바로 반영됩니다" : "";
+    : SHEET_CSV_URL ? `시트 입력이 30초 안에 자동 반영됩니다 · 마지막 확인 ${new Date().toTimeString().slice(0, 5)}` : "";
 }
 
 async function load() {
@@ -179,6 +184,7 @@ async function load() {
     drawSummary(rows);
     drawMap(blocks, byId);
     drawRank(rows);
+    markActive(); // 새로 그려도 선택한 번지 강조 유지
   } catch (e) {
     $("updated").textContent = "데이터를 불러오지 못했습니다. 새로고침해 주세요.";
     console.error(e);
@@ -257,3 +263,6 @@ const VB = [960, 720];
 const BADGE = [58, 36]; // 배지 크기(화면 px). 바꾸면 blocks.json 배지 위치도 다시 계산해야 겹치지 않는다.
 setupZoom();
 load();
+// 시트에 입력한 값이 새로고침 없이 보이도록: 30초마다, 그리고 다른 앱에서 돌아왔을 때 다시 읽는다.
+setInterval(() => { if (document.visibilityState === "visible") load(); }, 30000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") load(); });
