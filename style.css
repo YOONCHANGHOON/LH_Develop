@@ -1075,20 +1075,17 @@ body {
   font-size: 14px;
   color: var(--color-text);
 }
-.mail-addr {
-  font-size: 15px !important;
-  padding: 10px 14px;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
-  margin: 8px 0 !important;
-}
 .mail-note {
   font-size: 13px !important;
   color: var(--color-muted) !important;
 }
+.mail-steps {
+  margin: 8px 0 10px;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.mail-steps li { margin-bottom: 4px; }
 
 /* ─── Document checklist ─── */
 .doc-list {
@@ -1817,6 +1814,38 @@ body {
 .quick-list dd span { font-size: 14px; color: #4a5a53; }
 .quick-warn dt { background: #7a4b00; }
 .quick-warn dd { color: #7a4b00; }
+.quick-map {
+  margin: 4px 0 12px;
+  border-top: 1px solid #e3e8e5;
+  padding-top: 12px;
+}
+.quick-map iframe {
+  display: block;
+  width: 100%;
+  height: 220px;
+  border: 0;
+  border-radius: 10px;
+  background: #e3e8e5;
+}
+.quick-map-cap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a5a53;
+}
+.quick-map-cap strong { color: #1c2b25; }
+.quick-map-cap .nw { white-space: nowrap; }
+.quick-map-cap a {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
 @media (max-width: 480px) {
   .quick { padding: 16px 16px 6px; }
   .quick-list > div { flex-direction: column; gap: 6px; }
