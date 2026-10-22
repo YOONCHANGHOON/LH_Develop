@@ -1,6 +1,6 @@
-// 구글 시트 "웹에 게시 → CSV" 주소를 여기에 넣으면 시트 값이 지도에 반영된다.
-// 비워 두면 같은 폴더의 data.csv를 읽는다.
-const SHEET_CSV_URL = "";
+// 봉사자가 입력하는 구글 시트(링크 공유)의 CSV 내보내기 주소. 시트를 고치면 새로고침 때 바로 반영된다.
+// 비워 두거나 시트를 못 읽으면 같은 폴더의 data.csv를 읽는다.
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1yUVzLTEaM0V595PcRu2vUfJWPJzQBDn40beLnsTZO88/export?format=csv&gid=0";
 const TARGET = 30;  // 목표 동의율(%) — 30% 이상 가산점
 const MIN_RATE = 10; // 신청 가능 기준(%)
 
@@ -9,10 +9,23 @@ const NS = "http://www.w3.org/2000/svg";
 const AREA_COLORS = ["#3d6be6", "#d9408a", "#d8701e", "#8f4fd6", "#1597c4"];
 const $ = (id) => document.getElementById(id);
 
+// 여러 사람이 손으로 입력하는 시트라 값을 너그럽게 읽는다: 따옴표 안 쉼표, "12명"·"1,234" 같은 숫자, "346 a"·"346a번지" 같은 번지.
+function splitCsvLine(line) {
+  const out = []; let cur = "", q = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+    else if (c === '"') q = true; else if (c === ",") { out.push(cur); cur = ""; } else cur += c;
+  }
+  out.push(cur);
+  return out.map((v) => v.trim());
+}
+const num = (v) => Number(String(v || "").replace(/[^\d.]/g, "")) || 0;
+const normId = (v) => String(v || "").replace(/\s|번지/g, "").toUpperCase().replace(/^(\d+)([A-Z])$/, "$1-$2");
 function parseCsv(text) {
-  return text.trim().split(/\r?\n/).slice(1).map((line) => {
-    const [id, total, agree, date, memo] = line.split(",").map((s) => s.trim());
-    return { id, total: Number(total) || 0, agree: Number(agree) || 0, date: date || "", memo: memo || "" };
+  return text.replace(/^\uFEFF/, "").trim().split(/\r?\n/).slice(1).map((line) => {
+    const [id, total, agree, date, memo] = splitCsvLine(line);
+    return { id: normId(id), total: num(total), agree: num(agree), date: date || "", memo: memo || "" };
   }).filter((r) => r.id);
 }
 
@@ -29,7 +42,7 @@ function applyDemo(rows) {
 }
 
 // 자료 있음 = 소유자 수가 있고 한 번이라도 갱신됨.
-const has = (r) => !!r && r.total > 0 && (!!r.date || DEMO);
+const has = (r) => !!r && r.total > 0; // 소유자 수가 들어오면 그때부터 동의율 표시
 // 소유자가 적은 구역에서 0%나 100%면 모두의 제출 여부가 드러나므로 그때만 가린다.
 const SMALL = 10;
 const shown = (r) => has(r) && !(r.total < SMALL && (r.agree === 0 || r.agree >= r.total));
@@ -137,19 +150,23 @@ function drawSummary(rows) {
   $("to-target").textContent = total ? `${Math.max(0, Math.ceil((total * TARGET) / 100) - agree)}명` : "–";
   const dates = rows.map((r) => r.date).filter(Boolean).sort();
   $("updated").textContent = DEMO ? "데모 화면 · 실제 데이터가 아닙니다"
-    : dates.length ? `마지막 갱신 ${dates[dates.length - 1]}` : "아직 입력된 동의 현황이 없습니다";
+    : !rows.length ? "아직 입력된 동의 현황이 없습니다"
+    : dates.length ? `마지막 갱신 ${dates[dates.length - 1]}`
+    : SHEET_CSV_URL ? "시트에 입력하면 새로고침할 때 바로 반영됩니다" : "";
 }
 
 async function load() {
   try {
+    const get = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); });
+    const local = () => get(`data.csv?t=${Date.now()}`);
     const [blocks, csv] = await Promise.all([
       fetch("blocks.json", { cache: "no-cache" }).then((r) => r.json()),
-      fetch(SHEET_CSV_URL ? `${SHEET_CSV_URL}${SHEET_CSV_URL.includes("?") ? "&" : "?"}t=${Date.now()}` : `data.csv?t=${Date.now()}`).then((r) => {
-        if (!r.ok) throw new Error(r.status);
-        return r.text();
-      }),
+      // 시트를 못 읽으면 같은 폴더의 data.csv로 대신한다
+      SHEET_CSV_URL ? get(`${SHEET_CSV_URL}${SHEET_CSV_URL.includes("?") ? "&" : "?"}t=${Date.now()}`).catch(local) : local(),
     ]);
-    let rows = parseCsv(csv);
+    // 지도에 있는 구역만 쓰고, 시트에 빠진 구역은 빈 줄로 채운다
+    const got = Object.fromEntries(parseCsv(csv).map((r) => [r.id, r]));
+    let rows = Object.keys(blocks.labels).sort().map((id) => got[id] || { id, total: 0, agree: 0, date: "", memo: "" });
     if (DEMO) rows = applyDemo(rows);
     const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
     drawSummary(rows);
