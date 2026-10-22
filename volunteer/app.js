@@ -22,11 +22,18 @@ function splitCsvLine(line) {
 }
 const num = (v) => Number(String(v || "").replace(/[^\d.]/g, "")) || 0;
 const normId = (v) => String(v || "").replace(/\s|번지/g, "").toUpperCase().replace(/^(\d+)([A-Z])$/, "$1-$2");
+// 시트 위쪽에 제목·안내 줄이 있어도 되게, "번지"로 시작하는 줄을 머리글로 찾아 칸 이름으로 읽는다.
 function parseCsv(text) {
-  return text.replace(/^\uFEFF/, "").trim().split(/\r?\n/).slice(1).map((line) => {
-    const [id, total, agree, date, memo] = splitCsvLine(line);
-    return { id: normId(id), total: num(total), agree: num(agree), date: date || "", memo: memo || "" };
-  }).filter((r) => r.id);
+  const lines = text.replace(/^\uFEFF/, "").trim().split(/\r?\n/).map(splitCsvLine);
+  const h = lines.findIndex((c) => c[0] === "번지");
+  if (h < 0) return [];
+  const head = lines[h];
+  const col = (f) => head.findIndex(f);
+  const ci = { total: col((t) => t.startsWith("소유자")), agree: col((t) => t === "동의"),
+    date: col((t) => t.startsWith("갱신")), memo: col((t) => t.startsWith("메모")) };
+  const at = (c, i) => (i >= 0 ? c[i] || "" : "");
+  return lines.slice(h + 1).map((c) => ({ id: normId(c[0]), total: num(at(c, ci.total)), agree: num(at(c, ci.agree)),
+    date: at(c, ci.date), memo: at(c, ci.memo) })).filter((r) => r.id);
 }
 
 // ?demo 로 열면 화면 확인용 임의 값을 채운다 (실제 데이터 아님).
