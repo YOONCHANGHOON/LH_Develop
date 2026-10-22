@@ -27,10 +27,13 @@ function applyDemo(rows) {
 
 // 자료 있음 = 소유자 수가 있고 한 번이라도 갱신됨.
 const has = (r) => !!r && r.total > 0 && (!!r.date || DEMO);
+// 소유자가 적은 구역에서 0%나 100%면 모두의 제출 여부가 드러나므로 그때만 가린다.
+const SMALL = 10;
+const shown = (r) => has(r) && !(r.total < SMALL && (r.agree === 0 || r.agree >= r.total));
 // 동의율은 초록 한 가지 색의 진하기로만 나타낸다.
-const color = (r) => (!has(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
-const level = (r) => (!has(r) ? 0 : pct(r) < MIN_RATE ? 1 : pct(r) < TARGET ? 2 : 3);
-const rateText = (r) => (!has(r) ? "자료 없음" : fmt(pct(r)));
+const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
+const level = (r) => (!shown(r) ? 0 : pct(r) < MIN_RATE ? 1 : pct(r) < TARGET ? 2 : 3);
+const rateText = (r) => (!has(r) ? "자료 없음" : !shown(r) ? "비공개" : fmt(pct(r)));
 const name = (id) => id;
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
@@ -74,7 +77,7 @@ function drawMap(blocks, byId) {
     g.dataset.x = x; g.dataset.y = y;
     const rect = el("rect", { y: -17, height: 34, rx: 8 });
     const t1 = el("text", { class: "lbl-name", y: -5 }, label);
-    const t2 = el("text", { class: has(r) ? "lbl-pct" : "lbl-none", y: has(r) ? 12.5 : 10 }, sub);
+    const t2 = el("text", { class: shown(r) ? "lbl-pct" : "lbl-none", y: shown(r) ? 12.5 : 10 }, sub);
     g.append(rect, t1, t2);
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
@@ -102,23 +105,25 @@ function select(id) {
 function drawRank(rows) {
   const ol = $("rank");
   ol.replaceChildren();
-  // 자료 있는 번지를 동의율 낮은 순으로, 자료 없는 번지는 뒤에 둔다.
-  rows.slice().sort((a, b) => (has(b) - has(a)) || pct(a) - pct(b)).forEach((r) => {
+  // 공개 구역은 동의율 낮은 순, 그 뒤에 비공개·자료 없음 구역(비공개를 섞으면 값이 드러난다)
+  const rank = (r) => (shown(r) ? 0 : has(r) ? 1 : 2);
+  rows.slice().sort((a, b) => rank(a) - rank(b) || (rank(a) ? 0 : pct(a) - pct(b))).forEach((r) => {
     const li = document.createElement("li");
     li.dataset.id = r.id;
     const no = document.createElement("span"); no.className = "no";
     no.append(name(r.id));
     const mid = document.createElement("div");
     const bar = document.createElement("div"); bar.className = "bar";
-    const fill = document.createElement("b"); fill.style.width = (has(r) ? Math.min(100, pct(r)) : 0) + "%"; fill.style.background = color(r);
+    const fill = document.createElement("b"); fill.style.width = (shown(r) ? Math.min(100, pct(r)) : 0) + "%"; fill.style.background = color(r);
     bar.appendChild(fill);
     const sub = document.createElement("div"); sub.className = "sub";
     const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
     const left = need ? `30%까지 ${need}명 더` : "30% 달성";
     sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
+      : !shown(r) ? `소유자 ${r.total}명 · 인원이 적어 비공개`
       : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");
     mid.append(bar, sub);
-    const p = document.createElement("span"); p.className = "pct" + (has(r) ? "" : " muted"); p.textContent = has(r) ? fmt(pct(r)) : "–";
+    const p = document.createElement("span"); p.className = "pct" + (shown(r) ? "" : " muted"); p.textContent = shown(r) ? fmt(pct(r)) : "–";
     li.append(no, mid, p);
     li.addEventListener("click", () => select(r.id));
     ol.appendChild(li);
