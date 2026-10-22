@@ -6,6 +6,8 @@ const MIN_RATE = 10; // 신청 가능 기준(%)
 const SMALL = 10;    // 소유자가 이보다 적은 번지는 비율을 가린다(누가 냈는지 짐작되지 않게)
 
 const NS = "http://www.w3.org/2000/svg";
+// 구역 구분 색(초록은 동의율 배지 전용이라 뺀다)
+const AREA_COLORS = ["#3d6be6", "#d9408a", "#d8701e", "#8f4fd6", "#1597c4"];
 const $ = (id) => document.getElementById(id);
 
 function parseCsv(text) {
@@ -31,7 +33,7 @@ const shown = (r) => has(r) && r.total >= SMALL;
 const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
 const level = (r) => (!shown(r) ? 0 : pct(r) < MIN_RATE ? 1 : pct(r) < TARGET ? 2 : 3);
 const rateText = (r) => (!has(r) ? "자료 없음" : !shown(r) ? "소수 비공개" : fmt(pct(r)));
-const name = (id) => id.replace("-", " ");
+const name = (id) => id;
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -46,18 +48,26 @@ function el(tag, attrs = {}, text) {
 function drawMap(blocks, byId) {
   const svg = $("map-svg");
   svg.replaceChildren();
+  // 구역 색: 범위 구분용. 경계를 맞댄 이웃끼리는 다른 색이 되도록 순서대로 고른다.
+  const nb = {};
+  blocks.lines.forEach((l) => l.ids.forEach((a) => (nb[a] = (nb[a] || []).concat(l.ids.filter((b) => b !== a)))));
+  const pick = {};
+  blocks.groups.forEach((gp) => {
+    const used = (nb[gp.id] || []).map((n) => pick[n]);
+    pick[gp.id] = AREA_COLORS.findIndex((_, i) => !used.includes(i));
+  });
+  blocks.groups.forEach((gp) => {
+    const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
+    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd", "vector-effect": "non-scaling-stroke" });
+    path.style.fill = AREA_COLORS[pick[gp.id]];
+    path.addEventListener("click", () => select(gp.id));
+    svg.appendChild(path);
+  });
   // 구역 사이 경계선: 이웃 구역이 공유하는 변(blocks.lines)만 한 번씩 그린다.
   // 바깥 경계는 지도의 빨간 점선을 그대로 쓴다. 346 안의 작업 구분(sub)은 옅은 점선.
   const ln = (cls, l) => el("line", { class: cls + " " + l.kind, x1: l.a[0], y1: l.a[1], x2: l.b[0], y2: l.b[1], "vector-effect": "non-scaling-stroke" });
   blocks.lines.forEach((l) => svg.appendChild(ln("bd-halo", l)));
   blocks.lines.forEach((l) => svg.appendChild(ln("bd", l)));
-  // 구역 윤곽: 평소엔 보이지 않는 누르는 영역, 선택하면 테두리만 굵게 표시
-  blocks.groups.forEach((gp) => {
-    const d = gp.polys.map((q) => "M" + q.map((pt) => pt.join(",")).join("L") + "Z").join("");
-    const path = el("path", { class: "grp", "data-id": gp.id, d, "fill-rule": "evenodd", "vector-effect": "non-scaling-stroke" });
-    path.addEventListener("click", () => select(gp.id));
-    svg.appendChild(path);
-  });
   // 배지: 번지 이름과 동의율. 배지 바탕색이 동의율 단계를 나타낸다.
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
