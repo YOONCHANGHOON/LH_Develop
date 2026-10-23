@@ -57,6 +57,23 @@ const shown = (r) => has(r) && !(r.total < SMALL && (r.agree === 0 || r.agree >=
 const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
 const rateText = (r) => (!has(r) ? "–" : !shown(r) ? "비공개" : fmt(pct(r)));
 const name = (id) => id;
+// 현장 건물에는 지번이 아니라 도로명 번호판이 붙어 있어, 구역마다 주요 도로를 함께 보여 준다 (건축물대장 기준)
+const ROADS = {
+  "343": "강서로13길 9~47, 곰달래로23길 5~23, 강서로 47",
+  "344": "곰달래로19나길 32~50, 곰달래로 109",
+  "345": "곰달래로19나길 10~28, 곰달래로 91·95",
+  "346-A": "곰달래로19나길 5·15, 강서로15길 47~53",
+  "346-B": "곰달래로19나길 15~25, 곰달래로21길 19~31",
+  "346-C": "곰달래로21길 18~24, 곰달래로19나길 31~43",
+  "346-D": "곰달래로19나길 43, 강서로13길 38·42",
+  "346-E": "강서로13길 8~22, 강서로15길 7~19, 곰달래로19나길 43",
+  "347": "강서로15길 40~56, 강서로17길 51·53",
+  "348-A": "강서로15길 24~38, 강서로17길 15",
+  "348-B": "강서로 61, 강서로17길 9·15, 강서로15길 10·16",
+  "422": "강서로15길 58, 강서로17길 57",
+  "423": "곰달래로19길 14~38, 곰달래로19나길 5, 강서로15길 61·63",
+  "426": "곰달래로19나길 6",
+};
 const pct = (r) => (r.total ? (r.agree / r.total) * 100 : 0);
 const fmt = (n) => (Math.round(n * 10) / 10).toString() + "%";
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -145,7 +162,8 @@ function drawRank(rows) {
     sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
       : !shown(r) ? `소유자 ${r.total}명 · 인원이 적어 비공개`
       : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");
-    mid.append(bar, sub);
+    const road = document.createElement("div"); road.className = "road"; road.textContent = ROADS[r.id] || "";
+    mid.append(bar, sub, road);
     const p = document.createElement("span"); p.className = "pct" + (shown(r) ? "" : " muted"); p.textContent = shown(r) ? fmt(pct(r)) : "–";
     li.append(no, mid, p);
     li.addEventListener("click", () => select(r.id));
