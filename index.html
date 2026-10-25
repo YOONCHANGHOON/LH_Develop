@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261025a" />
+  <link rel="stylesheet" href="style.css?v=20261025e" />
 </head>
 <body>
 
@@ -60,7 +60,7 @@
           </p>
         </div>
       </div>
-      <section class="quick rate" aria-label="우리 집 동의율 찾기">
+      <section class="quick rate" id="rate" aria-label="우리 집 동의율 찾기">
         <p class="quick-title">우리 집 동의율 찾기</p>
         <p class="rate-total" id="rate-total">전체 동의율 불러오는 중…</p>
         <form class="finder-row" id="rate-form" role="search" autocomplete="off">
@@ -81,6 +81,9 @@
         </a>
         <a class="hero-share" data-track="consent-hero" href="volunteer/">
           <span class="share-label">동의 현황 보기</span>
+        </a>
+        <a class="hero-share" data-track="feedback-hero" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer">
+          <span class="share-label">건의사항 남기기</span>
         </a>
         <button type="button" class="hero-share" id="share-btn" data-track="share" aria-label="페이지 공유하기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -129,6 +132,7 @@
       <a href="#volunteer">봉사</a>
       <a href="#donation">후원</a>
       <a href="#contact">연락처</a>
+      <a href="#feedback">건의사항</a>
     </div>
   </nav>
 
@@ -172,10 +176,27 @@
             </div>
           </details>
 
-          <!-- ② 봉사자 모집 -->
+          <!-- ② 홈페이지 이용 안내 · 건의사항 -->
           <details class="nblock">
             <summary>
               <span class="nb-num">②</span>
+              <span class="nb-title">홈페이지 이용 안내 · 건의사항</span>
+              <span class="nb-meta">우리 집 동의율 찾는 법 · 의견 남기기(익명)</span>
+            </summary>
+            <div class="nb-body">
+              <ul class="nb-key">
+                <li><span>동의율 찾기</span> 첫 화면의 <a href="#rate">우리 집 동의율 찾기</a>에 지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣고 <strong>[찾기]</strong>를 누르면, 우리 집이 속한 구역의 동의율이 나옵니다. 집집마다의 동의 여부는 나오지 않습니다.</li>
+                <li><span>번지별 현황</span> <a href="volunteer/">번지별 동의 현황</a>에서 구역도와 &lsquo;이번 주 우선순위&rsquo;(동의율 낮은 구역부터)를 보실 수 있습니다. 1차 목표는 동의율 <strong>30% 이상</strong>입니다.</li>
+                <li><span>건의사항</span> 홈페이지나 사업 진행에 대해 불편한 점, 있었으면 하는 기능, 궁금한 점은 <a data-track="feedback-notice" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer"><strong>건의사항 남기기</strong></a>로 보내 주세요. 익명이고 로그인 없이 1분이면 됩니다. 당장 다 반영하지는 못하더라도 하나씩 차근차근 개선하겠습니다.</li>
+                <li class="must"><span>꼭 읽어 주세요</span> 건의사항에는 <strong>이름·주소·연락처를 적지 마세요.</strong> 익명이라 따로 답장은 어렵고, 자주 나오는 내용은 <a href="#faq">FAQ</a>와 주민 카톡방에 반영해 알려 드립니다. 답변이 꼭 필요하시면 주민 카톡방이나 추진위원장님 <a data-track="sms-feedback" href="sms:010-8367-2346">문자</a>(<span class="tel">010-8367-2346</span>)로 문의해 주세요.</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- ③ 봉사자 모집 -->
+          <details class="nblock">
+            <summary>
+              <span class="nb-num">③</span>
               <span class="nb-title">봉사자 모집</span>
               <span class="nb-meta">오전 10~12시 두 분 이상 · 낮 12시 이후 가능한 시간</span>
             </summary>
@@ -186,17 +207,17 @@
             </div>
           </details>
 
-          <!-- ③ 현황 -->
+          <!-- ④ 현황 -->
           <details class="nblock" open>
             <summary>
-              <span class="nb-num">③</span>
+              <span class="nb-num">④</span>
               <span class="nb-title">현황</span>
-              <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 목표 동의율 30%</span>
+              <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 1차 목표 동의율 30% 이상</span>
             </summary>
             <div class="nb-body">
               <iframe class="nb-consent" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
               <p>9/30 후보지 발표에서 우리 구역(강서6)은 <strong>&lsquo;보류&rsquo;</strong>로 안내되었습니다 (탈락 아님). 내년 상반기에 추가 공모가 예정되어 있습니다.
-              동의율 <strong>30% 이상</strong>을 목표로 하고 있습니다. (지난 공모 12%) <a href="volunteer/">번지별 동의 현황 보기</a></p>
+              동의율 <strong>30% 이상</strong>을 1차 목표로 하고 있습니다. (지난 공모 12%) <a href="volunteer/">번지별 동의 현황 보기</a></p>
               <div class="nb-alerts">
         <div class="alert alert-amber reveal">
           <div class="alert-badge">발표</div>
@@ -770,6 +791,21 @@
           </div>
           <span class="kakao-cta-arrow" aria-hidden="true">→</span>
         </a>
+
+        <!-- 건의사항: 구글 설문지(익명, 이메일 수집 안 함). 응답은 소유자 계정의 설문지에서 확인 -->
+        <a class="kakao-cta feedback-cta reveal" id="feedback" data-track="feedback-contact" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer">
+          <div class="kakao-cta-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+          </div>
+          <div class="kakao-cta-body">
+            <p class="kakao-cta-title">건의사항 남기기 (익명)</p>
+            <p class="kakao-cta-sub">홈페이지나 사업 진행에 대한 의견을 남겨 주세요. 당장 다 반영하지는 못하더라도 하나씩 차근차근 개선하겠습니다.</p>
+          </div>
+          <span class="kakao-cta-arrow" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
 
@@ -785,7 +821,7 @@
     </div>
   </footer>
 
-  <script src="volunteer/core.js?v=20261025a"></script>
+  <script src="volunteer/core.js?v=20261025b"></script>
   <script>
     // Scroll reveal
     (function () {
@@ -930,7 +966,7 @@
           parseCsv(csv).forEach(function (r) { if (zones[r.id]) byId[r.id] = r; });
           var t = 0, a = 0;
           Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
-          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30%까지 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명' : '';
+          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30% 넘기려면 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명 더' : '';
           addr = d; // 숫자까지 다 읽은 뒤에 찾기를 받는다(그 전에는 '불러오는 중' 안내)
         });
       }).catch(function () {
@@ -1068,7 +1104,7 @@
       window.addEventListener('pagehide', flush);
     })();
 
-    // ③ 현황을 펼치면 보이는 동의 현황(volunteer/ 페이지)을 내용 높이에 맞춰 늘린다. 지도·목록이 늦게 그려져도 따라간다.
+    // ④ 현황을 펼치면 보이는 동의 현황(volunteer/ 페이지)을 내용 높이에 맞춰 늘린다. 지도·목록이 늦게 그려져도 따라간다.
     document.querySelectorAll('iframe.nb-consent').forEach(function (f) {
       f.addEventListener('load', function () {
         var doc = f.contentDocument && f.contentDocument.documentElement;

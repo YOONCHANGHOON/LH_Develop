@@ -89,7 +89,7 @@ function rateLines(r) {
   if (!has(r)) return ["아직 자료가 없습니다."];
   if (!shown(r)) return ["소유자가 적은 구역이라 동의율은 비공개입니다."];
   const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-  return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + (need ? "30%까지 " + need + "명 더" : "30% 달성")];
+  return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + (need ? "30% 넘기려면 " + need + "명 더" : "30% 달성")];
 }
 // 조회 결과를 화면에 쓸 줄 목록 [[글, 칸 이름], …]으로 바꾼다. rowOf(구역) = 그 구역의 집계 줄
 function addrLines(res, rowOf) {

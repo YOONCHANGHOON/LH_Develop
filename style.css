@@ -108,7 +108,7 @@ body {
 .tabs a {
   flex-shrink: 0;
   padding: 16px 4px;
-  margin-right: 24px;
+  margin-right: 18px;
   color: var(--color-muted);
   text-decoration: none;
   font-weight: 500;
@@ -120,6 +120,8 @@ body {
 .tabs a:hover {
   color: var(--color-accent);
 }
+/* 메뉴 11개(건의사항 추가)가 PC 폭 880px 안에 가로 스크롤 없이 들어가게 */
+.tabs a:last-child { margin-right: 0; }
 
 .section {
   padding: 64px 0;
@@ -704,6 +706,18 @@ body {
 .kakao-cta:hover .kakao-cta-arrow {
   transform: translateX(4px);
 }
+
+/* 건의사항 버튼: 카톡 버튼과 같은 모양, 색만 사이트 기본색 */
+.feedback-cta {
+  scroll-margin-top: 72px;
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.feedback-cta:hover { box-shadow: var(--shadow-md); }
+.feedback-cta .kakao-cta-icon { background: var(--color-accent); }
+.feedback-cta .kakao-cta-icon svg { color: #fff; }
 
 @media (max-width: 640px) {
   .kakao-cta { padding: 18px 20px; gap: 14px; }
@@ -1757,7 +1771,7 @@ body {
 .nb-detail li strong { display: inline-block; min-width: 64px; color: var(--color-accent); }
 .nb-alerts { margin-top: 12px; }
 .nb-alerts .alert { margin-bottom: 14px; }
-/* ③ 현황 안의 동의 현황 — 높이는 내용에 맞춰 스크립트가 늘린다 */
+/* ④ 현황 안의 동의 현황 — 높이는 내용에 맞춰 스크립트가 늘린다 */
 .nb-consent { display: block; width: 100%; height: 640px; margin: 4px 0 0; border: 1px solid rgba(31, 74, 58, 0.18); border-radius: 10px; background: #fff; }
 @media (max-width: 480px) {
   .nblock > summary { padding: 16px 100px 16px 16px; gap: 4px 8px; }
@@ -1857,7 +1871,7 @@ body {
 }
 
 /* 첫 화면 '우리 집 동의율 찾기' (판정은 volunteer/core.js) */
-.quick.rate { margin-top: 14px; padding-bottom: 14px; }
+.quick.rate { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
 .rate-total { margin: 0 0 10px; font-size: 14px; color: #4a5a53; }
 .rate-result {
   margin-top: 10px;

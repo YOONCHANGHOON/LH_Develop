@@ -6,7 +6,7 @@ const NS = "http://www.w3.org/2000/svg";
 const AREA_COLORS = ["#3d6be6", "#d9408a", "#d8701e", "#8f4fd6", "#1597c4"];
 const $ = (id) => document.getElementById(id);
 
-// 홈 첫 화면의 ③ 현황에 끼워 넣어 보일 때는 '홈페이지로' 버튼을 숨긴다(누르면 칸 안에 홈이 또 열리므로)
+// 홈 첫 화면의 ④ 현황에 끼워 넣어 보일 때는 '홈페이지로' 버튼을 숨긴다(누르면 칸 안에 홈이 또 열리므로)
 if (window.top !== window.self) document.documentElement.classList.add("framed");
 
 // ?demo 로 열면 화면 확인용 임의 값을 채운다 (실제 데이터 아님).
@@ -132,7 +132,7 @@ function markActive() {
   if (ACTIVE) {
     const need = r && has(r) ? Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree) : 0;
     pick.textContent = ACTIVE + " · " + (!has(r) ? "자료 없음" : !shown(r) ? "소유자가 적어 비공개"
-      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30%까지 " + need + "명 더" : "30% 달성"));
+      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30% 넘기려면 " + need + "명 더" : "30% 달성"));
   }
 }
 
@@ -152,7 +152,7 @@ function drawRank(rows) {
     bar.appendChild(fill);
     const sub = document.createElement("div"); sub.className = "sub";
     const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-    const left = need ? `30%까지 ${need}명 더` : "30% 달성";
+    const left = need ? `30% 넘기려면 ${need}명 더` : "30% 달성";
     sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
       : !shown(r) ? `소유자 ${r.total}명 · 인원이 적어 비공개`
       : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");
