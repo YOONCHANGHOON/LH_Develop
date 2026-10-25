@@ -88,7 +88,22 @@ body {
 .rank li { cursor: pointer; }
 .rank li.on { background: #e8f3ec; margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
 
-/* 알파벳 구역 안내 (요약 아래) */
+/* 우리 집 동의율 찾기 */
+.addr-row { display: flex; gap: 8px; }
+.addr-row input { flex: 1; min-width: 0; font: inherit; font-size: 17px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text); }
+.addr-row button { font: inherit; font-size: 16px; font-weight: 700; padding: 0 18px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+.addr-result { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: #eef6f0; border-left: 4px solid var(--g3); }
+.addr-result.warn { background: #fbf6e6; border-left-color: #c9a227; }
+.addr-result p { margin: 2px 0; }
+.addr-result .big { font-size: 22px; font-weight: 800; color: var(--accent); }
+.addr-result button { margin-top: 8px; font: inherit; font-size: 14px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: #fff; cursor: pointer; }
+/* 알파벳 구역 안내 (접어 둠) */
+.zones > summary { cursor: pointer; list-style: none; }
+.zones > summary::-webkit-details-marker { display: none; }
+.zones > summary h2 { margin: 0; }
+.zones > summary h2::after { content: " ▾"; color: var(--muted); font-weight: 400; }
+.zones[open] > summary h2 { margin-bottom: 12px; }
+.zones[open] > summary h2::after { content: " ▴"; }
 .zone-list { list-style: none; padding: 0; margin: 0; }
 .zone-list li { display: grid; grid-template-columns: 64px 1fr; gap: 2px 10px; padding: 8px 0; border-top: 1px solid var(--border); }
 .zone-list li:first-child { border-top: 0; padding-top: 0; }

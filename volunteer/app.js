@@ -199,6 +199,8 @@ async function load() {
     let rows = Object.keys(blocks.labels).sort().map((id) => got[id] || { id, total: 0, agree: 0, date: "", memo: "" });
     if (DEMO) rows = applyDemo(rows);
     const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
+    BYID = byId;
+    if (LAST) showAddr(LAST); // 열어 둔 조회 결과도 새 숫자로
     drawSummary(rows);
     drawMap(blocks, byId);
     drawRank(rows);
@@ -276,6 +278,82 @@ function setupZoom() {
   $("zoom-reset").addEventListener("click", () => { s = 1; x = y = 0; apply(); });
   window.addEventListener("resize", apply);
 }
+
+// 우리 집 동의율 찾기: 지번이나 도로명 주소 → 구역(addr.json 대응표) → 그 구역 동의율(공개 집계 시트).
+// 집별 동의 여부는 다루지 않고, 소유자가 적은 구역의 0%·100%는 지도와 똑같이 가린다.
+let BYID = {}, ADDR = null, LAST = null;
+fetch("addr.json?v=20261025b").then((r) => r.json()).then((d) => { ADDR = d; }).catch(() => {});
+const BASES = ["343", "344", "345", "346", "347", "348", "422", "423", "426"];
+function resolveAddr(q) {
+  if (!ADDR) return { warn: "주소 자료를 불러오는 중입니다. 잠시 후 다시 눌러 주세요." };
+  const raw = q.replace(/\(.*?\)/g, " ").replace(/서울특별시|서울시|서울|강서구|화곡제1동|화곡1동|화곡동|번지/g, " ").trim();
+  const s = raw.replace(/\s+/g, "");
+  if (!s) return { warn: "지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣어 주세요." };
+  let lot = null, how = "";
+  if (/[로길]/.test(s)) {
+    const m = s.match(/^(.*?(?:로|길))(\d+)(?:-(\d+))?/);
+    if (m) {
+      lot = ADDR.roads[m[1] + m[2] + (m[3] ? "-" + m[3] : "")] || ADDR.roads[m[1] + m[2]] || null;
+      how = m[1] + " " + m[2] + (m[3] ? "-" + m[3] : "");
+    }
+    if (!lot) return { warn: how ? how + "는 우리 구역 도로명 목록에 없습니다. 지번으로 다시 찾아보시거나 추진위원장님께 문의해 주세요." : "도로명 뒤에 건물 번호까지 넣어 주세요. (예: 곰달래로19나길 15)" };
+  } else {
+    const m = raw.match(/(\d{3})\s*[-\s]\s*(\d{1,3})/) || s.match(/^(\d{3})-(\d{1,3})$/);
+    if (!m) {
+      const b = s.match(/^(\d{3})$/);
+      if (b && BASES.includes(b[1])) {
+        const zs = [...new Set(Object.values(ADDR.lots).filter((z) => z === b[1] || z.startsWith(b[1] + "-")))].sort();
+        return { base: b[1], zones: zs };
+      }
+      return { warn: "지번은 '346-85'처럼 앞번호와 뒷번호를 함께 넣어 주세요." };
+    }
+    lot = m[1] + "-" + Number(m[2]);
+    how = lot;
+  }
+  const zone = ADDR.lots[lot];
+  if (zone) return { lot, how, zone, pending: (ADDR.pending || []).includes(lot) };
+  if ((ADDR.excluded || []).includes(lot)) return { warn: lot + "는 사업구역에서 제외된 필지입니다." };
+  if ((ADDR.out || []).includes(lot)) return { warn: lot + "는 사업구역 밖입니다. (구역도 기준)" };
+  if (BASES.includes(lot.split("-")[0])) return { warn: lot + "는 구역 목록에서 찾지 못했습니다. 등기부등본의 지번을 확인하시거나 추진위원장님께 문의해 주세요." };
+  return { warn: lot + "는 우리 구역(화곡1동 343~348·422·423·426번지) 지번이 아닙니다." };
+}
+function rateLines(id) {
+  const r = BYID[id];
+  if (!has(r)) return ["아직 자료가 없습니다."];
+  if (!shown(r)) return ["소유자가 적은 구역이라 동의율은 비공개입니다."];
+  const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
+  return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + (need ? "30%까지 " + need + "명 더" : "30% 달성")];
+}
+function showAddr(res) {
+  LAST = res;
+  const box = $("addr-result");
+  box.replaceChildren();
+  const p = (t, cls) => { const e = document.createElement("p"); if (cls) e.className = cls; e.textContent = t; box.appendChild(e); return e; };
+  box.classList.toggle("warn", !!res.warn);
+  if (res.warn) {
+    p(res.warn);
+  } else if (res.base) {
+    p(res.base + "번지는 " + (res.zones.length > 1 ? "여러 구역으로 나뉘어 있습니다. 뒷번호까지 넣으시면 정확한 구역이 나옵니다." : "한 구역입니다."));
+    res.zones.forEach((z) => { const [a, b] = rateLines(z); p(z + " · " + a + (b ? " (" + b + ")" : "")); });
+  } else {
+    p(res.how + (res.how === res.lot ? "" : " (" + res.lot + ")") + " → " + res.zone + " 구역");
+    const [a, b] = rateLines(res.zone);
+    p(a, b ? "big" : "");
+    if (b) p(b);
+    if (res.pending) p("※ 이 건물은 아직 현황 집계에 들어가 있지 않아 추가할 예정입니다. 위 숫자는 같은 구역의 다른 집 기준입니다.");
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.textContent = "지도에서 보기";
+    btn.addEventListener("click", () => { ACTIVE = res.zone; markActive(); $("map-view").scrollIntoView({ behavior: "smooth", block: "center" }); });
+    box.appendChild(btn);
+  }
+  box.hidden = false;
+}
+$("addr-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const res = resolveAddr($("addr-input").value);
+  showAddr(res);
+  if (res.zone) { ACTIVE = res.zone; markActive(); }
+});
 
 const VB = [960, 720];
 const BADGE = [58, 36]; // 배지 크기(화면 px). 바꾸면 blocks.json 배지 위치도 다시 계산해야 겹치지 않는다.
