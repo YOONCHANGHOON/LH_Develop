@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261023a" />
+  <link rel="stylesheet" href="style.css?v=20261023b" />
 </head>
 <body>
 
@@ -183,6 +183,7 @@
               <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 목표 동의율 30%</span>
             </summary>
             <div class="nb-body">
+              <iframe class="nb-consent" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
               <p>9/30 후보지 발표에서 우리 구역(강서6)은 <strong>&lsquo;보류&rsquo;</strong>로 안내되었습니다 (탈락 아님). 내년 상반기에 추가 공모가 예정되어 있습니다.
               동의율 <strong>30% 이상</strong>을 목표로 하고 있습니다. (지난 공모 12%) <a href="volunteer/">번지별 동의 현황 보기</a></p>
               <div class="nb-alerts">
@@ -1004,6 +1005,17 @@
       });
       window.addEventListener('pagehide', flush);
     })();
+
+    // ③ 현황을 펼치면 보이는 동의 현황(volunteer/ 페이지)을 내용 높이에 맞춰 늘린다. 지도·목록이 늦게 그려져도 따라간다.
+    document.querySelectorAll('iframe.nb-consent').forEach(function (f) {
+      f.addEventListener('load', function () {
+        var doc = f.contentDocument && f.contentDocument.documentElement;
+        if (!doc) return;
+        var fit = function () { f.style.height = Math.ceil(doc.getBoundingClientRect().height) + (f.offsetHeight - f.clientHeight) + 'px'; };
+        if ('ResizeObserver' in window) new ResizeObserver(fit).observe(doc);
+        fit();
+      });
+    });
 
   </script>
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2319c0ba16b74f8995b47680a0c8aafa"}'></script><!-- End Cloudflare Web Analytics -->

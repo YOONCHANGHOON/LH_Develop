@@ -1757,6 +1757,8 @@ body {
 .nb-detail li strong { display: inline-block; min-width: 64px; color: var(--color-accent); }
 .nb-alerts { margin-top: 12px; }
 .nb-alerts .alert { margin-bottom: 14px; }
+/* ③ 현황 안의 동의 현황 — 높이는 내용에 맞춰 스크립트가 늘린다 */
+.nb-consent { display: block; width: 100%; height: 640px; margin: 4px 0 0; border: 1px solid rgba(31, 74, 58, 0.18); border-radius: 10px; background: #fff; }
 @media (max-width: 480px) {
   .nblock > summary { padding: 16px 100px 16px 16px; gap: 4px 8px; }
   .nblock > summary::after { right: 12px; top: 14px; padding: 6px 10px; font-size: 13px; }
@@ -1764,6 +1766,8 @@ body {
   /* 날짜 줄은 버튼 아래라서 오른쪽 여백까지 써서 덜 줄바꿈되게 */
   .nb-meta { padding-left: 0; flex-basis: calc(100% + 84px); margin-right: -84px; }
   .nb-body { padding: 0 16px 16px; }
+  /* 동의 현황은 지도·목록이 좁으면 겹치므로 블록 좌우 끝까지 쓴다 */
+  .nb-consent { width: calc(100% + 32px); margin-left: -16px; margin-right: -16px; border-radius: 0; border-left: 0; border-right: 0; }
   /* 라벨을 글 위에 따로 놓아서, 라벨이 길어져도 본문과 겹치지 않게 */
   .nb-key li, .nb-key li.must { padding-left: 0; }
   .nb-key li.must { padding: 12px; }
