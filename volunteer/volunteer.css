@@ -116,7 +116,7 @@ body {
 /* 전체 동의율: 맨 위, 크게 + 목표 30%까지 막대 */
 .summary { grid-template-columns: 1.35fr 1fr 1fr; }
 .tile.main strong { font-size: 30px; }
-.tile-label em { font-style: normal; opacity: .75; margin-left: 4px; }
+.goal-cap { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
 .goal { position: relative; display: block; height: 6px; margin-top: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
 .goal b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--g3); border-radius: 3px; transition: width .4s; }
 /* 지도에서 고른 구역 한 줄 정보 */
