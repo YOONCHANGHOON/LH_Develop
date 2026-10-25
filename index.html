@@ -153,6 +153,27 @@
               <span class="nb-meta">10/19(월) ~ 11/19(목) · 약 한 달간</span>
             </summary>
             <div class="nb-body">
+              <div class="cd" id="countdown" role="timer" aria-labelledby="cd-title">
+                <div class="cd-clock">
+                  <p class="cd-title" id="cd-title"><span id="cd-title-text">동의서 접수 마감까지</span> <span class="cd-sub">11/19(목) 24:00 기준</span></p>
+                  <div class="cd-digits" aria-hidden="true">
+                    <div class="cd-unit"><b id="cd-d">--</b><span>일</span></div>
+                    <div class="cd-unit"><b id="cd-h">--</b><span>시간</span></div>
+                    <div class="cd-unit"><b id="cd-m">--</b><span>분</span></div>
+                    <div class="cd-unit"><b id="cd-s">--</b><span>초</span></div>
+                  </div>
+                  <p class="cd-sr" id="cd-sr">11월 19일(목)까지</p>
+                  <div class="cd-bar" aria-hidden="true"><i id="cd-fill"></i></div>
+                  <p class="cd-bar-cap" aria-hidden="true"><span>10/19(월) 시작</span><span id="cd-pct"></span><span>11/19(목) 마감</span></p>
+                  <p class="cd-note">실제 접수 마감 시각은 추진위원장님 안내를 따라 주세요.</p>
+                </div>
+                <div class="cd-cal" aria-hidden="true">
+                  <p class="cd-cal-title">접수 기간 달력</p>
+                  <div class="cd-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+                  <div class="cd-grid" id="cd-grid"></div>
+                  <p class="cd-legend"><span><i class="lg-past"></i>지난 날</span><span><i class="lg-today"></i>오늘</span><span><i class="lg-left"></i>남은 날</span><span><i class="lg-end"></i>마감</span></p>
+                </div>
+              </div>
               <ul class="nb-key">
                 <li><span>왜 지금</span> 4월 제출 의향률이 12%여서, 국토부가 추가 제출을 요구하거나 내년 상반기 추가 공모가 열릴 때 바로 낼 수 있도록 추진위원회가 <strong>미리 받고 있습니다.</strong></li>
                 <li><span>어디서</span> <strong>유림부동산</strong> (유림아파트 앞) · 10/19(월) 오전 10시부터</li>
@@ -983,6 +1004,68 @@
         val.textContent = left === 0 ? 'D-DAY' : 'D-' + left;
         if (left <= 7) { box.classList.remove('dday-urgent'); box.classList.add('dday-critical'); }
       }
+    })();
+
+    // ① 동의서 재모집 남은 시간: 한국 시간 11/19(목) 24:00까지 일·시간·분·초를 매초 다시 계산하고,
+    // 접수 기간 달력(10/18 일요일 ~ 11/21 토요일, 5주)에 지난 날·오늘·마감을 칠한다.
+    (function () {
+      var box = document.getElementById('countdown');
+      if (!box) return;
+      var DAY = 864e5;
+      var START = Date.UTC(2026, 9, 19, 1);  // 10/19(월) 10:00 KST
+      var END = Date.UTC(2026, 10, 19, 15);  // 11/20 00:00 KST = 11/19(목)이 끝나는 때
+      var startDay = Date.UTC(2026, 9, 19) / DAY, endDay = Date.UTC(2026, 10, 19) / DAY;
+      var first = Date.UTC(2026, 9, 18) / DAY;
+      function $(id) { return document.getElementById(id); }
+      function two(n) { return (n < 10 ? '0' : '') + n; }
+
+      var grid = $('cd-grid'), cells = [];
+      for (var i = 0; i < 35; i++) {
+        var day = first + i, d = new Date(day * DAY);
+        var c = document.createElement('span'), num = document.createElement('b'), tag = document.createElement('small');
+        var inRange = day >= startDay && day <= endDay;
+        num.textContent = (d.getUTCDate() === 1 || day === startDay) ? (d.getUTCMonth() + 1) + '/' + d.getUTCDate() : d.getUTCDate();
+        c.className = 'cd-day' + (inRange ? '' : ' out') + (day === endDay ? ' end' : '');
+        c.appendChild(num); c.appendChild(tag); grid.appendChild(c);
+        cells.push({ el: c, tag: tag, day: day, inRange: inRange });
+      }
+      var painted = null;
+      function paintCal(today) {
+        if (today === painted) return;
+        painted = today;
+        cells.forEach(function (x) {
+          x.el.classList.toggle('past', x.inRange && x.day < today);
+          x.el.classList.toggle('today', x.day === today);
+          x.tag.textContent = x.day === today ? (x.day === endDay ? '오늘 마감' : '오늘')
+            : x.day === endDay ? '마감' : x.day === startDay ? '시작' : '';
+        });
+      }
+
+      var lastMin = -1, timer;
+      function tick() {
+        var now = Date.now(), left = Math.max(0, END - now), s = Math.floor(left / 1000);
+        var dd = Math.floor(s / 86400), hh = Math.floor(s / 3600) % 24, mm = Math.floor(s / 60) % 60;
+        $('cd-d').textContent = dd;
+        $('cd-h').textContent = two(hh);
+        $('cd-m').textContent = two(mm);
+        $('cd-s').textContent = two(s % 60);
+        var pct = Math.min(100, Math.max(0, (now - START) / (END - START) * 100));
+        $('cd-fill').style.width = pct.toFixed(2) + '%';
+        $('cd-pct').textContent = '기간의 ' + Math.floor(pct) + '% 지남';
+        box.classList.toggle('cd-critical', left > 0 && left <= 7 * DAY);
+        if (mm !== lastMin) { // 화면 낭독기용 요약은 분이 바뀔 때만
+          lastMin = mm;
+          $('cd-sr').textContent = left ? '마감까지 ' + dd + '일 ' + hh + '시간 ' + mm + '분 남았습니다.' : '접수 기간이 끝났습니다.';
+        }
+        paintCal(Math.floor((now + 9 * 3600e3) / DAY));
+        if (!left) {
+          box.classList.add('cd-over');
+          $('cd-title-text').textContent = '동의서 접수 기간이 끝났습니다';
+          clearInterval(timer);
+        }
+      }
+      tick();
+      if (!box.classList.contains('cd-over')) timer = setInterval(tick, 1000);
     })();
 
     // Share button
