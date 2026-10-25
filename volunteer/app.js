@@ -6,7 +6,7 @@ const NS = "http://www.w3.org/2000/svg";
 const AREA_COLORS = ["#3d6be6", "#d9408a", "#d8701e", "#8f4fd6", "#1597c4"];
 const $ = (id) => document.getElementById(id);
 
-// 홈 첫 화면의 ③ 현황에 끼워 넣어 보일 때는 '홈페이지로' 버튼을 숨긴다(누르면 칸 안에 홈이 또 열리므로)
+// 홈 첫 화면의 ④ 현황에 끼워 넣어 보일 때는 '홈페이지로' 버튼을 숨긴다(누르면 칸 안에 홈이 또 열리므로)
 if (window.top !== window.self) document.documentElement.classList.add("framed");
 
 // ?demo 로 열면 화면 확인용 임의 값을 채운다 (실제 데이터 아님).
