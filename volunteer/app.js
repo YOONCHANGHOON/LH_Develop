@@ -291,7 +291,9 @@ function resolveAddr(q) {
   if (!s) return { warn: "지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣어 주세요." };
   let lot = null, how = "";
   if (/[로길]/.test(s)) {
-    const m = s.match(/^(.*?(?:로|길))(\d+)(?:-(\d+))?/);
+    // "곰달래로 19나길 5-13 302호" → 도로명(곰달래로19나길) + 건물번호(5-13). 뒤의 호수는 무시
+    const t = raw.replace(/(로|길)\s+(?=\d+[가-힣]*길)/g, "$1");
+    const m = t.match(/([가-힣\d]+(?:로|길))\s*(\d+)(?:\s*-\s*(\d+))?(?![\d가-힣])/);
     if (m) {
       lot = ADDR.roads[m[1] + m[2] + (m[3] ? "-" + m[3] : "")] || ADDR.roads[m[1] + m[2]] || null;
       how = m[1] + " " + m[2] + (m[3] ? "-" + m[3] : "");
