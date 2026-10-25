@@ -705,6 +705,17 @@ body {
   transform: translateX(4px);
 }
 
+/* 건의사항 버튼: 카톡 버튼과 같은 모양, 색만 사이트 기본색 */
+.feedback-cta {
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.feedback-cta:hover { box-shadow: var(--shadow-md); }
+.feedback-cta .kakao-cta-icon { background: var(--color-accent); }
+.feedback-cta .kakao-cta-icon svg { color: #fff; }
+
 @media (max-width: 640px) {
   .kakao-cta { padding: 18px 20px; gap: 14px; }
   .kakao-cta-icon { width: 44px; height: 44px; }
