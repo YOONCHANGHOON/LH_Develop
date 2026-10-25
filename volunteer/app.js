@@ -132,7 +132,7 @@ function markActive() {
   if (ACTIVE) {
     const need = r && has(r) ? Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree) : 0;
     pick.textContent = ACTIVE + " · " + (!has(r) ? "자료 없음" : !shown(r) ? "소유자가 적어 비공개"
-      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30%까지 " + need + "명 더" : "30% 달성"));
+      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30% 넘기려면 " + need + "명 더" : "30% 달성"));
   }
 }
 
@@ -152,7 +152,7 @@ function drawRank(rows) {
     bar.appendChild(fill);
     const sub = document.createElement("div"); sub.className = "sub";
     const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-    const left = need ? `30%까지 ${need}명 더` : "30% 달성";
+    const left = need ? `30% 넘기려면 ${need}명 더` : "30% 달성";
     sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
       : !shown(r) ? `소유자 ${r.total}명 · 인원이 적어 비공개`
       : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");

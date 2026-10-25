@@ -191,12 +191,12 @@
             <summary>
               <span class="nb-num">③</span>
               <span class="nb-title">현황</span>
-              <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 목표 동의율 30%</span>
+              <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 1차 목표 동의율 30% 이상</span>
             </summary>
             <div class="nb-body">
               <iframe class="nb-consent" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
               <p>9/30 후보지 발표에서 우리 구역(강서6)은 <strong>&lsquo;보류&rsquo;</strong>로 안내되었습니다 (탈락 아님). 내년 상반기에 추가 공모가 예정되어 있습니다.
-              동의율 <strong>30% 이상</strong>을 목표로 하고 있습니다. (지난 공모 12%) <a href="volunteer/">번지별 동의 현황 보기</a></p>
+              동의율 <strong>30% 이상</strong>을 1차 목표로 하고 있습니다(넘을수록 좋습니다). (지난 공모 12%) <a href="volunteer/">번지별 동의 현황 보기</a></p>
               <div class="nb-alerts">
         <div class="alert alert-amber reveal">
           <div class="alert-badge">발표</div>
@@ -785,7 +785,7 @@
     </div>
   </footer>
 
-  <script src="volunteer/core.js?v=20261025a"></script>
+  <script src="volunteer/core.js?v=20261025b"></script>
   <script>
     // Scroll reveal
     (function () {
@@ -930,7 +930,7 @@
           parseCsv(csv).forEach(function (r) { if (zones[r.id]) byId[r.id] = r; });
           var t = 0, a = 0;
           Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
-          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30%까지 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명' : '';
+          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30% 넘기려면 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명 더' : '';
           addr = d; // 숫자까지 다 읽은 뒤에 찾기를 받는다(그 전에는 '불러오는 중' 안내)
         });
       }).catch(function () {
