@@ -1856,5 +1856,22 @@ body {
   .quick-list dt { flex: none; align-self: flex-start; padding: 3px 10px; }
 }
 
+/* 첫 화면 '우리 집 동의율 찾기' (판정은 volunteer/core.js) */
+.quick.rate { margin-top: 14px; padding-bottom: 14px; }
+.rate-total { margin: 0 0 10px; font-size: 14px; color: #4a5a53; }
+.rate-result {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #eef6f0;
+  border-left: 4px solid #1f7a3f;
+}
+.rate-result.warn { background: #fbf6e6; border-left-color: #c9a227; }
+.rate-result p { margin: 2px 0; }
+.rate-result .big { font-size: 24px; font-weight: 800; color: var(--color-accent); }
+.rate-result a { display: inline-block; margin-top: 6px; font-weight: 700; color: var(--color-accent); }
+.rate-foot { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: #4a5a53; }
+.rate-foot a { font-weight: 700; color: var(--color-accent); white-space: nowrap; }
+
 /* 전화번호가 줄 끝에서 "010-" / "8367-2346"처럼 쪼개지지 않게 */
 .tel, a[href^="tel:"] { white-space: nowrap; }
