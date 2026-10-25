@@ -112,3 +112,19 @@ body {
 .zone-list .road { grid-column: 2; }
 .note { font-size: 13px; color: var(--muted); margin: 0 0 32px; }
 @media (min-width: 640px) { .top h1 { font-size: 30px; } .tile strong { font-size: 28px; } }
+
+/* 전체 동의율: 맨 위, 크게 + 목표 30%까지 막대 */
+.summary { grid-template-columns: 1.35fr 1fr 1fr; }
+.tile.main strong { font-size: 30px; }
+.goal-cap { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+.goal { position: relative; display: block; height: 6px; margin-top: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.goal b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--g3); border-radius: 3px; transition: width .4s; }
+/* 지도에서 고른 구역 한 줄 정보 */
+.map-pick { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: #eef6f0; font-size: 14px; font-weight: 600; color: var(--accent); }
+/* 휴대폰: 작은 배지(동의율만), 확대 버튼 작게 */
+.badge.compact text { font-size: 11px; }
+@media (max-width: 560px) {
+  .zoom-ctl { right: 6px; bottom: 6px; gap: 4px; }
+  .zoom-ctl button { width: 30px; height: 30px; font-size: 17px; }
+}
+@media (min-width: 640px) { .tile.main strong { font-size: 36px; } }

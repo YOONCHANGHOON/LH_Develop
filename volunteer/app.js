@@ -109,18 +109,38 @@ function drawMap(blocks, byId) {
   blocks.lines.forEach((l) => svg.appendChild(ln("bd-halo", l)));
   blocks.lines.forEach((l) => svg.appendChild(ln("bd", l)));
   // 배지: 지도에 인쇄된 파란 번지 글자 위에 놓여 그 글자를 대신한다. 모든 배지는 같은 크기·같은 모양.
+  // 휴대폰처럼 좁은 화면에서는 배지가 지도를 덮지 않게 동의율만 있는 작은 딱지로 그린다(구역 이름은 누르면 아래에 표시).
+  COMPACT = isCompact();
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
-    const g = el("g", { class: "badge", "data-id": id });
+    const g = el("g", { class: "badge" + (COMPACT ? " compact" : ""), "data-id": id });
     g.dataset.x = x; g.dataset.y = y;
-    g.append(el("rect", { x: -BADGE[0] / 2, y: -BADGE[1] / 2, width: BADGE[0], height: BADGE[1], rx: 7 }),
-      el("text", { class: "lbl-name", y: -3 }, name(id)),
-      el("text", { class: "lbl-pct" + (shown(r) ? "" : " muted"), y: 14 }, rateText(r)));
+    if (COMPACT) {
+      const t = shown(r) ? fmt(pct(r)) : has(r) ? "비공개" : "–";
+      const w = t.length > 4 ? 42 : 36;
+      g.append(el("rect", { x: -w / 2, y: -9, width: w, height: 18, rx: 5 }),
+        el("text", { class: "lbl-pct" + (shown(r) ? "" : " muted"), y: 4 }, t));
+    } else {
+      g.append(el("rect", { x: -BADGE[0] / 2, y: -BADGE[1] / 2, width: BADGE[0], height: BADGE[1], rx: 7 }),
+        el("text", { class: "lbl-name", y: -3 }, name(id)),
+        el("text", { class: "lbl-pct" + (shown(r) ? "" : " muted"), y: 14 }, rateText(r)));
+    }
     g.addEventListener("click", () => select(id));
     svg.appendChild(g);
   });
+  // 구역마다 지도상 범위(주소 찾기 때 그 구역으로 확대하는 데 씀)
+  blocks.groups.forEach((gp) => {
+    const pts = gp.polys.flat();
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    BBOX[gp.id] = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  });
+  LASTDRAW = [blocks, byId];
   fitBadges(ZS);
+  markActive();
 }
+let COMPACT = false, LASTDRAW = null;
+const BBOX = {};
+const isCompact = () => $("map-view").clientWidth < 560;
 
 // 확대해도 배지 글씨는 화면에서 같은 크기로 보이게 한다. ZS = 지금 확대 배율(다시 그릴 때 유지)
 let ZS = 1;
@@ -140,6 +160,14 @@ function select(id) {
 function markActive() {
   $("map-svg").classList.toggle("has-on", !!ACTIVE);
   document.querySelectorAll(".grp, .badge, .rank li").forEach((e) => e.classList.toggle("on", e.dataset.id === ACTIVE));
+  const pick = $("map-pick"), r = ACTIVE && BYID[ACTIVE];
+  if (!pick) return;
+  pick.hidden = !ACTIVE;
+  if (ACTIVE) {
+    const need = r && has(r) ? Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree) : 0;
+    pick.textContent = ACTIVE + " · " + (!has(r) ? "자료 없음" : !shown(r) ? "소유자가 적어 비공개"
+      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30%까지 " + need + "명 더" : "30% 달성"));
+  }
 }
 
 function drawRank(rows) {
@@ -176,6 +204,7 @@ function drawSummary(rows) {
   const total = rows.reduce((s, r) => s + r.total, 0);
   const agree = rows.reduce((s, r) => s + r.agree, 0);
   $("total-rate").textContent = total ? fmt((agree / total) * 100) : "–";
+  if ($("goal-fill")) $("goal-fill").style.width = total ? Math.min(100, ((agree / total) * 100 / TARGET) * 100) + "%" : "0";
   $("total-count").textContent = total ? `${agree} / ${total}` : "–";
   $("to-target").textContent = total ? `${Math.max(0, Math.ceil((total * TARGET) / 100) - agree)}명` : "–";
   const dates = rows.map((r) => r.date).filter(Boolean).sort();
@@ -200,7 +229,7 @@ async function load() {
     if (DEMO) rows = applyDemo(rows);
     const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
     BYID = byId;
-    if (LAST) showAddr(LAST); // 열어 둔 조회 결과도 새 숫자로
+    if (LAST) showAddr(LAST, false); // 열어 둔 조회 결과도 새 숫자로(확대 위치는 그대로)
     drawSummary(rows);
     drawMap(blocks, byId);
     drawRank(rows);
@@ -276,12 +305,21 @@ function setupZoom() {
   $("zoom-in").addEventListener("click", () => zoomAt(...mid(), s * 1.5));
   $("zoom-out").addEventListener("click", () => zoomAt(...mid(), s / 1.5));
   $("zoom-reset").addEventListener("click", () => { s = 1; x = y = 0; apply(); });
-  window.addEventListener("resize", apply);
+  window.addEventListener("resize", () => { if (LASTDRAW && isCompact() !== COMPACT) drawMap(...LASTDRAW); apply(); });
+  // 지도 좌표(viewBox) 범위가 화면에 꽉 차게 확대·이동한다 (주소 찾기 결과용)
+  zoomToBox = (b) => {
+    const W = view.clientWidth, H = view.clientHeight, k = W / VB[0];
+    const bw = Math.max(40, b[2] - b[0]) * k, bh = Math.max(40, b[3] - b[1]) * k;
+    s = Math.min(MAX, Math.max(1, Math.min((W * 0.85) / bw, (H * 0.85) / bh)));
+    x = W / 2 - ((b[0] + b[2]) / 2) * k * s;
+    y = H / 2 - ((b[1] + b[3]) / 2) * k * s;
+    apply();
+  };
 }
 
 // 우리 집 동의율 찾기: 지번이나 도로명 주소 → 구역(addr.json 대응표) → 그 구역 동의율(공개 집계 시트).
 // 집별 동의 여부는 다루지 않고, 소유자가 적은 구역의 0%·100%는 지도와 똑같이 가린다.
-let BYID = {}, ADDR = null, LAST = null;
+let BYID = {}, ADDR = null, LAST = null, zoomToBox = null;
 fetch("addr.json?v=20261025b").then((r) => r.json()).then((d) => { ADDR = d; }).catch(() => {});
 const BASES = ["343", "344", "345", "346", "347", "348", "422", "423", "426"];
 function resolveAddr(q) {
@@ -326,7 +364,7 @@ function rateLines(id) {
   const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
   return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + (need ? "30%까지 " + need + "명 더" : "30% 달성")];
 }
-function showAddr(res) {
+function showAddr(res, zoom = true) {
   LAST = res;
   const box = $("addr-result");
   box.replaceChildren();
@@ -349,6 +387,10 @@ function showAddr(res) {
     box.appendChild(btn);
   }
   box.hidden = false;
+  // 찾은 구역(346만 넣었으면 346-A~E 전체)으로 지도를 확대
+  const ids = res.zone ? [res.zone] : res.zones || [];
+  const bs = ids.map((z) => BBOX[z]).filter(Boolean);
+  if (zoom && zoomToBox && bs.length) zoomToBox([Math.min(...bs.map((b) => b[0])), Math.min(...bs.map((b) => b[1])), Math.max(...bs.map((b) => b[2])), Math.max(...bs.map((b) => b[3]))]);
 }
 $("addr-form").addEventListener("submit", (e) => {
   e.preventDefault();
