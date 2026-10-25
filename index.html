@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261025e" />
+  <link rel="stylesheet" href="style.css?v=20261025g" />
 </head>
 <body>
 
@@ -49,7 +49,7 @@
           <div><dt>어디서</dt><dd><strong>유림부동산</strong> (곰달래로 89) · 10/19(월) 오전 10시부터<br/><span>동의서 서류는 현장에서 받아 바로 작성하실 수 있습니다.</span></dd></div>
           <div><dt>준비물</dt><dd><strong>주민등록증</strong><br/><span>등기부등본은 접수처(유림부동산)에서 준비해 드립니다.</span></dd></div>
           <div class="quick-warn"><dt>공동명의</dt><dd><strong>두 분 모두</strong> 주민등록증 필요 (함께 방문)</dd></div>
-          <div><dt>접수 기간</dt><dd><strong>10/19(월) ~ 11/19(목)</strong> (약 한 달) · 우편 접수도 가능</dd></div>
+          <div><dt>접수 기간</dt><dd><strong>10/19(월) ~ 11/19(목)</strong> (약 한 달) · 우편 접수도 가능<br/><span>가능하시면 월·화·목·금 11:30 이후에 오시면 추진위원장님께 바로 안내받으실 수 있습니다.</span></dd></div>
         </dl>
         <div class="quick-map">
           <iframe src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B3%B0%EB%8B%AC%EB%9E%98%EB%A1%9C%2089&amp;z=17&amp;hl=ko&amp;output=embed"
@@ -111,8 +111,8 @@
         </div>
       </div>
       <div class="dday dday-urgent" id="dday">
-        <span class="dday-label">공모용 동의서 접수</span>
-        <span class="dday-value">10/19~</span>
+        <span class="dday-label">동의서 접수 마감까지</span>
+        <span class="dday-value" id="dday-value">11/19</span>
         <span class="dday-date">11/19(목)까지</span>
       </div>
       </div>
@@ -303,7 +303,7 @@
             <span class="doc-check">✓</span>
             <div>
               <h3>주민등록증</h3>
-              <p>뒷자리는 가려도 무관</p>
+              <p>주민등록번호 뒷자리(7자리)는 가려도 됩니다</p>
             </div>
           </li>
           <li>
@@ -321,7 +321,7 @@
             <span class="doc-check">✓</span>
             <div>
               <h3>공모 참여 의향서</h3>
-              <p>현장에 준비되어 있습니다 · 원본 수기 작성만 인정 (복사본 불가)</p>
+              <p>현장에 준비되어 있습니다 · 원본 수기 작성만 인정 (복사본 불가) · 도장·인감 없이 지장(손도장)을 찍습니다</p>
             </div>
           </li>
           <li>
@@ -385,7 +385,7 @@
           <div class="overview-item">
             <span class="overview-label">사업 유형</span>
             <span class="overview-value">역세권 도심 공공주택 복합사업</span>
-            <span class="overview-note">도심 복합사업 3유형 중 혜택이 가장 큰 유형</span>
+            <span class="overview-note">도심 복합사업 유형 중 역세권 유형</span>
           </div>
           <div class="overview-item">
             <span class="overview-label">근거 법령</span>
@@ -395,7 +395,7 @@
           <div class="overview-item">
             <span class="overview-label">시행자</span>
             <span class="overview-value">LH · SH 등 공공</span>
-            <span class="overview-note">서울시 주관, 시행자는 선정 후 확정</span>
+            <span class="overview-note">국토교통부 공모·선정, 시행자는 선정 후 확정</span>
           </div>
           <div class="overview-item">
             <span class="overview-label">규모</span>
@@ -421,23 +421,10 @@
       <div class="container">
         <h2 class="reveal">사업 구역도</h2>
         <p class="section-lede reveal">
-          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 아래 칸에 지번을 넣으시면
-          지도에서 위치를 찾아 구역 안인지 알려 드립니다.
+          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에서
+          지번이나 도로명 주소를 찾은 뒤 &lsquo;구역도에서 위치 보기&rsquo;를 누르시면 이 지도에 표시됩니다.
         </p>
 
-        <!-- 우리 집 찾기 -->
-        <div class="finder reveal">
-          <form class="finder-form" id="finder-form" role="search">
-            <label for="finder-input" class="finder-label">우리 집 지번</label>
-            <div class="finder-row">
-              <input id="finder-input" type="text" inputmode="text" autocomplete="off"
-                     placeholder="예: 346-85" aria-describedby="finder-help" />
-              <button type="submit">찾기</button>
-            </div>
-            <p class="finder-help" id="finder-help">등기부등본이나 재산세 고지서의 지번(예: 화곡동 346-85)을 넣어 주세요.</p>
-          </form>
-          <div class="finder-result" id="finder-result" aria-live="polite" hidden></div>
-        </div>
 
         <figure class="map-figure reveal">
           <div class="finder-map" id="finder-map">
@@ -457,13 +444,16 @@
           </figcaption>
         </figure>
 
+        <!-- 첫 화면 '우리 집 동의율 찾기'에서 '구역도에서 위치 보기'를 누르면 지도 아래에 결과가 나온다 -->
+        <div class="finder-result" id="finder-result" aria-live="polite" hidden></div>
+
         <!-- 제출 3단계 -->
         <ol class="steps reveal-stagger">
           <li>
             <span class="step-num">1</span>
             <div>
               <h3>우리 집 확인</h3>
-              <p>위 칸에서 지번을 찾아 구역 안인지 확인합니다.</p>
+              <p>첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에 지번이나 도로명 주소를 넣으면 구역 안인지 알려 드립니다.</p>
             </div>
           </li>
           <li>
@@ -477,7 +467,7 @@
             <span class="step-num">3</span>
             <div>
               <h3>유림부동산 방문</h3>
-              <p>현장에서 의향서와 동의서를 쓰고 지장을 찍습니다. <a href="#submit">위치·시간 보기</a></p>
+              <p>현장에서 의향서와 동의서를 쓰고 지장(손도장)을 찍습니다. 도장·인감은 필요 없습니다. <a href="#submit">위치·시간 보기</a></p>
             </div>
           </li>
         </ol>
@@ -515,7 +505,7 @@
               <li><span>시작</span> 10/19(월) 오전 10:00부터</li>
               <li><span>문의</span> <span class="vh-val">추진위원장님 <span class="tel">010-8367-2346</span> (유림부동산 <span class="tel">02-2606-8853</span>)</span></li>
               <li><span>팩스</span> <span class="vh-val">유림부동산 <span class="tel">02-2693-3355</span></span></li>
-              <li><span>참고</span> 오전에는 부동산 대표님이 안 계시고 오후 3시경 도착하십니다. 오전·오후 모두 현장을 지켜 주실 봉사자가 필요합니다.</li>
+              <li><span>참고</span> 추진위원장님은 월·화·목·금 11:30부터 계시니, 가능하시면 그 이후 방문을 권해 드립니다. 오전에는 부동산 대표님이 안 계시고 오후 3시경 도착하십니다. 오전·오후 모두 현장을 지켜 주실 봉사자가 필요합니다.</li>
             </ul>
             <a class="venue-phone" data-track="tel-chair-venue" href="tel:010-8367-2346">
               <span>문의 · 추진위원장님</span>
@@ -532,8 +522,8 @@
             <p>등기 우편으로 <strong>서울 강서구 화곡동 426-3 유림부동산</strong>에 보내 주시고, 연락처는 <strong>최고야 <span class="tel">010-8367-2346</span></strong>으로 적어 주세요. 의향서·동의서 서식은 추진위원장님께 요청하시면 받으실 수 있습니다.</p>
             <ul class="mail-steps">
               <li><strong>의향서</strong> 맨 위에 이름과 사는 주소를 쓰시고, <strong>신청자 칸은 비워 두세요.</strong> 소유권 현황의 &lsquo;토지&rsquo; 칸에는 건물 번지만, &lsquo;건축물&rsquo; 칸에는 빌라 이름과 호수를 씁니다.</li>
-              <li><strong>의향서와 동의서</strong>를 모두 쓰신 뒤 <strong>지장</strong>을 찍어 주세요.</li>
-              <li><strong>주민등록증 앞면과 뒷면</strong>을 모두 복사해 함께 넣어 주세요. 뒷면이 빠지면 접수가 반려됩니다.</li>
+              <li><strong>의향서와 동의서</strong>를 모두 쓰신 뒤 <strong>지장</strong>(손도장)을 찍어 주세요. 도장·인감은 필요 없습니다.</li>
+              <li><strong>주민등록증 카드의 앞면과 뒷면</strong>(뒷면 = 주소 변경 기록이 있는 면)을 모두 복사해 함께 넣어 주세요. 뒷면 사본이 빠지면 접수가 반려됩니다. 앞면의 주민등록번호 뒷자리는 가려도 됩니다.</li>
               <li><strong>공동명의</strong>는 두 분이 각각 쓰시고, 대표자 선정란에 한 분을 표시해 주세요. 두 분의 주민등록증 앞뒤 사본이 모두 필요합니다.</li>
             </ul>
             <p class="mail-note">문의: 추진위원장님 <strong><span class="tel">010-8367-2346</span></strong></p>
@@ -576,7 +566,7 @@
           </details>
           <details class="faq-item">
             <summary>이전 모아타운·모아주택과는 어떤 관계인가요?</summary>
-            <div class="faq-answer">이전에는 모아주택으로 58% 동의를 받았던 이력이 있으며, 현재는 도심 공공주택 복합사업 공모로 전환하여 진행 중입니다.</div>
+            <div class="faq-answer">이전에는 모아주택으로 58% 동의를 받았던 이력이 있으며, 현재는 도심 공공주택 복합사업 공모로 전환하여 진행 중입니다. 모아주택 때 받은 동의는 다른 사업에 대한 동의라 이번 공모에는 쓸 수 없어서, 이번 공모용 동의서를 새로 받고 있습니다. 홈페이지의 동의 현황 숫자는 <strong>이번 공모용 동의서만</strong> 센 것입니다.</div>
           </details>
           <details class="faq-item">
             <summary>9/30 발표 결과는 어떻게 되었나요?</summary>
@@ -613,8 +603,8 @@
             <div class="faq-answer">세대주가 아닌 <strong>소유자 이름</strong>으로 접수해야 합니다.</div>
           </details>
           <details class="faq-item">
-            <summary>주민등록증 뒷자리를 가려도 되나요?</summary>
-            <div class="faq-answer">가능합니다. 사진을 찍으시거나 사본을 뜨실 때 뒷자리를 가리셔도 무관합니다.</div>
+            <summary>주민등록번호 뒷자리를 가려도 되나요?</summary>
+            <div class="faq-answer">가능합니다. 사진을 찍으시거나 사본을 뜨실 때 주민등록번호 뒷자리(7자리)를 가리셔도 됩니다.</div>
           </details>
           <details class="faq-item">
             <summary>우편으로도 접수할 수 있나요?</summary>
@@ -633,14 +623,14 @@
             <div class="faq-answer">상관없습니다. 예전 발행본도 괜찮고, 없으시면 접수처(유림부동산)에서 준비해 드립니다.</div>
           </details>
           <details class="faq-item">
+            <summary>도장이나 인감이 필요한가요?</summary>
+            <div class="faq-answer">필요 없습니다. 의향서와 동의서에 <strong>지장(손도장)</strong>을 찍으시면 됩니다.</div>
+          </details>
+          <details class="faq-item">
             <summary>공동명의일 경우 어떻게 처리하나요?</summary>
             <div class="faq-answer">
               <strong>두 분 모두</strong> 주민등록증이 필요합니다. 두 분이 함께 방문해 주세요.
             </div>
-          </details>
-          <details class="faq-item">
-            <summary>주민등록번호 뒷자리를 가려도 되나요?</summary>
-            <div class="faq-answer">가능합니다.</div>
           </details>
           <details class="faq-item">
             <summary>의향서 양식에는 생년월일을 적는데, 주민등록번호가 필요한가요?</summary>
@@ -658,7 +648,7 @@
               <ul>
                 <li><strong>장소:</strong> 유림부동산 (곰달래로 89, 유림아파트 앞쪽)</li>
                 <li><strong>기간:</strong> 10/19(월) 오전 10시부터 11/19(목)까지 (약 한 달간)</li>
-                <li><strong>참고:</strong> 오전에는 부동산 대표님이 안 계시고 오후 3시경 도착하십니다.</li>
+                <li><strong>참고:</strong> 추진위원장님은 월·화·목·금 11:30부터 계시니, 가능하시면 그 이후 방문을 권해 드립니다. 오전에는 부동산 대표님이 안 계시고 오후 3시경 도착하십니다.</li>
               </ul>
             </div>
           </details>
@@ -687,7 +677,7 @@
       <div class="container">
         <h2 class="reveal">자원봉사자 모집</h2>
         <p class="section-lede reveal">
-          짧은 공모 기간 안에 주민 동의를 확보하려면 많은 손길이 필요합니다.
+          11/19 마감 전까지 주민 동의를 모으려면 많은 손길이 필요합니다.
           아래 분야 중 가능한 것으로 도움 주시면 큰 힘이 됩니다. (중복 지원 가능)
         </p>
 
@@ -750,8 +740,8 @@
           <div class="donation-row">
             <span class="donation-k">회계 투명성</span>
             <span class="donation-v">
-              카카오뱅크 모임통장을 통해 수입·지출 내역을 실시간으로 투명하게 공개합니다.
-              주민 누구나 정산 내역을 확인하실 수 있도록 정기적으로 공지됩니다.
+              카카오뱅크 모임통장으로 관리하며,
+              주민 누구나 정산 내역을 확인하실 수 있도록 공지합니다.
             </span>
           </div>
         </div>
@@ -845,14 +835,12 @@
       targets.forEach(function (el) { io.observe(el); });
     })();
 
-    // 우리 집 찾기: 지번을 넣으면 구역도에서 위치를 표시하고 구역 안/밖/제외를 알려 준다.
+    // 구역도에 우리 집 표시: 첫 화면 '우리 집 동의율 찾기' 결과의 '구역도에서 위치 보기'가 showOnMap(지번)을 부른다.
     // 판정은 지도에 적힌 번호 기준이라, 못 찾은 번호를 '구역 밖'이라고 말하지 않는다.
     (function () {
-      var form = document.getElementById('finder-form');
-      if (!form) return;
-      var input = document.getElementById('finder-input');
-      var result = document.getElementById('finder-result');
       var map = document.getElementById('finder-map');
+      if (!map) return;
+      var result = document.getElementById('finder-result');
       var stage = document.getElementById('finder-stage');
       var marks = document.getElementById('finder-marks');
       var reset = document.getElementById('finder-reset');
@@ -866,12 +854,6 @@
           lots = rows.map(function (r) { return { id: r[0], x: r[1], y: r[2], s: r[3] }; });
           return lots;
         });
-      }
-
-      // "화곡동 346-85", "346번지 85", "３４６－８５" 모두 [346, 85]로
-      function parse(text) {
-        var t = text.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
-        return t.match(/\d+/g) || [];
       }
 
       function zoomTo(pts) {
@@ -922,29 +904,10 @@
         var msg = '<p class="finder-msg is-' + hits[0].s + '"><strong>' + id + '</strong> · ' + LABEL[hits[0].s] + '</p>';
         if (hits.length > 1) msg += '<p>지도에 같은 번호가 ' + hits.length + '곳 있어 모두 표시했습니다.</p>';
         say(msg);
-        map.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        map.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var nums = parse(input.value);
-        if (!nums.length) { input.focus(); return; }
-        load().then(function () {
-          if (nums.length >= 2) { show(nums[nums.length - 2] + '-' + nums[nums.length - 1]); return; }
-          // 부번만 넣은 경우: 본번이 다른 후보를 고르게 한다
-          var bu = '-' + nums[0];
-          var cands = lots.filter(function (l) { return l.id.slice(-bu.length) === bu; });
-          unzoom();
-          if (!cands.length) { show(nums[0]); return; }
-          say('<p>본번(앞 번호)까지 넣어 주세요. 이 중 하나인가요?</p><div class="finder-cands">' +
-              cands.map(function (c) { return '<button type="button" data-id="' + c.id + '">' + c.id + '</button>'; }).join('') + '</div>');
-        });
-      });
-
-      result.addEventListener('click', function (e) {
-        var id = e.target.getAttribute && e.target.getAttribute('data-id');
-        if (id) { input.value = id; show(id); }
-      });
+      window.showOnMap = function (id) { load().then(function () { show(id); }); };
       reset.addEventListener('click', unzoom);
     })();
 
@@ -986,14 +949,40 @@
           result.appendChild(p);
         });
         if (res.zone) {
+          var links = document.createElement('div');
+          links.className = 'rate-links';
+          if (window.showOnMap) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('data-track', 'rate-lot-map');
+            b.textContent = '구역도에서 위치 보기';
+            b.addEventListener('click', function () { window.showOnMap(res.lot); });
+            links.appendChild(b);
+          }
           var a = document.createElement('a');
           a.href = 'volunteer/?q=' + encodeURIComponent(q);
           a.setAttribute('data-track', 'rate-map');
-          a.textContent = '지도에서 보기 →';
-          result.appendChild(a);
+          a.textContent = '동의율 지도에서 보기 →';
+          links.appendChild(a);
+          result.appendChild(links);
         }
         result.hidden = false;
       });
+    })();
+
+    // 상단 띠 D-day: 동의서 접수 마감 11/19(목)까지 남은 날(한국 시간 기준). 마감 7일 전부터 빨간 강조
+    (function () {
+      var box = document.getElementById('dday'), val = document.getElementById('dday-value');
+      if (!box || !val) return;
+      var kstToday = Math.floor((Date.now() + 9 * 3600e3) / 864e5);
+      var left = Math.floor(Date.UTC(2026, 10, 19) / 864e5) - kstToday;
+      if (left < 0) {
+        val.textContent = '마감';
+        box.querySelector('.dday-label').textContent = '동의서 접수';
+      } else {
+        val.textContent = left === 0 ? 'D-DAY' : 'D-' + left;
+        if (left <= 7) { box.classList.remove('dday-urgent'); box.classList.add('dday-critical'); }
+      }
     })();
 
     // Share button
