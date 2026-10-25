@@ -9,7 +9,7 @@
   <title>번지별 동의 현황</title>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
-  <link rel="stylesheet" href="volunteer.css?v=20261025a" />
+  <link rel="stylesheet" href="volunteer.css?v=20261025b" />
 </head>
 <body>
   <header class="top">
@@ -21,14 +21,24 @@
   </header>
 
   <main class="wrap">
+    <section class="card addr" aria-label="우리 집 동의율 찾기">
+      <h2>우리 집 동의율 찾기</h2>
+      <form id="addr-form" class="addr-row" autocomplete="off">
+        <input id="addr-input" type="text" enterkeyhint="search" placeholder="예: 346-85 또는 곰달래로19나길 15" aria-label="지번 또는 도로명 주소" />
+        <button type="submit">찾기</button>
+      </form>
+      <div id="addr-result" class="addr-result" aria-live="polite" hidden></div>
+      <p class="zoom-hint">지번(재산세 고지서·등기부)이나 건물 번호판의 도로명 주소를 넣으세요. 집집마다의 동의 여부는 나오지 않고, 그 구역 전체의 동의율만 보여 드립니다.</p>
+    </section>
+
     <section class="summary" aria-label="전체 요약">
       <div class="tile"><span class="tile-label">전체 동의율</span><strong id="total-rate">–</strong></div>
       <div class="tile"><span class="tile-label">동의 / 소유자</span><strong id="total-count">–</strong></div>
       <div class="tile"><span class="tile-label">30%까지</span><strong id="to-target">–</strong></div>
     </section>
 
-    <section class="card zones" aria-label="알파벳 구역 안내">
-      <h2>알파벳 구역 안내 <small>큰 번지를 나눠 다니기 쉽게 정한 구역 (공식 구분 아님)</small></h2>
+    <details class="card zones">
+      <summary><h2>알파벳 구역 범위 보기 <small>346-A~E, 348-A·B (공식 구분 아님)</small></h2></summary>
       <ul class="zone-list">
         <li><b>346-A</b><span class="zone-where">서쪽(423번지 옆) · 346-49·50, 86, 90~102, 109~133, 145, 154</span><span class="road">곰달래로19나길 5·15, 강서로15길 47~53</span></li>
         <li><b>346-B</b><span class="zone-where">가운데 아래쪽 · 346-61~85, 107, 113, 128~161 일부</span><span class="road">곰달래로19나길 15~25, 곰달래로21길 19~31</span></li>
@@ -39,7 +49,7 @@
         <li><b>348-B</b><span class="zone-where">북쪽 끝(도시철도 쪽) · 348-2~13, 32~44, 57</span><span class="road">강서로 61, 강서로17길 9·15, 강서로15길 10·16</span></li>
       </ul>
       <p class="zoom-hint">번호가 섞여 있어 현장에서는 도로명 번호판을 보고 찾는 게 빠릅니다.</p>
-    </section>
+    </details>
 
     <section class="card">
       <h2>구역도</h2>
@@ -79,6 +89,6 @@
     </p>
   </main>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=20261025b"></script>
 </body>
 </html>
