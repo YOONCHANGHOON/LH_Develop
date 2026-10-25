@@ -1832,7 +1832,6 @@ body {
 /* ─── Hero quick answers ─── */
 .quick {
   margin-top: 28px;
-  max-width: 540px;
   background: #fff;
   color: #1c2b25;
   border-radius: 14px;
