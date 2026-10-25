@@ -23,6 +23,9 @@ body {
 }
 .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
 .top { background: #0e2e24; color: #fff; padding: 20px 0 18px; }
+.home { display: inline-block; margin: 0 0 12px; padding: 7px 14px; font-size: 15px; font-weight: 700; color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.45); border-radius: 999px; }
+.home:hover, .home:focus-visible { background: rgba(255, 255, 255, 0.12); }
+.framed .home { display: none; }
 .eyebrow { margin: 0 0 4px; font-size: 13px; color: #f0c674; font-weight: 600; }
 .top h1 { margin: 0; font-size: 24px; }
 .updated { margin: 6px 0 0; font-size: 13px; color: #b8cbc2; }

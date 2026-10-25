@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261023b" />
+  <link rel="stylesheet" href="style.css?v=20261025a" />
 </head>
 <body>
 
@@ -60,6 +60,17 @@
           </p>
         </div>
       </div>
+      <section class="quick rate" aria-label="우리 집 동의율 찾기">
+        <p class="quick-title">우리 집 동의율 찾기</p>
+        <p class="rate-total" id="rate-total">전체 동의율 불러오는 중…</p>
+        <form class="finder-row" id="rate-form" role="search" autocomplete="off">
+          <input id="rate-input" type="text" enterkeyhint="search" placeholder="예: 346-85 또는 곰달래로19나길 15" aria-label="지번 또는 도로명 주소" />
+          <button type="submit" data-track="rate-hero">찾기</button>
+        </form>
+        <div class="rate-result" id="rate-result" aria-live="polite" hidden></div>
+        <p class="rate-foot">지번(재산세 고지서·등기부)이나 건물 번호판의 도로명 주소를 넣으세요. 집집마다의 동의 여부는 나오지 않고, 그 구역 전체의 동의율만 보여 드립니다.
+          <a href="volunteer/" data-track="consent-rate">번지별 동의 현황 전체 보기 →</a></p>
+      </section>
       <div class="hero-actions">
         <a class="hero-kakao" href="#notice">접수 안내 보기 <span class="arrow">↓</span></a>
         <a class="hero-share" data-track="kakao-hero" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">
@@ -774,6 +785,7 @@
     </div>
   </footer>
 
+  <script src="volunteer/core.js?v=20261025a"></script>
   <script>
     // Scroll reveal
     (function () {
@@ -791,7 +803,9 @@
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      // threshold는 0이어야 한다: 휴대폰에서 공지 블록은 동의 현황까지 펼쳐져 화면 높이의 8배가 넘어서,
+      // '12%가 보일 때'로 두면 끝내 조건을 못 채워 공지 탭을 눌러도 빈 화면만 보였다.
+      }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
       targets.forEach(function (el) { io.observe(el); });
     })();
 
@@ -896,6 +910,54 @@
         if (id) { input.value = id; show(id); }
       });
       reset.addEventListener('click', unzoom);
+    })();
+
+    // 우리 집 동의율 찾기(첫 화면): 동의 현황 페이지(volunteer/)와 같은 주소 대응표·공개 집계 시트를 읽어
+    // 그 구역 동의율만 보여 준다. 판정 로직은 volunteer/core.js를 같이 쓴다.
+    (function () {
+      var form = document.getElementById('rate-form');
+      if (!form || typeof resolveAddr !== 'function') return;
+      var input = document.getElementById('rate-input');
+      var result = document.getElementById('rate-result');
+      var total = document.getElementById('rate-total');
+      var addr = null, byId = {};
+
+      fetch('volunteer/addr.json?v=20261025b').then(function (r) { return r.json(); }).then(function (d) {
+        return fetchSheet('volunteer/').then(function (csv) {
+          // 지도에 있는 구역(대응표의 구역)만 센다 — 동의 현황 페이지 맨 위 숫자와 같아지게
+          var zones = {};
+          Object.keys(d.lots).forEach(function (k) { zones[d.lots[k]] = 1; });
+          parseCsv(csv).forEach(function (r) { if (zones[r.id]) byId[r.id] = r; });
+          var t = 0, a = 0;
+          Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
+          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30%까지 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명' : '';
+          addr = d; // 숫자까지 다 읽은 뒤에 찾기를 받는다(그 전에는 '불러오는 중' 안내)
+        });
+      }).catch(function () {
+        total.textContent = '동의 현황을 불러오지 못했습니다. 새로고침해 주세요.';
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var q = input.value.trim();
+        var res = resolveAddr(q, addr);
+        result.replaceChildren();
+        result.classList.toggle('warn', !!res.warn);
+        addrLines(res, function (z) { return byId[z]; }).forEach(function (line) {
+          var p = document.createElement('p');
+          if (line[1]) p.className = line[1];
+          p.textContent = line[0];
+          result.appendChild(p);
+        });
+        if (res.zone) {
+          var a = document.createElement('a');
+          a.href = 'volunteer/?q=' + encodeURIComponent(q);
+          a.setAttribute('data-track', 'rate-map');
+          a.textContent = '지도에서 보기 →';
+          result.appendChild(a);
+        }
+        result.hidden = false;
+      });
     })();
 
     // Share button
