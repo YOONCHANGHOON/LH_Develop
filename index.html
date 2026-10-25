@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261025c" />
+  <link rel="stylesheet" href="style.css?v=20261025e" />
 </head>
 <body>
 
@@ -82,6 +82,9 @@
         <a class="hero-share" data-track="consent-hero" href="volunteer/">
           <span class="share-label">동의 현황 보기</span>
         </a>
+        <a class="hero-share" data-track="feedback-hero" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer">
+          <span class="share-label">건의사항 남기기</span>
+        </a>
         <button type="button" class="hero-share" id="share-btn" data-track="share" aria-label="페이지 공유하기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="18" cy="5" r="3"/>
@@ -129,6 +132,7 @@
       <a href="#volunteer">봉사</a>
       <a href="#donation">후원</a>
       <a href="#contact">연락처</a>
+      <a href="#feedback">건의사항</a>
     </div>
   </nav>
 
@@ -789,7 +793,7 @@
         </a>
 
         <!-- 건의사항: 구글 설문지(익명, 이메일 수집 안 함). 응답은 소유자 계정의 설문지에서 확인 -->
-        <a class="kakao-cta feedback-cta reveal" data-track="feedback-contact" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer">
+        <a class="kakao-cta feedback-cta reveal" id="feedback" data-track="feedback-contact" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer">
           <div class="kakao-cta-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 20h9"/>

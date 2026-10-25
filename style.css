@@ -108,7 +108,7 @@ body {
 .tabs a {
   flex-shrink: 0;
   padding: 16px 4px;
-  margin-right: 24px;
+  margin-right: 18px;
   color: var(--color-muted);
   text-decoration: none;
   font-weight: 500;
@@ -120,6 +120,8 @@ body {
 .tabs a:hover {
   color: var(--color-accent);
 }
+/* 메뉴 11개(건의사항 추가)가 PC 폭 880px 안에 가로 스크롤 없이 들어가게 */
+.tabs a:last-child { margin-right: 0; }
 
 .section {
   padding: 64px 0;
@@ -707,6 +709,7 @@ body {
 
 /* 건의사항 버튼: 카톡 버튼과 같은 모양, 색만 사이트 기본색 */
 .feedback-cta {
+  scroll-margin-top: 72px;
   margin-top: 12px;
   background: #fff;
   border: 1px solid var(--color-border);
