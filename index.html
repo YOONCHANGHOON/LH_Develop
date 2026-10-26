@@ -1078,6 +1078,21 @@
       }
     })();
 
+    // 방문·클릭 전수 집계(worker.js → D1). Cloudflare 방문 통계는 10건 중 1건만 표본으로 남겨서 따로 센다.
+    // 세션 구분용 임의 번호만 보내고, 입력한 지번·주소 같은 내용은 보내지 않는다.
+    var hit = (function () {
+      var sid = '';
+      try {
+        sid = sessionStorage.getItem('sid') || Math.random().toString(36).slice(2, 10);
+        sessionStorage.setItem('sid', sid);
+      } catch (e) { /* 프라이빗 모드 등 — 세션 구분 없이 보낸다 */ }
+      return function (kind, name) {
+        if (!navigator.sendBeacon) return;
+        navigator.sendBeacon('/api/hit', JSON.stringify({ k: kind, n: name || '', p: location.pathname, s: sid }));
+      };
+    })();
+    hit('view');
+
     // 클릭 추적 — Cloudflare Web Analytics는 커스텀 이벤트를 지원하지 않으므로,
     // 비콘이 자동 감지하는 history 경로 변경을 이용해 가상 경로(/e-항목)로 기록한다.
     // 비콘은 "경로를 떠날 때" 그 경로의 뷰를 보내므로, 클릭 즉시 경로를 되돌리면
@@ -1098,6 +1113,7 @@
         if (sent[name]) return;        // 한 세션에 같은 항목은 한 번만
         sent[name] = 1;
         pending.push(name);
+        hit('click', name);
         try {
           sessionStorage.setItem('tracked', JSON.stringify(sent));
         } catch (e) { /* 저장 실패해도 추적은 계속 */ }
