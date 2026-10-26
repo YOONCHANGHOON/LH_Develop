@@ -1891,6 +1891,32 @@ body {
 }
 .quick-map-cap strong { color: #1c2b25; }
 .quick-map-cap .nw { white-space: nowrap; }
+/* 첫 화면 전단 미리보기 카드 → flyer/ */
+.flyer-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+  text-decoration: none;
+}
+.flyer-hero img {
+  flex: 0 0 120px;
+  width: 120px;
+  height: auto;
+  border: 1px solid #e3e8e5;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: rotate(-2deg);
+}
+.flyer-hero .quick-title { display: block; }
+.flyer-hero strong { display: block; margin-bottom: 4px; font-size: 17px; color: #1c2b25; }
+.flyer-hero-desc { display: block; font-size: 14px; line-height: 1.5; color: #4a5a53; }
+.flyer-hero-go { display: inline-block; margin-top: 10px; font-size: 15px; font-weight: 700; color: var(--color-accent); }
+.flyer-hero:hover .flyer-hero-go, .flyer-hero:focus-visible .flyer-hero-go { text-decoration: underline; }
+@media (max-width: 480px) {
+  .flyer-hero { gap: 14px; padding: 14px 16px; }
+  .flyer-hero img { flex-basis: 96px; width: 96px; }
+}
 .quick-map-cap a {
   flex-shrink: 0;
   font-weight: 700;
