@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261026c" />
+  <link rel="stylesheet" href="style.css?v=20261026d" />
 </head>
 <body>
 
@@ -82,6 +82,17 @@
         <p class="intent-cap">누르면 크게 볼 수 있습니다 · 2026. 5. 8. 신청 마감 기준</p>
         <p class="intent-now">지난 공모 12% → <strong>지금 <span id="intent-now">집계 중</span></strong> (지난 공모 때 내신 분 포함) · 1차 목표 <strong>30% 이상</strong></p>
         <p class="intent-note">사전의향률만으로 선정이 정해지지는 않습니다. 국토부는 노후도 등 법정 요건, 사업성, 주민 의향률을 종합해 심사했다고 밝혔습니다.</p>
+      </section>
+      <section class="quick intent-hero" id="why-hold" aria-labelledby="why-hold-title">
+        <p class="quick-title" id="why-hold-title">왜 &lsquo;보류&rsquo;이고, 왜 동의율이 목표인가</p>
+        <p class="intent-lead">위 자료에서 의향률이 <strong>24~40%</strong>였던 강서구 다른 구역 3곳(②③⑤)은 탈락했는데, <strong>12%</strong>였던 우리 구역은 <strong>&lsquo;보류&rsquo;</strong>(탈락 아님)가 되었습니다.</p>
+        <dl class="quick-list">
+          <div><dt>국토부</dt><dd>구역별 보류 사유는 공개하지 않았습니다. 선정되지 않은 곳은 <strong>주민 의향률 확보, 지구계 변경 등 보완</strong> 후 다시 신청할 수 있다고 안내했습니다.</dd></div>
+          <div><dt>추진위</dt><dd>주변에 도로가 많아 <strong>진입로는 문제가 아니라고</strong> 보고, <strong>낮은 동의율(12%)을 보완</strong>해야 한다고 판단합니다. 5년 이상 우리 구역을 맡아 오신 추진위원장님도 다른 구역보다 여러 면에서 유리하다고 보십니다.</dd></div>
+          <div><dt>블로그</dt><dd>재개발 전문 블로거는 이 결과를 <strong>&ldquo;의향률만 채우면 다른 조건은 괜찮다는 뜻&rdquo;</strong>으로 해석했습니다. <span>개인 분석이라 참고로만 봐 주세요.</span></dd></div>
+          <div><dt>그래서</dt><dd>지금 주민이 직접 바꿀 수 있는 것은 <strong>동의율</strong>입니다. 지난 공모에서 30%를 넘긴 구역은 가점 <strong>+9.5~10점</strong>(우리 +5.5점)을 받았고, 추진위는 <strong>1차 목표를 30% 이상</strong>으로 잡고 있습니다.</dd></div>
+        </dl>
+        <p class="intent-note">구역계 보완 여부는 아직 확정된 것이 없습니다. 투자·매매를 권하는 글이 아닙니다. <a href="#hold-reason" data-track="why-hold-reason">추진위 판단 자세히</a> · <a href="#blog-analysis" data-track="why-hold-blog">블로그 분석 자세히</a></p>
       </section>
       <div class="hero-actions">
         <a class="hero-kakao" href="#notice">접수 안내 보기 <span class="arrow">↓</span></a>
@@ -265,7 +276,7 @@
           </div>
         </div>
 
-        <div class="alert alert-amber reveal">
+        <div class="alert alert-amber reveal" id="hold-reason">
           <div class="alert-badge">진행</div>
           <div class="alert-body">
             <h3>왜 보류인가, 지금 어디까지 진행됐나 (10/26 기준)</h3>
@@ -285,7 +296,7 @@
           </div>
         </div>
 
-        <div class="alert alert-amber reveal">
+        <div class="alert alert-amber reveal" id="blog-analysis">
           <div class="alert-badge">참고</div>
           <div class="alert-body">
             <h3>외부 분석: 재개발 전문 블로거가 본 우리 구역</h3>
