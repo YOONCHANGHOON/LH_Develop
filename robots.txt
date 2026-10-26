@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /drafts/
+Disallow: /flyer.html
+Disallow: /flyer-bw.html
+Disallow: /api/
+Disallow: /README.md
+Disallow: /notion-import.md
+
+Sitemap: https://hwagok-c-zone.hwagok1.workers.dev/sitemap.xml
