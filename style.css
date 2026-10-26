@@ -88,6 +88,73 @@ body {
   max-width: 540px;
 }
 
+/* 첫 화면 동의율 막대: 오른쪽 끝 = 목표 30% */
+.gauge {
+  margin: 0 0 24px;
+  padding: 18px 20px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.gauge-label {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #8ee0b9;
+}
+.gauge-label span { margin-left: 6px; font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.72); }
+.gauge-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 2px 0 12px;
+}
+.gauge-rate {
+  font-size: clamp(52px, 13vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.gauge-count { font-size: 16px; color: rgba(255, 255, 255, 0.85); }
+.gauge-track {
+  position: relative;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.gauge-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5fc79a, #8ee0b9);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 지난 공모 12% 위치 = 12 ÷ 30 */
+.gauge-prev {
+  position: absolute;
+  left: 40%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: #fff;
+  opacity: 0.8;
+}
+.gauge-scale {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+.gauge-scale strong { color: #fff; }
+.gauge-prev-cap { position: absolute; left: 40%; transform: translateX(-50%); white-space: nowrap; }
+.gauge-need { margin: 10px 0 0; font-size: 17px; color: #fff; }
+.gauge-need strong { color: #ffd84d; font-size: 20px; }
+
 .tabs {
   background: #fff;
   border-bottom: 1px solid var(--color-border);
@@ -1464,6 +1531,7 @@ body {
   /* Hero entrance */
   .hero .eyebrow,
   .hero h1,
+  .hero .gauge,
   .hero .lede {
     opacity: 0;
     transform: translateY(14px);
@@ -1471,6 +1539,7 @@ body {
   }
   .hero .eyebrow { animation-delay: 0.1s; }
   .hero h1 { animation-delay: 0.25s; }
+  .hero .gauge { animation-delay: 0.35s; }
   .hero .lede { animation-delay: 0.45s; }
 
   @keyframes hero-rise {
@@ -1581,6 +1650,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hero::after { animation: none; }
   .finder-pin { animation: none; }
+  .gauge-fill { transition: none; }
   .reveal, .reveal-stagger > * {
     opacity: 1;
     transform: none;
