@@ -838,6 +838,10 @@
         본 페이지의 내용은 주민 안내를 위한 요약이며, 공식 공고·법령과 차이가 있을 경우
         공식 자료가 우선합니다. 접수 장소·시간은 변동될 수 있으니 방문 전 전화 확인 부탁드립니다.
       </p>
+      <p class="disclaimer" id="clarity-notice" hidden>
+        이 사이트는 이용 현황(클릭·스크롤 위치) 파악을 위해 Microsoft Clarity와 Cloudflare 방문 통계를 사용합니다.
+        입력하신 글자와 주소는 가려져 수집되지 않습니다.
+      </p>
     </div>
   </footer>
 
@@ -1154,6 +1158,21 @@
       });
     });
 
+  </script>
+  <script>
+    // Microsoft Clarity(클릭·스크롤 열지도). 프로젝트 ID를 넣으면 켜지고, 비워 두면 아무것도 하지 않는다.
+    // 대시보드 Settings > Masking 은 반드시 Strict 로 둘 것(입력한 주소가 화면 기록에 보이지 않게).
+    (function () {
+      var CLARITY_ID = "z3l2tdlgjj";
+      if (!CLARITY_ID) return;
+      (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", CLARITY_ID);
+      var n = document.getElementById("clarity-notice");
+      if (n) n.hidden = false;
+    })();
   </script>
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2319c0ba16b74f8995b47680a0c8aafa"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
