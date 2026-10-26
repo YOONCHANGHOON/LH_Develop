@@ -77,6 +77,9 @@ function drawMap(blocks, byId) {
   // 배지: 지도에 인쇄된 파란 번지 글자 위에 놓여 그 글자를 대신한다. 모든 배지는 같은 크기·같은 모양.
   // 휴대폰처럼 좁은 화면에서는 배지가 지도를 덮지 않게 동의율만 있는 작은 딱지로 그린다(구역 이름은 누르면 아래에 표시).
   COMPACT = isCompact();
+  $("badge-legend").textContent = COMPACT
+    ? "배지: 동의율 (번지는 누르면 지도 아래에 표시 · – 는 자료 없음)"
+    : "배지: 위 번지 · 아래 동의율 (– 는 자료 없음)";
   Object.entries(blocks.labels).forEach(([id, [x, y]]) => {
     const r = byId[id];
     const g = el("g", { class: "badge" + (COMPACT ? " compact" : ""), "data-id": id });

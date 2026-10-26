@@ -1580,6 +1580,7 @@ body {
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .hero::after { animation: none; }
+  .finder-pin { animation: none; }
   .reveal, .reveal-stagger > * {
     opacity: 1;
     transform: none;
@@ -1898,6 +1899,25 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+/* 동의서 카드 바로가기: 우편 · 전화 · 접수 확인 문자 */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid #e3e8e5;
+}
+.quick-links a {
+  padding: 8px 14px;
+  border: 1px solid rgba(31, 74, 58, 0.35);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.quick-links a:hover, .quick-links a:focus-visible { background: var(--color-accent); color: #fff; }
 @media (max-width: 480px) {
   .quick { padding: 16px 16px 6px; }
   .quick-list > div { flex-direction: column; gap: 6px; }
@@ -1948,7 +1968,7 @@ body {
   top: 90.4%;
   width: 80.6%;
   height: 2.7%;
-  border: 3px solid #d9480f;
+  border: 3px solid #c2410c;
   border-radius: 4px;
   background: rgba(255, 212, 59, 0.25);
 }
@@ -1959,7 +1979,7 @@ body {
   margin-bottom: 2px;
   padding: 1px 6px;
   border-radius: 4px;
-  background: #d9480f;
+  background: #c2410c;
   color: #fff;
   font-size: 12px;
   font-weight: 800;
