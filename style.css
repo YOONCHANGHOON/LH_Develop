@@ -592,6 +592,77 @@ body {
   flex-shrink: 0;
 }
 
+/* 맨 위 단톡방 띠 (화면에 고정하지 않음 — 스크롤하면 본문을 가리지 않게) */
+.kakao-strip {
+  display: block;
+  background: #FEE500;
+  color: #191919;
+  text-decoration: none;
+}
+.kakao-strip-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kakao-strip-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #191919;
+  color: #FEE500;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.kakao-strip-icon svg {
+  width: 17px;
+  height: 17px;
+}
+.kakao-strip-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.kakao-strip-chev {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+@media (min-width: 768px) {
+  .kakao-strip-inner { padding: 12px 20px; }
+  .kakao-strip-text { font-size: 16.5px; }
+}
+/* 비밀번호 알약: 검정 바탕 + 노란 숫자 (맨 위 띠·맨 아래 카드 공통) */
+.kakao-pw {
+  display: inline-block;
+  background: #191919;
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.kakao-pw b {
+  color: #FEE500;
+  font-weight: 800;
+  margin-left: 3px;
+  letter-spacing: 0.04em;
+}
+.kakao-cta-sub .kakao-pw {
+  margin-right: 4px;
+}
+.hero-share .pw-num {
+  color: #FEE500;
+  font-weight: 800;
+}
+
 /* Toast */
 .toast {
   position: fixed;

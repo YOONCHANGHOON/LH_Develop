@@ -29,9 +29,23 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261026g" />
+  <link rel="stylesheet" href="style.css?v=20261028a" />
 </head>
 <body>
+
+  <!-- 맨 위 단톡방 띠 -->
+  <a class="kakao-strip" data-track="kakao-top" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">
+    <span class="kakao-strip-inner">
+      <span class="kakao-strip-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.84 5.3 4.6 6.73-.2.7-.72 2.58-.83 2.98-.14.5.18.49.38.36.16-.1 2.54-1.72 3.56-2.42.75.11 1.5.17 2.29.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
+        </svg>
+      </span>
+      <span class="kakao-strip-text">주민 단톡방 참여하기</span>
+      <span class="kakao-pw">비밀번호<b>1016</b></span>
+      <svg class="kakao-strip-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </span>
+  </a>
 
   <!-- Hero -->
   <header class="hero">
@@ -109,7 +123,7 @@
           <svg class="kakao-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.84 5.3 4.6 6.73-.2.7-.72 2.58-.83 2.98-.14.5.18.49.38.36.16-.1 2.54-1.72 3.56-2.42.75.11 1.5.17 2.29.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
           </svg>
-          <span class="share-label">주민 카톡방 참여</span>
+          <span class="share-label">주민 카톡방 참여 · 비밀번호 <b class="pw-num">1016</b></span>
         </a>
         <a class="hero-share" data-track="consent-hero" href="volunteer/">
           <span class="share-label">동의 현황 보기</span>
@@ -865,6 +879,7 @@
           </div>
           <div class="kakao-cta-body">
             <p class="kakao-cta-title">주민 단톡방 참여하기</p>
+            <p class="kakao-cta-sub"><span class="kakao-pw">비밀번호<b>1016</b></span> 카톡에서 &lsquo;참여코드&rsquo;를 물으면 이 번호를 넣어 주세요.</p>
             <p class="kakao-cta-sub">최신 공지, 접수 현황, 질문과 답변을 실시간으로 받아보실 수 있습니다.</p>
           </div>
           <span class="kakao-cta-arrow" aria-hidden="true">→</span>
