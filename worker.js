@@ -11,6 +11,12 @@ export default {
       }
       return new Response(null, { status: 204 });
     }
+    // 검색 사이트 소유 확인 파일(google….html·naver….html)은 정적 파일 처리가 .html 없는 주소로
+    // 307 이동시켜서 확인이 실패할 수 있다 → .html 주소 그대로 200으로 내준다.
+    if (/^\/(google|naver)[0-9a-z]+\.html$/.test(url.pathname)) {
+      const res = await env.ASSETS.fetch(new Request(new URL(url.pathname.slice(0, -5), url), request));
+      return new Response(res.body, { status: res.status, headers: res.headers });
+    }
     return env.ASSETS.fetch(request);
   },
 };
