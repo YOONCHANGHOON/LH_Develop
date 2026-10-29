@@ -101,7 +101,8 @@
     <div id="days"><p class="note">불러오는 중…</p></div>
     <p class="note">
       위원장님·부동산 대표님 시간은 평소 기준이라 날마다 다를 수 있습니다. 확실히 하시려면 추진위원장님(<a href="tel:010-8367-2346">010-8367-2346</a>)께 확인해 주세요.<br/>
-      신청하신 이름은 이 페이지를 보는 누구나 볼 수 있습니다. <b>전화번호·주소는 적지 마세요.</b>
+      신청하신 이름은 이 페이지를 보는 누구나 볼 수 있습니다. <b>전화번호·주소는 적지 마세요.</b><br/>
+      <a href="#admin" id="admin-link" data-track="schedule-admin">위원장님 시간 설정 (관리)</a>
     </p>
   </main>
 
@@ -113,7 +114,7 @@
     <label for="f-start">시간</label>
     <div class="two"><select id="f-start" aria-label="시작"></select> 부터 <select id="f-end" aria-label="끝"></select> 까지</div>
     <label for="f-name">이름 (카톡 닉네임도 됩니다)</label>
-    <input id="f-name" type="text" maxlength="20" placeholder="예: 343-16 지인식" />
+    <input id="f-name" type="text" maxlength="20" placeholder="예: 홍길동" />
     <label>할 일</label>
     <div class="tasks" id="f-tasks"></div>
     <label for="f-pin">취소할 때 쓸 숫자 4자리</label>
@@ -126,7 +127,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-  <script src="app.js?v=20261029a"></script>
+  <script src="app.js?v=20261029c"></script>
   <script>
     // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
     (function () {

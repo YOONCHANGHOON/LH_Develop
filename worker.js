@@ -74,10 +74,10 @@ function appOf(ua) {
 // 위원장·대표 시간 고치기와 아무 예약 지우기는 Worker 비밀값 ADMIN_KEY 가 있어야 한다.
 const TASKS = ["접수 안내", "전단", "전화", "가가호호 방문"];
 const BOOK_DAYS = 21; // 오늘부터 며칠 뒤까지 예약 가능
-// 홈페이지 '접수 장소' 안내 문구 기준(위원장님 월·화·목·금 11:30부터, 대표님 오후 3시경, 위원장님 일요일 16시부터)
+// 홈페이지 '접수 장소' 안내 문구 기준(위원장님 월·화·목·금 11:30부터, 대표님 오후 3시경).
+// 그 밖의 요일(일요일 등)은 비워 두고 위원장님이 #admin 에서 직접 정한다.
 const PRESENCE_SEED = [
   ["chair", "w1", 11.5, 19], ["chair", "w2", 11.5, 19], ["chair", "w4", 11.5, 19], ["chair", "w5", 11.5, 19],
-  ["chair", "w0", 16, 19],
   ["owner", "w1", 15, 19], ["owner", "w2", 15, 19], ["owner", "w3", 15, 19],
   ["owner", "w4", 15, 19], ["owner", "w5", 15, 19], ["owner", "w6", 15, 19],
 ];
@@ -91,11 +91,23 @@ function ensureTables(env) {
     env.DB.prepare(
       "CREATE TABLE IF NOT EXISTS presence (host TEXT, who TEXT, day TEXT, start REAL, end REAL, PRIMARY KEY (host, who, day))"
     ),
-  ]).catch((e) => {
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY)"),
+  ]).then(() => migrate(env)).catch((e) => {
     tablesReady = null;
     throw e;
   });
   return tablesReady;
+}
+
+// 한 번만 하는 데이터 정리. meta 에 이름을 남겨서 다시 돌지 않게 한다(한 batch = 한 트랜잭션).
+function migrate(env) {
+  return env.DB.batch([
+    // 10/29: 처음 넣었던 위원장님 일요일 16~19시 기본값은 근거가 없어 지운다 → 위원장님이 직접 설정
+    env.DB.prepare(
+      "DELETE FROM presence WHERE who = 'chair' AND day = 'w0' AND start = 16 AND end = 19 AND NOT EXISTS (SELECT 1 FROM meta WHERE k = 'drop-chair-sunday-seed')"
+    ),
+    env.DB.prepare("INSERT OR IGNORE INTO meta (k) VALUES ('drop-chair-sunday-seed')"),
+  ]);
 }
 
 async function schedule(request, env, host) {
@@ -137,6 +149,8 @@ async function schedule(request, env, host) {
     if (!validDay(d.day, today, BOOK_DAYS)) return json({ error: "신청할 수 없는 날짜입니다" }, 400);
     if (!Number.isInteger(start) || !Number.isInteger(end) || start < 10 || end > 19 || start >= end)
       return json({ error: "시간을 다시 골라 주세요" }, 400);
+    // 오늘 이미 지난 시간은 받지 않는다(지금 시각이 든 칸부터 신청 가능 — 화면의 회색 칸 기준과 같음)
+    if (d.day === today && start < kstHour()) return json({ error: "이미 지난 시간입니다. 시간을 다시 골라 주세요" }, 400);
     if (!name) return json({ error: "이름을 적어 주세요" }, 400);
     if (!TASKS.includes(d.task)) return json({ error: "할 일을 골라 주세요" }, 400);
     if (!/^\d{4}$/.test(String(d.pin ?? ""))) return json({ error: "취소용 번호는 숫자 4자리입니다" }, 400);
@@ -189,6 +203,11 @@ async function schedule(request, env, host) {
 // 한국 시간 기준 날짜 'YYYY-MM-DD' (offset 일 뒤)
 function kstDay(offset) {
   return new Date(Date.now() + 9 * 3600e3 + offset * 86400e3).toISOString().slice(0, 10);
+}
+
+// 한국 시간 기준 지금 몇 시(0~23)
+function kstHour() {
+  return new Date(Date.now() + 9 * 3600e3).getUTCHours();
 }
 
 function validDay(day, today, maxDays) {
