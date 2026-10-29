@@ -36,6 +36,8 @@ const shiftsOn = (day) => data.shifts.filter((s) => s.day === day);
 const countAt = (list, h) => list.filter((s) => s.start <= h && h < s.end).length;
 // 이미 지난 시간(오늘)은 빈 시간으로 세지 않는다
 const isPast = (day, h) => day === data.today && h < nowKstHour();
+// 19시가 지나면 오늘은 신청할 시간이 없다 → 신청서는 내일부터
+const todayClosed = () => nowKstHour() >= H1;
 
 // 봉사자 0명인 시간을 이어진 구간으로 묶는다 → ['10~12시', '15~19시']
 function gaps(day) {
@@ -70,7 +72,7 @@ function dayCard(day, i) {
   card.appendChild(h2);
 
   const g = gaps(day);
-  const closed = day === data.today && nowKstHour() >= H1;
+  const closed = day === data.today && todayClosed();
   card.appendChild(el("p", "gap" + (g.length ? "" : " full"),
     closed ? "오늘 접수 시간이 끝났습니다" : g.length ? `봉사자 없는 시간: ${g.join(", ")}` : "모든 시간에 봉사자가 있습니다"));
 
@@ -118,7 +120,7 @@ function dayCard(day, i) {
   book.type = "button";
   book.setAttribute("data-track", "schedule-book-day");
   book.onclick = () => openSheet(day, null);
-  acts.appendChild(book);
+  if (!closed) acts.appendChild(book);
   if (g.length) {
     const copy = el("button", "copy", "단톡방 문구 복사");
     copy.type = "button";
@@ -126,7 +128,7 @@ function dayCard(day, i) {
     copy.onclick = () => copyText(`[봉사 일정] ${label(day)} 유림부동산에 봉사자가 없는 시간: ${g.join(", ")}\n나와 주실 수 있는 분은 아래에서 시간을 신청해 주세요.\n${location.origin}/schedule/`);
     acts.appendChild(copy);
   }
-  card.appendChild(acts);
+  if (acts.childNodes.length) card.appendChild(acts);
 
   if (adminKey) card.appendChild(adminDay(day));
   return card;
@@ -172,19 +174,19 @@ function shiftItem(s) {
 function openSheet(day, h) {
   const fd = $("f-day");
   fd.textContent = "";
-  for (let i = 0; i <= data.bookDays; i++) {
+  for (let i = todayClosed() ? 1 : 0; i <= data.bookDays; i++) {
     const d = addDays(data.today, i);
     const o = el("option", "", label(d) + (i === 0 ? " 오늘" : i === 1 ? " 내일" : ""));
     o.value = d;
     fd.appendChild(o);
   }
-  fd.value = day || data.today;
+  fd.value = day || fd.options[0].value;
   const fs = $("f-start"), fe = $("f-end");
   fs.textContent = "";
   fe.textContent = "";
   for (let k = H0; k < H1; k++) fs.appendChild(Object.assign(el("option", "", `${k}시`), { value: k }));
   for (let k = H0 + 1; k <= H1; k++) fe.appendChild(Object.assign(el("option", "", `${k}시`), { value: k }));
-  const start = h ?? Math.max(H0, Math.min(H1 - 1, day === data.today ? nowKstHour() + 1 : H0));
+  const start = h ?? Math.max(H0, Math.min(H1 - 1, fd.value === data.today ? nowKstHour() + 1 : H0));
   fs.value = start;
   fe.value = Math.min(start + 2, H1);
   const ft = $("f-tasks");
@@ -230,6 +232,7 @@ $("sheet").onsubmit = (ev) => {
     $("f-err").textContent = m;
     $("f-err").hidden = false;
   };
+  if (body.day === data.today && body.start < nowKstHour()) return err("이미 지난 시간입니다. 시작 시간을 다시 골라 주세요");
   if (body.end <= body.start) return err("끝나는 시간을 시작 시간보다 뒤로 골라 주세요");
   if (!body.name) return err("이름을 적어 주세요");
   if (!/^\d{4}$/.test(body.pin)) return err("취소용 번호는 숫자 4자리로 적어 주세요");

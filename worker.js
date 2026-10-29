@@ -137,6 +137,8 @@ async function schedule(request, env, host) {
     if (!validDay(d.day, today, BOOK_DAYS)) return json({ error: "신청할 수 없는 날짜입니다" }, 400);
     if (!Number.isInteger(start) || !Number.isInteger(end) || start < 10 || end > 19 || start >= end)
       return json({ error: "시간을 다시 골라 주세요" }, 400);
+    // 오늘 이미 지난 시간은 받지 않는다(지금 시각이 든 칸부터 신청 가능 — 화면의 회색 칸 기준과 같음)
+    if (d.day === today && start < kstHour()) return json({ error: "이미 지난 시간입니다. 시간을 다시 골라 주세요" }, 400);
     if (!name) return json({ error: "이름을 적어 주세요" }, 400);
     if (!TASKS.includes(d.task)) return json({ error: "할 일을 골라 주세요" }, 400);
     if (!/^\d{4}$/.test(String(d.pin ?? ""))) return json({ error: "취소용 번호는 숫자 4자리입니다" }, 400);
@@ -189,6 +191,11 @@ async function schedule(request, env, host) {
 // 한국 시간 기준 날짜 'YYYY-MM-DD' (offset 일 뒤)
 function kstDay(offset) {
   return new Date(Date.now() + 9 * 3600e3 + offset * 86400e3).toISOString().slice(0, 10);
+}
+
+// 한국 시간 기준 지금 몇 시(0~23)
+function kstHour() {
+  return new Date(Date.now() + 9 * 3600e3).getUTCHours();
 }
 
 function validDay(day, today, maxDays) {
