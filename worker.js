@@ -67,13 +67,14 @@ function appOf(ua) {
 }
 
 // ─── 봉사 일정 (/schedule/ 페이지) ───
-// shifts: 봉사자가 직접 넣는 예약(1시간 단위, 10~19시). 취소용 숫자 4자리는 소금+해시로만 저장.
+// shifts: 봉사자가 직접 넣는 예약(1시간 단위, OPEN~CLOSE시 = 10~22시). 취소용 숫자 4자리는 소금+해시로만 저장.
 // presence: 위원장님·부동산 대표님이 계신 시간. day = 'w0'~'w6'(매주 요일 기본) 또는 'YYYY-MM-DD'(그날만).
 //   그날만 값이 있으면 요일 기본보다 우선. start=end=0 은 '안 계심'.
 // host 로 나눠서 미리보기 주소에서 시험한 예약이 실제 사이트에 섞이지 않게 한다.
 // 위원장·대표 시간 고치기와 아무 예약 지우기는 Worker 비밀값 ADMIN_KEY 가 있어야 한다.
 const TASKS = ["접수 안내", "전단", "전화", "가가호호 방문"];
 const BOOK_DAYS = 21; // 오늘부터 며칠 뒤까지 예약 가능
+const OPEN = 10, CLOSE = 22; // 봉사 시간 10~22시(저녁 10시까지 봉사함). schedule/app.js 의 H0·H1 과 같아야 한다
 // 홈페이지 '접수 장소' 안내 문구 기준(위원장님 월·화·목·금 11:30부터, 대표님 오후 3시경).
 // 그 밖의 요일(일요일 등)은 비워 두고 위원장님이 #admin 에서 직접 정한다.
 const PRESENCE_SEED = [
@@ -147,7 +148,7 @@ async function schedule(request, env, host) {
     const name = String(d.name ?? "").trim().slice(0, 20);
     const start = Number(d.start), end = Number(d.end);
     if (!validDay(d.day, today, BOOK_DAYS)) return json({ error: "신청할 수 없는 날짜입니다" }, 400);
-    if (!Number.isInteger(start) || !Number.isInteger(end) || start < 10 || end > 19 || start >= end)
+    if (!Number.isInteger(start) || !Number.isInteger(end) || start < OPEN || end > CLOSE || start >= end)
       return json({ error: "시간을 다시 골라 주세요" }, 400);
     // 오늘 이미 지난 시간은 받지 않는다(지금 시각이 든 칸부터 신청 가능 — 화면의 회색 칸 기준과 같음)
     if (d.day === today && start < kstHour()) return json({ error: "이미 지난 시간입니다. 시간을 다시 골라 주세요" }, 400);
@@ -189,7 +190,7 @@ async function schedule(request, env, host) {
     const start = Number(d.start), end = Number(d.end);
     const half = (v) => Number.isInteger(v * 2);
     const off = start === 0 && end === 0;
-    if (!off && (!half(start) || !half(end) || start < 10 || end > 19 || start >= end))
+    if (!off && (!half(start) || !half(end) || start < OPEN || end > CLOSE || start >= end))
       return json({ error: "시간을 다시 골라 주세요" }, 400);
     await env.DB.prepare("INSERT OR REPLACE INTO presence (host, who, day, start, end) VALUES (?, ?, ?, ?, ?)")
       .bind(host, d.who, day, start, end)
