@@ -81,7 +81,9 @@ function resolveAddr(q, addr) {
     how = lot;
   }
   const zone = addr.lots[lot];
-  if (zone) return { lot, how, zone, pending: (addr.pending || []).includes(lot) };
+  // 다른 건물이 함께 쓰는 땅(건축물대장 부속지번)이면 그 건물을 같이 알려 준다. 예: 347-17 → 다솜(422-3) 땅
+  const main = (addr.atch || {})[lot];
+  if (zone) return { lot, how, zone, pending: (addr.pending || []).includes(lot), main: main ? bldLabel(main, addr) : "" };
   if ((addr.excluded || []).includes(lot)) return { warn: lot + "는 사업구역에서 제외된 필지입니다." };
   if ((addr.out || []).includes(lot)) return { warn: lot + "는 사업구역 밖입니다. (구역도 기준)" };
   if (BASES.includes(lot.split("-")[0])) return { warn: lot + "는 구역 목록에서 찾지 못했습니다. 등기부등본의 지번을 확인하시거나 추진위원장님께 문의해 주세요." };
@@ -104,6 +106,13 @@ function findByName(raw, addr) {
   if (hit.length > 6) return { warn: "'" + raw.trim() + "'(이)가 들어간 건물이 많습니다. 건물 이름을 조금 더 길게 넣어 주세요." };
   return { warn: "이름이 비슷한 건물이 여러 곳입니다: " + hit.map((n) => n + "(" + addr.names[n].join("·") + ")").join(", ") + ". 지번이나 도로명 주소로 다시 찾아 주세요." };
 }
+// '다솜(422-3, 강서로15길 58)' 처럼 건물 이름(대표 지번, 도로명)
+function bldLabel(lot, addr) {
+  const name = Object.keys(addr.names || {}).find((n) => addr.names[n].includes(lot));
+  const road = Object.keys(addr.roads || {}).find((r) => addr.roads[r] === lot);
+  const where = [lot, road ? road.replace(/(\d+(?:-\d+)?)$/, " $1") : ""].filter(Boolean).join(", ");
+  return (name || "") + "(" + where + ")";
+}
 function rateLines(r) {
   if (!has(r)) return ["아직 자료가 없습니다."];
   if (!shown(r)) return ["소유자가 적은 구역이라 동의율은 비공개입니다."];
@@ -118,7 +127,9 @@ function addrLines(res, rowOf) {
       .concat(res.zones.map((z) => { const [a, b] = rateLines(rowOf(z)); return [z + " · " + a + (b ? " (" + b + ")" : "")]; }));
   }
   const [a, b] = rateLines(rowOf(res.zone));
-  const out = [[res.how + (res.how === res.lot ? "" : " (" + res.lot + ")") + " → " + res.zone + " 구역"], [a, b ? "big" : ""]];
+  const out = [[res.how + (res.how === res.lot ? "" : " (" + res.lot + ")") + " → " + res.zone + " 구역"]];
+  if (res.main) out.push([res.lot + "은(는) " + res.main + " 건물이 함께 쓰는 땅입니다. 동의율은 그 건물이 들어 있는 " + res.zone + " 구역 기준입니다."]);
+  out.push([a, b ? "big" : ""]);
   if (b) out.push([b]);
   if (res.pending) out.push(["※ 이 건물은 아직 현황 집계에 들어가 있지 않아 추가할 예정입니다. 위 숫자는 같은 구역의 다른 집 기준입니다."]);
   return out;
