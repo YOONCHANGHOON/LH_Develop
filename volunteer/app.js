@@ -284,7 +284,7 @@ function setupZoom() {
 
 // 우리 집 동의율 찾기(판정은 core.js의 resolveAddr·addrLines). 찾은 구역으로 지도를 확대하고 강조한다.
 let BYID = {}, ADDR = null, LAST = null, zoomToBox = null;
-const ADDR_READY = fetch("addr.json?v=20261028a").then((r) => r.json()).then((d) => { ADDR = d; }).catch(() => {});
+const ADDR_READY = fetch("addr.json?v=20261029a").then((r) => r.json()).then((d) => { ADDR = d; }).catch(() => {});
 // 홈 첫 화면에서 넘어온 주소(volunteer/?q=곰달래로19나길 15)
 const Q = (new URLSearchParams(location.search).get("q") || "").trim();
 function showAddr(res, zoom = true) {
