@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#0e2e24" />
+  <title>봉사 일정 · 화곡1동 도심 공공주택 복합사업</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="봉사 일정 · 유림부동산 접수처" />
+  <meta property="og:description" content="봉사자가 없는 시간을 미리 확인하고, 나오실 수 있는 시간을 신청해 주세요." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    :root { --bg: #f5f7f5; --text: #1a1f1c; --muted: #5a6560; --accent: #1f4a3a; --border: #e3e7e4;
+      --chair: #2f6fb5; --owner: #8a5cc2; --vol: #1f7a3f; --empty: #d64545; --empty-bg: #fde8e8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Pretendard", -apple-system, "Malgun Gothic", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; word-break: keep-all; -webkit-text-size-adjust: 100%; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 12px; }
+    .top { background: #0e2e24; color: #fff; padding: 20px 0 18px; }
+    .home { display: inline-block; margin: 0 0 12px; padding: 7px 14px; font-size: 15px; font-weight: 700; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; }
+    .top h1 { margin: 0; font-size: 24px; }
+    .top p { margin: 6px 0 0; font-size: 15px; color: #d6e4dd; }
+    button { font: inherit; cursor: pointer; }
+    .primary { display: block; width: 100%; margin: 14px 0; padding: 14px; font-size: 17px; font-weight: 700; color: #fff; background: var(--accent); border: 0; border-radius: 12px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 12px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+    .legend i { display: inline-block; width: 14px; height: 10px; margin-right: 5px; border-radius: 3px; vertical-align: 0; }
+    .day { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; margin-bottom: 12px; }
+    .day h2 { margin: 0; font-size: 18px; }
+    .day h2 .tag { margin-left: 6px; padding: 1px 8px; font-size: 13px; color: #fff; background: var(--accent); border-radius: 999px; vertical-align: 2px; }
+    .day h2 .sun { color: var(--empty); }
+    .day h2 .sat { color: var(--chair); }
+    .gap { margin: 4px 0 10px; font-size: 15px; font-weight: 700; color: var(--empty); }
+    .gap.full { color: var(--vol); }
+    /* 10~19시 = 9시간 × 30분 칸 18개 + 왼쪽 이름 칸 */
+    .grid { display: grid; grid-template-columns: 52px repeat(18, 1fr); row-gap: 4px; align-items: center; font-size: 12px; }
+    .grid .lab { grid-column: 1; color: var(--muted); font-size: 12px; line-height: 1.2; }
+    .grid .hr { grid-column: span 2; color: var(--muted); border-left: 1px solid var(--border); padding-left: 2px; }
+    .bar { height: 18px; border-radius: 4px; color: #fff; font-size: 11px; line-height: 18px; padding-left: 4px; white-space: nowrap; overflow: hidden; }
+    .bar.chair { background: var(--chair); }
+    .bar.owner { background: var(--owner); }
+    .none { color: #9aa39f; font-size: 12px; }
+    .cell { grid-column: span 2; height: 34px; margin-right: 2px; border: 0; border-radius: 6px; font-size: 13px; font-weight: 700; padding: 0; }
+    .cell.v0 { background: var(--empty-bg); color: var(--empty); }
+    .cell.v1 { background: #c7e9c0; color: #14532d; }
+    .cell.v2 { background: var(--vol); color: #fff; }
+    .shifts { margin: 10px 0 0; padding: 0; list-style: none; font-size: 15px; }
+    .shifts li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 0; border-top: 1px dashed var(--border); }
+    .shifts .t { font-weight: 700; color: var(--vol); min-width: 64px; }
+    .shifts .task { font-size: 13px; color: var(--muted); }
+    .link { margin-left: auto; padding: 4px 10px; font-size: 13px; color: var(--muted); background: #fff; border: 1px solid var(--border); border-radius: 999px; }
+    .pinrow { display: flex; gap: 6px; width: 100%; }
+    .pinrow input { flex: 1; min-width: 0; padding: 8px; font-size: 16px; border: 1px solid #c9d1cd; border-radius: 8px; }
+    .pinrow button { padding: 8px 12px; color: #fff; background: var(--empty); border: 0; border-radius: 8px; }
+    .acts { display: flex; gap: 8px; margin-top: 12px; }
+    .acts button { flex: 1; padding: 11px 6px; font-size: 15px; font-weight: 700; border-radius: 10px; }
+    .acts .book { color: #fff; background: var(--accent); border: 0; }
+    .acts .copy { color: #191919; background: #FEE500; border: 0; }
+    .admin { margin-top: 12px; padding: 10px; font-size: 14px; background: #f3f0fa; border-radius: 10px; }
+    .admin .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0; }
+    .admin select, .admin button { padding: 6px; font-size: 14px; }
+    .note { margin: 4px 0 24px; font-size: 13px; color: var(--muted); }
+    /* 신청서: 화면 아래에서 올라오는 판 */
+    .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 10; }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 16px 16px 0 0; padding: 18px 16px 24px; z-index: 11; }
+    .sheet h2 { margin: 0 0 12px; font-size: 20px; }
+    .sheet label { display: block; margin: 12px 0 4px; font-size: 15px; font-weight: 700; }
+    .sheet select, .sheet input[type=text], .sheet input[type=tel], .sheet input[type=password] { width: 100%; padding: 11px; font-size: 17px; border: 1px solid #c9d1cd; border-radius: 10px; background: #fff; }
+    .sheet .two { display: flex; gap: 8px; align-items: center; }
+    .sheet .two select { flex: 1; }
+    .tasks { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tasks label { margin: 0; padding: 9px 12px; font-weight: 400; border: 1px solid #c9d1cd; border-radius: 999px; }
+    .tasks input { margin-right: 4px; }
+    .sheet .hint { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+    .sheet .err { margin: 10px 0 0; color: var(--empty); font-weight: 700; }
+    .sheet .close { width: 100%; margin-top: 8px; padding: 12px; font-size: 16px; color: var(--muted); background: #fff; border: 1px solid var(--border); border-radius: 12px; }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); padding: 10px 18px; color: #fff; background: rgba(20,30,25,.92); border-radius: 999px; font-size: 15px; z-index: 20; }
+    [hidden] { display: none !important; }
+    @media (min-width: 640px) { .grid { grid-template-columns: 72px repeat(18, 1fr); } .wrap { padding: 0 16px; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="home" href="../">← 홈페이지로</a>
+      <h1>봉사 일정 · 유림부동산 접수처</h1>
+      <p>봉사자가 없는 시간은 <b style="color:#ffb3b3">빨간 칸</b>입니다. 나오실 수 있는 시간을 눌러 신청해 주세요.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <button type="button" class="primary" id="book-top" data-track="schedule-book-top">봉사 신청하기</button>
+    <ul class="legend" aria-label="색 설명">
+      <li><i style="background:var(--chair)"></i>위원장님</li>
+      <li><i style="background:var(--owner)"></i>부동산 대표님</li>
+      <li><i style="background:var(--empty-bg);border:1px solid var(--empty)"></i>봉사자 없음</li>
+      <li><i style="background:#c7e9c0"></i>봉사자 1명</li>
+      <li><i style="background:var(--vol)"></i>2명 이상</li>
+    </ul>
+    <div id="days"><p class="note">불러오는 중…</p></div>
+    <p class="note">
+      위원장님·부동산 대표님 시간은 평소 기준이라 날마다 다를 수 있습니다. 확실히 하시려면 추진위원장님(<a href="tel:010-8367-2346">010-8367-2346</a>)께 확인해 주세요.<br/>
+      신청하신 이름은 이 페이지를 보는 누구나 볼 수 있습니다. <b>전화번호·주소는 적지 마세요.</b>
+    </p>
+  </main>
+
+  <div class="sheet-bg" id="sheet-bg" hidden></div>
+  <form class="sheet" id="sheet" hidden autocomplete="off">
+    <h2>봉사 신청</h2>
+    <label for="f-day">날짜</label>
+    <select id="f-day"></select>
+    <label for="f-start">시간</label>
+    <div class="two"><select id="f-start" aria-label="시작"></select> 부터 <select id="f-end" aria-label="끝"></select> 까지</div>
+    <label for="f-name">이름 (카톡 닉네임도 됩니다)</label>
+    <input id="f-name" type="text" maxlength="20" placeholder="예: 343-16 지인식" />
+    <label>할 일</label>
+    <div class="tasks" id="f-tasks"></div>
+    <label for="f-pin">취소할 때 쓸 숫자 4자리</label>
+    <input id="f-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="예: 1234" />
+    <p class="hint">못 나오시게 되면 이 번호로 직접 취소하실 수 있습니다.</p>
+    <p class="err" id="f-err" hidden></p>
+    <button type="submit" class="primary" data-track="schedule-book-submit">신청하기</button>
+    <button type="button" class="close" id="f-close">닫기</button>
+  </form>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js?v=20261029a"></script>
+  <script>
+    // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
+    (function () {
+      if (!navigator.sendBeacon) return;
+      var sid = '';
+      try {
+        sid = sessionStorage.getItem('sid') || Math.random().toString(36).slice(2, 10);
+        sessionStorage.setItem('sid', sid);
+      } catch (e) { /* 프라이빗 모드 등 — 세션 구분 없이 보낸다 */ }
+      var hit = function (kind, name) {
+        navigator.sendBeacon('/api/hit', JSON.stringify({ k: kind, n: name || '', p: location.pathname, s: sid }));
+      };
+      hit('view');
+      document.addEventListener('click', function (ev) {
+        var el = ev.target.closest('[data-track]');
+        if (el) hit('click', el.getAttribute('data-track'));
+      }, true);
+    })();
+  </script>
+</body>
+</html>
