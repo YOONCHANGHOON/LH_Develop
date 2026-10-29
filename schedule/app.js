@@ -246,13 +246,14 @@ $("sheet").onsubmit = (ev) => {
     .catch((e) => err(e.message));
 };
 
-// ─── 관리(위원장님·운영자): 주소 끝에 #admin 을 붙여 열고 관리 비밀번호 입력 ───
+// ─── 관리(위원장님·운영자): 맨 아래 '위원장님 시간 설정' 또는 주소 끝 #admin 으로 열고 관리 비밀번호 입력 ───
 function adminLogin() {
   const box = el("div", "admin");
-  box.appendChild(el("b", "", "관리 비밀번호"));
+  box.appendChild(el("b", "", "위원장님 시간 설정 · 관리 비밀번호"));
   const row = el("div", "row");
   const pw = el("input");
   pw.type = "password";
+  pw.onkeydown = (ev) => ev.key === "Enter" && ok.click();
   const ok = el("button", "", "확인");
   ok.type = "button";
   ok.onclick = () =>
@@ -392,4 +393,14 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && data) load();
 });
 window.addEventListener("hashchange", () => data && render());
+// 맨 아래 링크를 누르면 맨 위 관리 칸으로 올라가 비밀번호 칸에 커서를 둔다(이미 #admin 이어도 동작)
+$("admin-link").onclick = (ev) => {
+  ev.preventDefault();
+  if (!data) return;
+  history.replaceState(null, "", "#admin");
+  render();
+  $("days").scrollIntoView({ behavior: "smooth" });
+  const pw = document.querySelector(".admin input");
+  if (pw) pw.focus({ preventScroll: true });
+};
 load();

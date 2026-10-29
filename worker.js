@@ -74,10 +74,10 @@ function appOf(ua) {
 // 위원장·대표 시간 고치기와 아무 예약 지우기는 Worker 비밀값 ADMIN_KEY 가 있어야 한다.
 const TASKS = ["접수 안내", "전단", "전화", "가가호호 방문"];
 const BOOK_DAYS = 21; // 오늘부터 며칠 뒤까지 예약 가능
-// 홈페이지 '접수 장소' 안내 문구 기준(위원장님 월·화·목·금 11:30부터, 대표님 오후 3시경, 위원장님 일요일 16시부터)
+// 홈페이지 '접수 장소' 안내 문구 기준(위원장님 월·화·목·금 11:30부터, 대표님 오후 3시경).
+// 그 밖의 요일(일요일 등)은 비워 두고 위원장님이 #admin 에서 직접 정한다.
 const PRESENCE_SEED = [
   ["chair", "w1", 11.5, 19], ["chair", "w2", 11.5, 19], ["chair", "w4", 11.5, 19], ["chair", "w5", 11.5, 19],
-  ["chair", "w0", 16, 19],
   ["owner", "w1", 15, 19], ["owner", "w2", 15, 19], ["owner", "w3", 15, 19],
   ["owner", "w4", 15, 19], ["owner", "w5", 15, 19], ["owner", "w6", 15, 19],
 ];
@@ -91,11 +91,23 @@ function ensureTables(env) {
     env.DB.prepare(
       "CREATE TABLE IF NOT EXISTS presence (host TEXT, who TEXT, day TEXT, start REAL, end REAL, PRIMARY KEY (host, who, day))"
     ),
-  ]).catch((e) => {
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY)"),
+  ]).then(() => migrate(env)).catch((e) => {
     tablesReady = null;
     throw e;
   });
   return tablesReady;
+}
+
+// 한 번만 하는 데이터 정리. meta 에 이름을 남겨서 다시 돌지 않게 한다(한 batch = 한 트랜잭션).
+function migrate(env) {
+  return env.DB.batch([
+    // 10/29: 처음 넣었던 위원장님 일요일 16~19시 기본값은 근거가 없어 지운다 → 위원장님이 직접 설정
+    env.DB.prepare(
+      "DELETE FROM presence WHERE who = 'chair' AND day = 'w0' AND start = 16 AND end = 19 AND NOT EXISTS (SELECT 1 FROM meta WHERE k = 'drop-chair-sunday-seed')"
+    ),
+    env.DB.prepare("INSERT OR IGNORE INTO meta (k) VALUES ('drop-chair-sunday-seed')"),
+  ]);
 }
 
 async function schedule(request, env, host) {
