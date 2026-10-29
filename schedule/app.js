@@ -1,6 +1,6 @@
 // 봉사 일정: 데이터는 Worker의 /api/schedule (D1 shifts·presence 테이블, worker.js 참고)
 const SHOW_DAYS = 14; // 화면에 보여 주는 날 수
-const H0 = 10, H1 = 19; // 10~19시, 1시간 칸
+const H0 = 10, H1 = 22; // 10~22시, 1시간 칸 (worker.js 의 OPEN·CLOSE 와 같아야 한다)
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 const WHO = { chair: "위원장님", owner: "부동산 대표님" };
 const $ = (id) => document.getElementById(id);
@@ -36,10 +36,10 @@ const shiftsOn = (day) => data.shifts.filter((s) => s.day === day);
 const countAt = (list, h) => list.filter((s) => s.start <= h && h < s.end).length;
 // 이미 지난 시간(오늘)은 빈 시간으로 세지 않는다
 const isPast = (day, h) => day === data.today && h < nowKstHour();
-// 19시가 지나면 오늘은 신청할 시간이 없다 → 신청서는 내일부터
+// 22시가 지나면 오늘은 신청할 시간이 없다 → 신청서는 내일부터
 const todayClosed = () => nowKstHour() >= H1;
 
-// 봉사자 0명인 시간을 이어진 구간으로 묶는다 → ['10~12시', '15~19시']
+// 봉사자 0명인 시간을 이어진 구간으로 묶는다 → ['10~12시', '15~22시']
 function gaps(day) {
   const list = shiftsOn(day);
   const out = [];
@@ -97,7 +97,9 @@ function dayCard(day, i) {
   for (let h = H0; h < H1; h++) {
     const n = countAt(list, h);
     const past = isPast(day, h);
-    const b = el("button", "cell v" + Math.min(n, 2), n ? `${n}명` : "없음");
+    // 휴대폰에선 칸이 좁아 '명'·'없음' 글자(.u)를 숨기고 숫자와 색만 보인다(index.html 참고)
+    const b = el("button", "cell v" + Math.min(n, 2), n ? String(n) : null);
+    b.appendChild(el("span", "u", n ? "명" : "없음"));
     b.type = "button";
     b.setAttribute("aria-label", `${h}시~${h + 1}시 봉사자 ${n}명${past ? "" : ", 눌러서 신청"}`);
     b.setAttribute("data-track", "schedule-cell");
