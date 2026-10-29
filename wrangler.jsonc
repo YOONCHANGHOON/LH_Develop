@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hwagok-c-zone",
   "compatibility_date": "2026-04-22",
-  // 방문·클릭 집계(/api/hit)만 Worker가 받고, 나머지 요청은 정적 파일이 그대로 응답한다.
+  // 방문·클릭 집계(/api/hit)와 봉사 일정(/api/schedule)만 Worker가 받고, 나머지 요청은 정적 파일이 그대로 응답한다.
   "main": "worker.js",
   "observability": {
     "enabled": true
