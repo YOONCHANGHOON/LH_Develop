@@ -73,7 +73,9 @@ function resolveAddr(q, addr) {
         const zs = [...new Set(Object.values(addr.lots).filter((z) => z === b[1] || z.startsWith(b[1] + "-")))].sort();
         return { base: b[1], zones: zs };
       }
-      return { warn: "지번은 '346-85'처럼 앞번호와 뒷번호를 함께 넣어 주세요." };
+      const byName = findByName(raw, addr);
+      if (byName) return byName;
+      return { warn: "지번은 '346-85'처럼 앞번호와 뒷번호를 함께 넣어 주세요. 건물 이름(예: 다솜)으로도 찾을 수 있습니다." };
     }
     lot = m[1] + "-" + Number(m[2]);
     how = lot;
@@ -84,6 +86,23 @@ function resolveAddr(q, addr) {
   if ((addr.out || []).includes(lot)) return { warn: lot + "는 사업구역 밖입니다. (구역도 기준)" };
   if (BASES.includes(lot.split("-")[0])) return { warn: lot + "는 구역 목록에서 찾지 못했습니다. 등기부등본의 지번을 확인하시거나 추진위원장님께 문의해 주세요." };
   return { warn: lot + "는 우리 구역(화곡1동 343~348·422·423·426번지) 지번이 아닙니다." };
+}
+// 건물 이름(건축물대장 기준, addr.json names)으로 찾기. 호수·층·숫자·띄어쓰기는 빼고 비교한다.
+// 똑같은 이름이 있으면 그것만, 없으면 이름 일부가 겹치는 건물을 모은다.
+function findByName(raw, addr) {
+  const norm = (v) => v.replace(/[\s\d\-]|호|층/g, "");
+  const s = norm(raw);
+  if (s.length < 2 || !addr.names) return null;
+  const all = Object.keys(addr.names);
+  let hit = all.filter((n) => norm(n) === s);
+  if (!hit.length) hit = all.filter((n) => { const k = norm(n); return k.length >= 2 && (s.includes(k) || k.includes(s)); });
+  if (!hit.length) return { warn: "'" + raw.trim() + "' 이름의 건물을 찾지 못했습니다. 지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)로 찾아 주세요." };
+  const lots = [...new Set(hit.flatMap((n) => addr.names[n]))];
+  const zones = [...new Set(lots.map((l) => addr.lots[l]).filter(Boolean))];
+  if (zones.length === 1) return { lot: lots[0], how: hit.length === 1 ? hit[0] : raw.trim(), zone: zones[0], pending: (addr.pending || []).includes(lots[0]) };
+  if (hit.length === 1) return { warn: hit[0] + "은(는) 여러 구역(" + zones.join("·") + ")에 걸쳐 있습니다. 지번(" + lots.join(", ") + ")으로 찾아 주세요." };
+  if (hit.length > 6) return { warn: "'" + raw.trim() + "'(이)가 들어간 건물이 많습니다. 건물 이름을 조금 더 길게 넣어 주세요." };
+  return { warn: "이름이 비슷한 건물이 여러 곳입니다: " + hit.map((n) => n + "(" + addr.names[n].join("·") + ")").join(", ") + ". 지번이나 도로명 주소로 다시 찾아 주세요." };
 }
 function rateLines(r) {
   if (!has(r)) return ["아직 자료가 없습니다."];
