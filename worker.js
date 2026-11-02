@@ -37,14 +37,15 @@ export default {
 // 공개 집계 시트의 동의 수 합계를 하루 한 번 읽어, 마지막 값과 다를 때만 한 줄 남긴다. 번지별 숫자와 개인정보는 저장하지 않는다.
 // 소유자 수도 저장하지 않는다: 그래프가 모든 날을 지금 소유자 수로 나눠서, 분모가 바뀌어도 선이 튀지 않게 한다.
 const SHEET_CSV = "https://docs.google.com/spreadsheets/d/1yUVzLTEaM0V595PcRu2vUfJWPJzQBDn40beLnsTZO88/export?format=csv&gid=0"; // volunteer/core.js 의 SHEET_CSV_URL 과 같아야 한다
-// 자동 저장을 시작하기 전 값(상세 시트에 반영된 날 기준). 10/28 이전은 4월 제출분을 옮겨 적은 숫자라 증가로 보이지 않게 넣지 않는다.
-const TREND_SEED = [["2026-10-28", 227], ["2026-10-29", 236], ["2026-10-30", 244], ["2026-11-02", 266]];
+// 자동 저장을 시작하기 전 값. 10/28·10/29는 시트 기록, 10/30~11/01은 명부 날짜별로 새로 체크된 수를 더한 값이다.
+// 10/27은 새 명부 반영 직전 시트 값이고, 그 전 숫자는 4월 제출분을 옮겨 적은 것이라 증가로 보이지 않게 넣지 않는다.
+const TREND_SEED = [["2026-10-27", 219], ["2026-10-28", 227], ["2026-10-29", 236], ["2026-10-30", 245], ["2026-10-31", 255], ["2026-11-01", 266]];
 
 let trendReady = null;
 function ensureTrend(env) {
   trendReady ||= env.DB.batch([
     env.DB.prepare("CREATE TABLE IF NOT EXISTS trend (day TEXT PRIMARY KEY, agree INTEGER)"),
-    ...TREND_SEED.map(([day, agree]) => env.DB.prepare("INSERT OR IGNORE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree)),
+    ...TREND_SEED.map(([day, agree]) => env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree)),
   ]).catch((e) => {
     trendReady = null;
     throw e;
