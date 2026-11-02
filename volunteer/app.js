@@ -229,7 +229,7 @@ function drawTrend(rows) {
     const goal = v === TARGET;
     svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: goal ? "goal-line" : "grid" }));
     svg.append(mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, `${v}%`));
-    if (goal) svg.append(mk("text", { x: W - R, y: Y(v) - 6, "text-anchor": "end" }, "1차 목표"));
+    if (goal) svg.append(mk("text", { x: L, y: Y(v) - 6 }, "1차 목표")); // 왼쪽: 끝점 글자가 오른쪽 위로 와도 겹치지 않게
   }
   const DAY = 864e5;
   for (let t = x0; X(t) < W - R - 90; t += 7 * DAY) { // 오른쪽 끝 날짜 글자와 겹치지 않는 데까지
