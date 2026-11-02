@@ -240,6 +240,8 @@ function drawTrend(rows) {
 
   const px = (p) => X(ms(p.day)), py = (p) => Y(rate(p));
   svg.append(mk("polyline", { class: "line", points: pts.map((p) => `${px(p)},${py(p)}`).join(" ") }));
+  // 기록이 있는 날마다 점. 하루 간격이 12px 남짓이라 흰 테두리 없이 작게 찍고, 끝점만 크게
+  pts.slice(0, -1).forEach((p) => svg.append(mk("circle", { class: "pt", cx: px(p), cy: py(p), r: 3 })));
   svg.append(mk("circle", { class: "dot", cx: px(lastP), cy: py(lastP), r: 4 }));
   // 시작점과 끝점에만 숫자를 붙인다. 끝점 오른쪽에 자리가 없으면 왼쪽 위로
   if (pts.length > 1) svg.append(mk("text", { x: px(first), y: py(first) + 18 }, fmt(rate(first))));

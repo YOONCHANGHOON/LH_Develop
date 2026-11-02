@@ -141,6 +141,7 @@ body {
 .trend-plot .goal-line { stroke: var(--muted); stroke-width: 1; }
 .trend-plot .line { fill: none; stroke: var(--g3); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .trend-plot .dot { fill: var(--g3); stroke: var(--card); stroke-width: 2; }
+.trend-plot .pt { fill: var(--g3); }
 .trend-plot .cross { stroke: var(--muted); stroke-width: 1; }
 .trend-plot .end, .trend-plot .tip { font-size: 14px; font-weight: 700; fill: var(--text); }
 .trend-plot .sub { font-size: 12px; font-weight: 400; fill: var(--muted); }
