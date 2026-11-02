@@ -145,6 +145,8 @@ body {
 .trend-plot .cross { stroke: var(--muted); stroke-width: 1; }
 .trend-plot .end, .trend-plot .tip { font-size: 14px; font-weight: 700; fill: var(--text); }
 .trend-plot .sub { font-size: 12px; font-weight: 400; fill: var(--muted); }
+/* 끝점 글자가 목표선·눈금선에 걸려도 읽히도록 글자 둘레를 바탕색으로 */
+.trend-plot .end, .trend-plot .gain { paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
 .trend-plot .tip-bg { fill: var(--card); stroke: var(--border); }
 .trend-more { margin-top: 8px; font-size: 13px; color: var(--muted); }
 .trend-more summary { cursor: pointer; padding: 4px 0; }
