@@ -180,6 +180,130 @@ function drawSummary(rows) {
     : SHEET_CSV_URL ? `시트 입력이 30초 안에 자동 반영됩니다 · 마지막 확인 ${new Date().toTimeString().slice(0, 5)}` : "";
 }
 
+// ─── 전체 동의율 추이 ───
+// 저장된 점(/api/trend: 동의 수가 바뀐 날만)에 지금 시트 값을 끝점으로 붙여 그린다. 못 읽으면 칸 전체를 숨긴 채 둔다.
+// 모든 점을 지금 소유자 수로 나눠서, 분모가 바뀌어도 선이 튀지 않는다.
+const TREND_END = "2026-11-19"; // 접수 마감
+let TREND = null, TREND_ROWS = null, TREND_KEY = "";
+const TREND_READY = DEMO ? Promise.resolve() : fetch("../api/trend").then((r) => r.json()).then((d) => { TREND = d.points; }).catch(() => {});
+const shortDay = (d) => `${+d.slice(5, 7)}/${+d.slice(8, 10)}`;
+function mk(name, attrs, text) {
+  const e = document.createElementNS(NS, name);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function drawTrend(rows) {
+  TREND_ROWS = rows;
+  rows = rows.filter(has);
+  const total = rows.reduce((s, r) => s + r.total, 0);
+  const agree = rows.reduce((s, r) => s + r.agree, 0);
+  if (!TREND || !TREND.length || !total) return;
+  $("trend").hidden = false;
+  const plot = $("trend-plot");
+  const W = plot.clientWidth || 340, H = 176;
+  const key = [agree, total, W].join();
+  if (key === TREND_KEY) return; // 30초마다 다시 읽어도 값이 같으면 그대로 둔다
+  TREND_KEY = key;
+
+  const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  const pts = TREND.map((p) => ({ ...p }));
+  const end = pts[pts.length - 1];
+  if (end.agree !== agree) {
+    if (end.day === today) end.agree = agree;
+    else pts.push({ day: today, agree });
+  }
+  const rate = (p) => (p.agree / total) * 100;
+  const ms = (d) => Date.parse(d + "T00:00:00Z");
+  const L = 36, R = 12, T = 22, B = 24;
+  const x0 = ms(pts[0].day), x1 = Math.max(ms(TREND_END), ms(pts[pts.length - 1].day));
+  const X = (t) => L + ((t - x0) / (x1 - x0)) * (W - L - R);
+  const yMin = 10, yMax = Math.max(TARGET, Math.ceil(Math.max(...pts.map(rate)) / 10) * 10);
+  const Y = (v) => T + ((yMax - v) / (yMax - yMin)) * (H - T - B);
+  const first = pts[0], lastP = pts[pts.length - 1];
+  const svg = mk("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", tabindex: 0,
+    "aria-label": `전체 동의율 추이. ${shortDay(first.day)} ${fmt(rate(first))}에서 ${shortDay(lastP.day)} ${fmt(rate(lastP))}. 1차 목표 ${TARGET}%.` });
+
+  for (let v = yMin; v <= yMax; v += 10) {
+    const goal = v === TARGET;
+    svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: goal ? "goal-line" : "grid" }));
+    svg.append(mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, `${v}%`));
+    if (goal) svg.append(mk("text", { x: W - R, y: Y(v) - 6, "text-anchor": "end" }, "1차 목표"));
+  }
+  const DAY = 864e5;
+  for (let t = x0; X(t) < W - R - 90; t += 7 * DAY) { // 오른쪽 끝 날짜 글자와 겹치지 않는 데까지
+    svg.append(mk("text", { x: X(t), y: H - 6, "text-anchor": t === x0 ? "start" : "middle" }, shortDay(new Date(t).toISOString().slice(0, 10))));
+  }
+  const endLabel = shortDay(new Date(x1).toISOString().slice(0, 10)) + (x1 === ms(TREND_END) ? " 마감" : "");
+  svg.append(mk("text", { x: W - R, y: H - 6, "text-anchor": "end" }, endLabel));
+
+  const px = (p) => X(ms(p.day)), py = (p) => Y(rate(p));
+  svg.append(mk("polyline", { class: "line", points: pts.map((p) => `${px(p)},${py(p)}`).join(" ") }));
+  svg.append(mk("circle", { class: "dot", cx: px(lastP), cy: py(lastP), r: 4 }));
+  // 시작점과 끝점에만 숫자를 붙인다. 끝점 오른쪽에 자리가 없으면 왼쪽 위로
+  if (pts.length > 1) svg.append(mk("text", { x: px(first), y: py(first) + 18 }, fmt(rate(first))));
+  const roomy = px(lastP) + 96 < W - R;
+  const endText = mk("text", { x: px(lastP) + (roomy ? 10 : -6), y: py(lastP) + (roomy ? 5 : -10), "text-anchor": roomy ? "start" : "end", class: "end" }, fmt(rate(lastP)));
+  endText.append(mk("tspan", { class: "sub", dx: 5 }, `${lastP.agree}명`));
+  svg.append(endText);
+
+  // 가리키면 가장 가까운 날의 값을 보여 준다. 같은 값은 끝점 숫자와 아래 표로도 볼 수 있다
+  const cross = mk("line", { class: "cross", y1: T, y2: H - B, visibility: "hidden" });
+  const mark = mk("circle", { class: "dot", r: 4, visibility: "hidden" });
+  const tip = mk("g", { visibility: "hidden" });
+  const tipBg = mk("rect", { class: "tip-bg", rx: 6 });
+  const tipText = mk("text", { class: "tip" });
+  tip.append(tipBg, tipText);
+  svg.append(cross, mark, tip);
+  let cur = -1;
+  const hide = () => { cur = -1; [cross, mark, tip].forEach((e) => e.setAttribute("visibility", "hidden")); };
+  const show = (i) => {
+    cur = i;
+    const p = pts[i], x = px(p);
+    cross.setAttribute("x1", x); cross.setAttribute("x2", x);
+    mark.setAttribute("cx", x); mark.setAttribute("cy", py(p));
+    [cross, mark].forEach((e) => e.setAttribute("visibility", "visible"));
+    tipText.textContent = fmt(rate(p));
+    tipText.append(mk("tspan", { class: "sub", dx: 6 }, `${p.agree}명 · ${shortDay(p.day)}`));
+    tip.setAttribute("visibility", "visible");
+    const box = tipText.getBBox();
+    const tx = Math.max(L + 8, Math.min(W - R - box.width - 8, x - box.width / 2));
+    const ty = py(p) - 16 > T + 8 ? py(p) - 16 : py(p) + 28;
+    tipText.setAttribute("x", tx); tipText.setAttribute("y", ty);
+    const b = tipText.getBBox();
+    tipBg.setAttribute("x", b.x - 7); tipBg.setAttribute("y", b.y - 4);
+    tipBg.setAttribute("width", b.width + 14); tipBg.setAttribute("height", b.height + 8);
+  };
+  const nearest = (e) => {
+    const x = e.clientX - svg.getBoundingClientRect().left;
+    let best = 0;
+    pts.forEach((p, i) => { if (Math.abs(px(p) - x) < Math.abs(px(pts[best]) - x)) best = i; });
+    return best;
+  };
+  svg.addEventListener("pointermove", (e) => show(nearest(e)));
+  svg.addEventListener("pointerdown", (e) => show(nearest(e)));
+  // 손가락은 떼는 순간 pointerleave 가 와서, 휴대폰에선 다른 곳을 누를 때(blur)까지 값을 남겨 둔다
+  svg.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hide(); });
+  svg.addEventListener("pointercancel", hide);
+  svg.addEventListener("blur", hide);
+  svg.addEventListener("keydown", (e) => {
+    const d = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    show(cur < 0 ? pts.length - 1 : Math.max(0, Math.min(pts.length - 1, cur + d)));
+  });
+  plot.replaceChildren(svg);
+
+  const body = $("trend-rows");
+  body.textContent = "";
+  [...pts].reverse().forEach((p) => {
+    const tr = body.insertRow();
+    [shortDay(p.day), `${p.agree}명`, fmt(rate(p))].forEach((v) => { tr.insertCell().textContent = v; });
+  });
+}
+window.addEventListener("resize", () => { if (TREND_ROWS) drawTrend(TREND_ROWS); });
+
 async function load() {
   try {
     const [blocks, csv] = await Promise.all([
@@ -194,6 +318,7 @@ async function load() {
     BYID = byId;
     if (LAST) showAddr(LAST, false); // 열어 둔 조회 결과도 새 숫자로(확대 위치는 그대로)
     drawSummary(rows);
+    TREND_READY.then(() => drawTrend(rows));
     drawMap(blocks, byId);
     drawRank(rows);
     markActive(); // 새로 그려도 선택한 번지 강조 유지

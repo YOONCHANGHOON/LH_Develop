@@ -22,9 +22,67 @@ export default {
       const res = await env.ASSETS.fetch(new Request(new URL(url.pathname.slice(0, -5), url), request));
       return new Response(res.body, { status: res.status, headers: res.headers });
     }
+    if (url.pathname === "/api/trend") {
+      return trend(env).catch(() => json({ error: "잠시 후 다시 시도해 주세요" }, 500));
+    }
     return env.ASSETS.fetch(request);
   },
+  // 매일 밤 동의 수를 저장한다(wrangler.jsonc 의 triggers.crons)
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(saveAgree(env));
+  },
 };
+
+// ─── 동의율 추이 (/volunteer/ 그래프) ───
+// 공개 집계 시트의 동의 수 합계를 하루 한 번 읽어, 마지막 값과 다를 때만 한 줄 남긴다. 번지별 숫자와 개인정보는 저장하지 않는다.
+// 소유자 수도 저장하지 않는다: 그래프가 모든 날을 지금 소유자 수로 나눠서, 분모가 바뀌어도 선이 튀지 않게 한다.
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/1yUVzLTEaM0V595PcRu2vUfJWPJzQBDn40beLnsTZO88/export?format=csv&gid=0"; // volunteer/core.js 의 SHEET_CSV_URL 과 같아야 한다
+// 자동 저장을 시작하기 전 값(상세 시트에 반영된 날 기준). 10/28 이전은 4월 제출분을 옮겨 적은 숫자라 증가로 보이지 않게 넣지 않는다.
+const TREND_SEED = [["2026-10-28", 227], ["2026-10-29", 236], ["2026-10-30", 244], ["2026-11-02", 266]];
+
+let trendReady = null;
+function ensureTrend(env) {
+  trendReady ||= env.DB.batch([
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS trend (day TEXT PRIMARY KEY, agree INTEGER)"),
+    ...TREND_SEED.map(([day, agree]) => env.DB.prepare("INSERT OR IGNORE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree)),
+  ]).catch((e) => {
+    trendReady = null;
+    throw e;
+  });
+  return trendReady;
+}
+
+async function trend(env) {
+  await ensureTrend(env);
+  const { results } = await env.DB.prepare("SELECT day, agree FROM trend ORDER BY day").all();
+  return new Response(JSON.stringify({ points: results }), {
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300" },
+  });
+}
+
+async function saveAgree(env) {
+  const res = await fetch(SHEET_CSV);
+  const agree = res.ok ? sumAgree(await res.text()) : null;
+  if (agree === null) {
+    console.error("trend: 공개 집계 시트를 읽지 못함", res.status);
+    return;
+  }
+  await ensureTrend(env);
+  const last = await env.DB.prepare("SELECT agree FROM trend ORDER BY day DESC LIMIT 1").first();
+  if (last && last.agree === agree) return;
+  await env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(kstDay(0), agree).run();
+}
+
+// '번지' 머리글 아래 번지 줄의 '동의' 칸을 더한다('합계' 줄은 번지가 아니라서 빠진다). 형식이 다르면 null.
+function sumAgree(csv) {
+  const lines = csv.split(/\r?\n/).map((l) => l.split(","));
+  const head = lines.findIndex((c) => c[0].trim() === "번지");
+  if (head < 0) return null;
+  const col = lines[head].findIndex((t) => t.trim() === "동의");
+  if (col < 0) return null;
+  const rows = lines.slice(head + 1).filter((c) => /^\d{3}/.test(c[0].trim()));
+  return rows.length ? rows.reduce((s, c) => s + (Number(String(c[col]).replace(/\D/g, "")) || 0), 0) : null;
+}
 
 async function record(body, request, env, host) {
   let d;

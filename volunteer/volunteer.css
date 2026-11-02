@@ -131,3 +131,23 @@ body {
   .zoom-ctl button { width: 30px; height: 30px; font-size: 17px; }
 }
 @media (min-width: 640px) { .tile.main strong { font-size: 36px; } }
+/* 전체 동의율 추이 그래프 */
+.trend h2 { margin-bottom: 8px; }
+.trend-plot svg { display: block; touch-action: pan-y; }
+.trend-plot svg:focus { outline: none; }
+.trend-plot svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.trend-plot text { font-size: 12px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.trend-plot .grid { stroke: var(--border); stroke-width: 1; }
+.trend-plot .goal-line { stroke: var(--muted); stroke-width: 1; }
+.trend-plot .line { fill: none; stroke: var(--g3); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.trend-plot .dot { fill: var(--g3); stroke: var(--card); stroke-width: 2; }
+.trend-plot .cross { stroke: var(--muted); stroke-width: 1; }
+.trend-plot .end, .trend-plot .tip { font-size: 14px; font-weight: 700; fill: var(--text); }
+.trend-plot .sub { font-size: 12px; font-weight: 400; fill: var(--muted); }
+.trend-plot .tip-bg { fill: var(--card); stroke: var(--border); }
+.trend-more { margin-top: 8px; font-size: 13px; color: var(--muted); }
+.trend-more summary { cursor: pointer; padding: 4px 0; }
+.trend-more table { width: 100%; margin-top: 4px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.trend-more th, .trend-more td { padding: 4px 6px; border-top: 1px solid var(--border); text-align: right; }
+.trend-more th { font-weight: 600; }
+.trend-more th:first-child, .trend-more td:first-child { text-align: left; }
