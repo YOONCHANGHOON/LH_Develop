@@ -229,7 +229,7 @@ function drawTrend(rows) {
     const goal = v === TARGET;
     svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: goal ? "goal-line" : "grid" }));
     svg.append(mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, `${v}%`));
-    if (goal) svg.append(mk("text", { x: W - R, y: Y(v) - 6, "text-anchor": "end" }, "1차 목표"));
+    if (goal) svg.append(mk("text", { x: L, y: Y(v) - 6 }, "1차 목표")); // 왼쪽: 끝점 글자가 오른쪽 위로 와도 겹치지 않게
   }
   const DAY = 864e5;
   for (let t = x0; X(t) < W - R - 90; t += 7 * DAY) { // 오른쪽 끝 날짜 글자와 겹치지 않는 데까지
@@ -239,6 +239,12 @@ function drawTrend(rows) {
   svg.append(mk("text", { x: W - R, y: H - 6, "text-anchor": "end" }, endLabel));
 
   const px = (p) => X(ms(p.day)), py = (p) => Y(rate(p));
+  // 앞 기록보다 늘어난 인원. 하루 넘게 비어 있으면 며칠 치인지 같이 적는다
+  const gain = (i) => {
+    if (!i) return "";
+    const g = pts[i].agree - pts[i - 1].agree, days = Math.round((ms(pts[i].day) - ms(pts[i - 1].day)) / DAY);
+    return `${g > 0 ? "+" : ""}${g}명${days > 1 ? ` (${days}일)` : ""}`;
+  };
   svg.append(mk("polyline", { class: "line", points: pts.map((p) => `${px(p)},${py(p)}`).join(" ") }));
   // 기록이 있는 날마다 점. 하루 간격이 12px 남짓이라 흰 테두리 없이 작게 찍고, 끝점만 크게
   pts.slice(0, -1).forEach((p) => svg.append(mk("circle", { class: "pt", cx: px(p), cy: py(p), r: 3 })));
@@ -246,9 +252,16 @@ function drawTrend(rows) {
   // 시작점과 끝점에만 숫자를 붙인다. 끝점 오른쪽에 자리가 없으면 왼쪽 위로
   if (pts.length > 1) svg.append(mk("text", { x: px(first), y: py(first) + 18 }, fmt(rate(first))));
   const roomy = px(lastP) + 96 < W - R;
-  const endText = mk("text", { x: px(lastP) + (roomy ? 10 : -6), y: py(lastP) + (roomy ? 5 : -10), "text-anchor": roomy ? "start" : "end", class: "end" }, fmt(rate(lastP)));
+  const endY = roomy ? py(lastP) + 5 : Math.max(14, py(lastP) - 28);
+  const endText = mk("text", { x: px(lastP) + (roomy ? 10 : -6), y: endY, "text-anchor": roomy ? "start" : "end", class: "end" }, fmt(rate(lastP)));
   endText.append(mk("tspan", { class: "sub", dx: 5 }, `${lastP.agree}명`));
   svg.append(endText);
+  // 그 아래 줄에 가장 최근에 늘어난 날과 인원
+  let up = pts.length - 1;
+  while (up > 0 && pts[up].agree <= pts[up - 1].agree) up--;
+  if (up > 0) {
+    svg.append(mk("text", { x: endText.getAttribute("x"), y: endY + 18, "text-anchor": endText.getAttribute("text-anchor"), class: "gain" }, `${shortDay(pts[up].day)} ${gain(up)}`));
+  }
 
   // 가리키면 가장 가까운 날의 값을 보여 준다. 같은 값은 끝점 숫자와 아래 표로도 볼 수 있다
   const cross = mk("line", { class: "cross", y1: T, y2: H - B, visibility: "hidden" });
@@ -267,7 +280,7 @@ function drawTrend(rows) {
     mark.setAttribute("cx", x); mark.setAttribute("cy", py(p));
     [cross, mark].forEach((e) => e.setAttribute("visibility", "visible"));
     tipText.textContent = fmt(rate(p));
-    tipText.append(mk("tspan", { class: "sub", dx: 6 }, `${p.agree}명 · ${shortDay(p.day)}`));
+    tipText.append(mk("tspan", { class: "sub", dx: 6 }, `${p.agree}명 · ${shortDay(p.day)}${i ? " · " + gain(i) : ""}`));
     tip.setAttribute("visibility", "visible");
     const box = tipText.getBBox();
     const tx = Math.max(L + 8, Math.min(W - R - box.width - 8, x - box.width / 2));
@@ -299,9 +312,9 @@ function drawTrend(rows) {
 
   const body = $("trend-rows");
   body.textContent = "";
-  [...pts].reverse().forEach((p) => {
+  pts.map((p, i) => [shortDay(p.day), `${p.agree}명`, gain(i) || "–", fmt(rate(p))]).reverse().forEach((cells) => {
     const tr = body.insertRow();
-    [shortDay(p.day), `${p.agree}명`, fmt(rate(p))].forEach((v) => { tr.insertCell().textContent = v; });
+    cells.forEach((v) => { tr.insertCell().textContent = v; });
   });
 }
 window.addEventListener("resize", () => { if (TREND_ROWS) drawTrend(TREND_ROWS); });
