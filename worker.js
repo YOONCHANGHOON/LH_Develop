@@ -22,8 +22,9 @@ export default {
       const res = await env.ASSETS.fetch(new Request(new URL(url.pathname.slice(0, -5), url), request));
       return new Response(res.body, { status: res.status, headers: res.headers });
     }
+    // 동의율 추이는 11-04 추진위원장 요청으로 공개 중단(매일 밤 저장은 계속). 다시 열 때 아래 줄을 trend(env) 호출로 되돌린다.
     if (url.pathname === "/api/trend") {
-      return trend(env).catch(() => json({ error: "잠시 후 다시 시도해 주세요" }, 500));
+      return json({ error: "공개 중단" }, 404);
     }
     return env.ASSETS.fetch(request);
   },
