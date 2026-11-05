@@ -628,6 +628,12 @@ body {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+.kakao-strip-sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.8;
+}
 .kakao-strip-chev {
   width: 18px;
   height: 18px;
