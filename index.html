@@ -86,14 +86,16 @@
           <span class="flyer-hero-go">전단 보기 · 내려받기 →</span>
         </span>
       </a>
-      <section class="quick rate" id="rate" aria-label="우리 집 구역 확인">
-        <p class="quick-title">우리 집 구역 확인</p>
+      <section class="quick rate" id="rate" aria-label="우리 집 동의율 찾기">
+        <p class="quick-title">우리 집 동의율 찾기</p>
+        <p class="rate-total" id="rate-total">전체 동의율 불러오는 중…</p>
         <form class="finder-row" id="rate-form" role="search" autocomplete="off">
           <input id="rate-input" type="text" enterkeyhint="search" placeholder="예: 346-85, 곰달래로19나길 15, 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
           <button type="submit" data-track="rate-hero">찾기</button>
         </form>
         <div class="rate-result" id="rate-result" aria-live="polite" hidden></div>
-        <p class="rate-foot">지번(재산세 고지서·등기부)이나 건물 번호판의 도로명 주소를 넣으면 우리 집이 사업 구역 안인지 알려 드립니다.</p>
+        <p class="rate-foot">지번(재산세 고지서·등기부)이나 건물 번호판의 도로명 주소를 넣으세요. 집집마다의 동의 여부는 나오지 않고, 그 구역 전체의 동의율만 보여 드립니다.
+          <a href="volunteer/" data-track="consent-rate">번지별 동의 현황 전체 보기 →</a></p>
       </section>
       <section class="quick intent-hero" id="intent" aria-labelledby="intent-title">
         <p class="quick-title" id="intent-title">지난 공모 사전의향률 · 강서구청 자료</p>
@@ -104,7 +106,7 @@
           <span class="intent-mark" aria-hidden="true"><span>우리 구역</span></span>
         </a>
         <p class="intent-cap">누르면 크게 볼 수 있습니다 · 2026. 5. 8. 신청 마감 기준</p>
-        <p class="intent-now">지난 공모 12% → 이번 1차 목표 <strong>30% 이상</strong></p>
+        <p class="intent-now">지난 공모 12% → <strong>지금 <span id="intent-now">집계 중</span></strong> (지난 공모 때 내신 분 포함) · 1차 목표 <strong>30% 이상</strong></p>
         <p class="intent-note">사전의향률만으로 선정이 정해지지는 않습니다. 국토부는 노후도 등 법정 요건, 사업성, 주민 의향률을 종합해 심사했다고 밝혔습니다.</p>
       </section>
       <section class="quick intent-hero" id="why-hold" aria-labelledby="why-hold-title">
@@ -125,6 +127,9 @@
             <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.84 5.3 4.6 6.73-.2.7-.72 2.58-.83 2.98-.14.5.18.49.38.36.16-.1 2.54-1.72 3.56-2.42.75.11 1.5.17 2.29.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/>
           </svg>
           <span class="share-label">주민 카톡방 참여 · 비밀번호 <b class="pw-num">1016</b></span>
+        </a>
+        <a class="hero-share" data-track="consent-hero" href="volunteer/">
+          <span class="share-label">동의 현황 보기</span>
         </a>
         <a class="hero-share" data-track="schedule-hero" href="schedule/">
           <span class="share-label">봉사 일정 · 신청</span>
@@ -207,6 +212,7 @@
                 <li class="must"><span>공유지분</span> <strong>공유지분자(공동명의)이신 경우, 두 분 모두의 주민등록증이 필요합니다.</strong> 두 분이 함께 방문해 주세요.</li>
                 <li><span>이미 내신 분</span> 지난 4월에 동의서를 내신 분은 다시 내실 필요가 없습니다.</li>
                 <li><span>접수 확인</span> 내 동의서가 접수됐는지 궁금하시면 추진위원장님께 <a data-track="sms-consent-check" href="sms:010-8367-2346"><strong>문자</strong></a>로 <strong>주소(번지·호수)와 성함</strong>을 보내 주세요. 확인해서 문자로 답장드립니다. (동의 여부는 개인정보라 카톡방이 아닌 문자로 한 분씩 알려 드립니다)</li>
+                <li><span>동의 현황</span> <a href="volunteer/">번지별 동의 현황 보기</a> (실시간 업데이트 중 · 아직 기록되지 않은 동의서가 있을 수 있으며, 순차적으로 추가됩니다)</li>
               </ul>
               <details class="nb-more">
                 <summary>자세히 보기 (눌러서 열기)</summary>
@@ -227,11 +233,12 @@
             <summary>
               <span class="nb-num">②</span>
               <span class="nb-title">홈페이지 이용 안내 · 건의사항</span>
-              <span class="nb-meta">우리 집 구역 확인 · 의견 남기기(익명)</span>
+              <span class="nb-meta">우리 집 동의율 찾는 법 · 의견 남기기(익명)</span>
             </summary>
             <div class="nb-body">
               <ul class="nb-key">
-                <li><span>구역 확인</span> 첫 화면의 <a href="#rate">우리 집 구역 확인</a>에 지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣고 <strong>[찾기]</strong>를 누르면, 우리 집이 사업 구역 안인지 알려 드립니다.</li>
+                <li><span>동의율 찾기</span> 첫 화면의 <a href="#rate">우리 집 동의율 찾기</a>에 지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣고 <strong>[찾기]</strong>를 누르면, 우리 집이 속한 구역의 동의율이 나옵니다. 집집마다의 동의 여부는 나오지 않습니다.</li>
+                <li><span>번지별 현황</span> <a href="volunteer/">번지별 동의 현황</a>에서 구역도와 &lsquo;이번 주 우선순위&rsquo;(동의율 낮은 구역부터)를 보실 수 있습니다. 1차 목표는 동의율 <strong>30% 이상</strong>입니다.</li>
                 <li><span>건의사항</span> 홈페이지나 사업 진행에 대해 불편한 점, 있었으면 하는 기능, 궁금한 점은 <a data-track="feedback-notice" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer"><strong>건의사항 남기기</strong></a>로 보내 주세요. 익명이고 로그인 없이 1분이면 됩니다. 당장 다 반영하지는 못하더라도 하나씩 차근차근 개선하겠습니다.</li>
                 <li class="must"><span>꼭 읽어 주세요</span> 건의사항에는 <strong>이름·주소·연락처를 적지 마세요.</strong> 익명이라 따로 답장은 어렵고, 자주 나오는 내용은 <a href="#faq">FAQ</a>와 주민 카톡방에 반영해 알려 드립니다. 답변이 꼭 필요하시면 주민 카톡방이나 추진위원장님 <a data-track="sms-feedback" href="sms:010-8367-2346">문자</a>(<span class="tel">010-8367-2346</span>)로 문의해 주세요.</li>
               </ul>
@@ -261,8 +268,9 @@
               <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 1차 목표 동의율 30% 이상</span>
             </summary>
             <div class="nb-body">
+              <iframe class="nb-consent" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
               <p>9/30 후보지 발표에서 우리 구역(강서6)은 <strong>&lsquo;보류&rsquo;</strong>로 안내되었습니다 (탈락 아님). 내년 상반기에 추가 공모가 예정되어 있습니다.
-              동의율 <strong>30% 이상</strong>을 1차 목표로 하고 있습니다. (<a href="#intent">지난 공모 12%</a>)</p>
+              동의율 <strong>30% 이상</strong>을 1차 목표로 하고 있습니다. (<a href="#intent">지난 공모 12%</a>) <a href="volunteer/">번지별 동의 현황 보기</a></p>
               <div class="intent" id="intent-table">
                 <h3 id="intent-table-title">지난 공모 사전의향률: 우리 구역은 12%였습니다</h3>
                 <p>지난 국토교통부 공모에 강서구에서는 화곡동 일대 7개 구역이 신청했습니다. 강서구청이 정리한 신청 현황을 보면
@@ -530,7 +538,7 @@
       <div class="container">
         <h2 class="reveal">사업 구역도</h2>
         <p class="section-lede reveal">
-          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 첫 화면 <a href="#rate">우리 집 구역 확인</a>에서
+          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에서
           지번이나 도로명 주소를 찾은 뒤 &lsquo;구역도에서 위치 보기&rsquo;를 누르시면 이 지도에 표시됩니다.
         </p>
 
@@ -562,7 +570,7 @@
             <span class="step-num">1</span>
             <div>
               <h3>우리 집 확인</h3>
-              <p>첫 화면 <a href="#rate">우리 집 구역 확인</a>에 지번이나 도로명 주소를 넣으면 구역 안인지 알려 드립니다.</p>
+              <p>첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에 지번이나 도로명 주소를 넣으면 구역 안인지 알려 드립니다.</p>
             </div>
           </li>
           <li>
@@ -675,7 +683,7 @@
           </details>
           <details class="faq-item">
             <summary>이전 모아타운·모아주택과는 어떤 관계인가요?</summary>
-            <div class="faq-answer">이전에는 모아주택으로 58% 동의를 받았던 이력이 있으며, 현재는 도심 공공주택 복합사업 공모로 전환하여 진행 중입니다. 모아주택 때 받은 동의는 다른 사업에 대한 동의라 이번 공모에는 쓸 수 없어서, 이번 공모용 동의서를 새로 받고 있습니다.</div>
+            <div class="faq-answer">이전에는 모아주택으로 58% 동의를 받았던 이력이 있으며, 현재는 도심 공공주택 복합사업 공모로 전환하여 진행 중입니다. 모아주택 때 받은 동의는 다른 사업에 대한 동의라 이번 공모에는 쓸 수 없어서, 이번 공모용 동의서를 새로 받고 있습니다. 홈페이지의 동의 현황 숫자는 <strong>이번 공모용 동의서만</strong> 센 것입니다.</div>
           </details>
           <details class="faq-item">
             <summary>9/30 발표 결과는 어떻게 되었나요?</summary>
@@ -1040,16 +1048,34 @@
       reset.addEventListener('click', unzoom);
     })();
 
-    // 우리 집 구역 확인(첫 화면): 주소 대응표(volunteer/addr.json)로 사업 구역 안인지만 알려 준다.
-    // 동의율은 11-04 추진위원장 요청으로 공개하지 않는다(공개 집계 시트도 읽지 않음). 판정 로직은 volunteer/core.js를 같이 쓴다.
+    // 우리 집 동의율 찾기(첫 화면): 동의 현황 페이지(volunteer/)와 같은 주소 대응표·공개 집계 시트를 읽어
+    // 그 구역 동의율만 보여 준다. 판정 로직은 volunteer/core.js를 같이 쓴다.
     (function () {
       var form = document.getElementById('rate-form');
       if (!form || typeof resolveAddr !== 'function') return;
       var input = document.getElementById('rate-input');
       var result = document.getElementById('rate-result');
-      var addr = null;
+      var total = document.getElementById('rate-total');
+      var addr = null, byId = {};
 
-      fetch('volunteer/addr.json?v=20261029a').then(function (r) { return r.json(); }).then(function (d) { addr = d; });
+      fetch('volunteer/addr.json?v=20261029a').then(function (r) { return r.json(); }).then(function (d) {
+        return fetchSheet('volunteer/').then(function (csv) {
+          // 지도에 있는 구역(대응표의 구역)만 센다 — 동의 현황 페이지 맨 위 숫자와 같아지게
+          var zones = {};
+          Object.keys(d.lots).forEach(function (k) { zones[d.lots[k]] = 1; });
+          parseCsv(csv).forEach(function (r) { if (zones[r.id]) byId[r.id] = r; });
+          var t = 0, a = 0;
+          Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
+          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30% 넘기려면 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명 더' : '';
+          var now = document.getElementById('intent-now'); // ④ 현황의 '지난 공모 12% → 지금 N%'
+          if (now && t) now.textContent = fmt(a / t * 100);
+          addr = d; // 숫자까지 다 읽은 뒤에 찾기를 받는다(그 전에는 '불러오는 중' 안내)
+        });
+      }).catch(function () {
+        total.textContent = '동의 현황을 불러오지 못했습니다. 새로고침해 주세요.';
+        var now = document.getElementById('intent-now');
+        if (now) now.textContent = '(불러오지 못함)';
+      });
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -1057,10 +1083,7 @@
         var res = resolveAddr(q, addr);
         result.replaceChildren();
         result.classList.toggle('warn', !!res.warn);
-        var lines = res.warn ? [[res.warn]]
-          : res.base ? [[res.base + '번지는 ' + (res.zones.length > 1 ? '여러 구역(' + res.zones.join('·') + ')으로 나뉘어 있습니다. 뒷번호까지 넣으시면 정확한 구역이 나옵니다.' : '사업 구역 안입니다.')]]
-          : [[res.how + (res.how === res.lot ? '' : ' (' + res.lot + ')') + ' → 사업 구역 안입니다 (' + res.zone + ' 구역)']];
-        lines.forEach(function (line) {
+        addrLines(res, function (z) { return byId[z]; }).forEach(function (line) {
           var p = document.createElement('p');
           if (line[1]) p.className = line[1];
           p.textContent = line[0];
@@ -1077,6 +1100,11 @@
             b.addEventListener('click', function () { window.showOnMap(res.lot); });
             links.appendChild(b);
           }
+          var a = document.createElement('a');
+          a.href = 'volunteer/?q=' + encodeURIComponent(q);
+          a.setAttribute('data-track', 'rate-map');
+          a.textContent = '동의율 지도에서 보기 →';
+          links.appendChild(a);
           result.appendChild(links);
         }
         result.hidden = false;
