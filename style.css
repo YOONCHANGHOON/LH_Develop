@@ -40,29 +40,27 @@ body {
 }
 
 .hero {
+  --scene-h: clamp(160px, 10vw, 220px);
   background: var(--color-accent);
   color: #fff;
-  padding: 72px 0 56px;
+  padding: calc(var(--scene-h) + 26px) 0 56px;
   position: relative;
   overflow: hidden;
 }
 
-.hero::after {
-  content: "";
+/* 맨 위 그림(SVG 1600x160): 높이를 고정하고 넘치는 좌우를 잘라 휴대폰에선 가운데만 보인다 */
+.hero-scene {
   position: absolute;
   top: 0;
-  right: 0;
-  width: 160px;
-  height: 160px;
-  background: var(--color-accent-light);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  opacity: 0.6;
-  animation: float-accent 9s ease-in-out infinite;
+  left: 0;
+  width: 100%;
+  height: var(--scene-h);
+  display: block;
+  pointer-events: none;
 }
-
-@keyframes float-accent {
-  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
-  50% { transform: translate(-10px, 12px); opacity: 0.75; }
+.hero > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .hero .eyebrow {
@@ -547,7 +545,7 @@ body {
 
 @media (max-width: 640px) {
   .hero {
-    padding: 56px 0 44px;
+    padding-bottom: 44px;
   }
   .section {
     padding: 48px 0;
@@ -1656,7 +1654,6 @@ body {
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .hero::after { animation: none; }
   .reveal, .reveal-stagger > * {
     opacity: 1;
     transform: none;
@@ -2006,6 +2003,32 @@ body {
   .quick-list > div { flex-direction: column; gap: 6px; }
   .quick-list dt { flex: none; align-self: flex-start; padding: 3px 10px; }
 }
+/* '동의서, 이렇게 하시면 됩니다': 2호선 초록→5호선 보라 노선 위에 역 4개 */
+.quick-route { position: relative; }
+.quick-route::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 24px;
+  bottom: 34px;
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(#00A84D, #996CAC);
+}
+.quick-route > div { position: relative; padding-left: 40px; border-top: 0; }
+.quick-route > div::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3.5px solid #1a1f1c;
+}
+.quick-route dt { background: none; color: #1a1f1c; text-align: left; font-size: 13.5px; padding: 0; }
+.quick-route .quick-warn dt { background: none; color: #7a4b00; }
 
 /* 첫 화면 '우리 집 동의율 찾기' (판정은 volunteer/core.js) */
 .quick.rate { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
