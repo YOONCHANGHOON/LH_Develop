@@ -2151,27 +2151,9 @@ body {
   font-weight: 800;
   white-space: nowrap;
 }
-/* 위치도 ⑥(우리 구역): 빗금이 빨주노초파남보 순서로 한 색씩 진해졌다 연해짐(한 색 1.6초) +
-   왼쪽 흰 여백 꼬리표에서 화살표가 콕콕. 곱하기 섞기라 지도 글씨는 검게 그대로 보임 */
-.intent-zone, .intent-zone-arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.intent-zone { mix-blend-mode: multiply; animation: intent-zone-rainbow 11.2s ease-in-out infinite; }
-.intent-zone-arrow g { fill: #d9480f; animation: intent-zone-nudge 1.2s ease-in-out infinite; }
-.intent-zone-arrow path { fill: none; stroke: #d9480f; stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.intent-zone-tag {
-  position: absolute;
-  right: 89.8%;
-  top: 64.56%;
-  transform: translateY(-50%);
-  padding: 2px 4px;
-  border-radius: 3px;
-  background: #d9480f;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1.15;
-  text-align: center;
-  pointer-events: none;
-}
+/* 위치도 ⑥(우리 구역): 빗금이 빨주노초파남보 순서로 한 색씩 진해졌다 연해짐(한 색 1.6초).
+   곱하기 섞기라 지도 글씨는 검게 그대로 보임 */
+.intent-zone { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: multiply; animation: intent-zone-rainbow 11.2s ease-in-out infinite; }
 @keyframes intent-zone-rainbow {
   0% { color: #ff6b6b; opacity: .15; }
   7.143% { color: #ff6b6b; opacity: .6; }
@@ -2189,10 +2171,8 @@ body {
   92.857% { color: #cc5de8; opacity: .6; }
   100% { color: #cc5de8; opacity: .15; }
 }
-@keyframes intent-zone-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-16px); } }
 @media (prefers-reduced-motion: reduce) {
   .intent-zone { animation: none; color: #ff922b; opacity: .5; }
-  .intent-zone-arrow g { animation: none; }
 }
 .intent-cap { margin: 6px 0 10px; font-size: 13px; color: #4a5a53; }
 .quick .intent-now { margin: 0 0 8px; padding: 10px 12px; background: #f1f7f3; border-radius: 8px; font-size: 15px; }
