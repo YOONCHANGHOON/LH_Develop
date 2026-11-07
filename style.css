@@ -39,11 +39,19 @@ body {
   padding: 0 20px;
 }
 
-.hero {
+/* 맨 위 그림 칸: 메뉴를 그림 바로 아래에 두려고 hero 밖으로 꺼냄 (11-07) */
+.hero-scene-wrap {
   --scene-h: clamp(160px, 10vw, 220px);
+  position: relative;
+  height: var(--scene-h);
+  overflow: hidden;
+  background: var(--color-accent);
+}
+
+.hero {
   background: var(--color-accent);
   color: #fff;
-  padding: calc(var(--scene-h) + 26px) 0 56px;
+  padding: 26px 0 56px;
   position: relative;
   overflow: hidden;
 }
@@ -96,7 +104,7 @@ body {
   background: rgba(255, 255, 255, 0.92);
 }
 
-.tabs .container {
+.tabs-list {
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -106,11 +114,11 @@ body {
 .tabs a {
   flex-shrink: 0;
   padding: 16px 4px;
-  margin-right: 18px;
+  margin-right: 6px;
   color: var(--color-muted);
   text-decoration: none;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   border-bottom: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
@@ -118,11 +126,70 @@ body {
 .tabs a:hover {
   color: var(--color-accent);
 }
-/* 메뉴 11개(건의사항 추가)가 PC 폭 880px 안에 가로 스크롤 없이 들어가게 */
+/* 메뉴 13개(동의율 찾기·지난 공모 추가)가 PC 폭 880px 안에 가로 스크롤 없이 들어가게: 14px, 간격 6px (11-07) */
 .tabs a:last-child { margin-right: 0; }
+
+/* 휴대폰: 핵심 4칸 + [전체]. 옆으로 밀 필요 없이 누르면 13개가 아래로 펼쳐짐 */
+.tabs-key { display: none; }
+.tabs-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.tabs-all svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+@media (max-width: 879px) {
+  .tabs-key {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    align-items: center;
+  }
+  .tabs-key a {
+    margin: 0;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-accent);
+    border-bottom: 0;
+  }
+  .tabs-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 8px;
+    padding: 6px 20px 12px;
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    overflow: visible;
+  }
+  .tabs.is-open .tabs-list { display: grid; }
+  .tabs-list a {
+    margin: 0;
+    padding: 12px 4px;
+    font-size: 15px;
+    color: var(--color-text);
+    border-bottom: 1px solid #eef1ef;
+  }
+}
 
 .section {
   padding: 64px 0;
+  /* 메뉴로 이동했을 때 제목이 위에 붙은 메뉴(휴대폰 54px)에 걸리지 않게 (11-07) */
+  scroll-margin-top: 12px;
 }
 
 .section.alt {
