@@ -32,7 +32,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261107a" />
+  <link rel="stylesheet" href="style.css?v=20261107b" />
 </head>
 <body>
 
@@ -116,6 +116,15 @@
           <img src="assets/gangseo-season2-intent.jpg" width="1000" height="1414"
                alt="강서구청 「강서구 도심공공주택복합사업 시즌2 신청 현황」. 7개 구역 사전의향률: ① 화곡본동 105번지 일대 46%, ② 화곡본동 102번지 일대 39.5%(가점 +10), ③ 화곡8동 409번지 일대 24.24%(+8.5), ④ 화곡8동 397-1번지 일대 20.63%(+7.7), ⑤ 화곡8동 392번지 일대 30.41%(+9.5), ⑥ 화곡1동 422번지 일대(우리 구역) 12%(+5.5), ⑦ 화곡1동 424번지 일대 5.1%." />
           <span class="intent-mark" aria-hidden="true"><span>우리 구역</span></span>
+          <!-- 위치도 ⑥(우리 구역): 무지개 빗금 + 왼쪽 흰 여백 꼬리표에서 화살표. 좌표 = 이미지 1000×1415 px 기준 -->
+          <svg class="intent-zone" viewBox="0 0 1000 1415" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <defs><pattern id="intent-zone-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4.5" height="9" fill="currentColor" /></pattern></defs>
+            <polygon points="417.8,857.5 461.7,854.5 500.5,833.3 504.2,840 508.3,847.5 515,859.2 520.8,867.5 510.3,873.7 513.7,912.5 422,918" fill="url(#intent-zone-hatch)" />
+          </svg>
+          <svg class="intent-zone-arrow" viewBox="0 0 1000 1415" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <g><path d="M103 913.5H405L426.1 910.8" /><polygon points="440,909 425,916.5 423.3,905.6" /></g>
+          </svg>
+          <span class="intent-zone-tag" aria-hidden="true">우리<br />구역</span>
         </a>
         <p class="intent-cap">누르면 크게 볼 수 있습니다 · 2026. 5. 8. 신청 마감 기준</p>
         <p class="intent-now">지난 공모 12% → <strong>지금 <span id="intent-now">집계 중</span></strong> (지난 공모 때 내신 분 포함) · 1차 목표 <strong>30% 이상</strong></p>
