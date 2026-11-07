@@ -1303,15 +1303,43 @@
     })();
 
     // ④ 현황을 펼치면 보이는 동의 현황(volunteer/ 페이지)을 내용 높이에 맞춰 늘린다. 지도·목록이 늦게 그려져도 따라간다.
-    document.querySelectorAll('iframe.nb-consent').forEach(function (f) {
-      f.addEventListener('load', function () {
-        var doc = f.contentDocument && f.contentDocument.documentElement;
-        if (!doc) return;
-        var fit = function () { f.style.height = Math.ceil(doc.getBoundingClientRect().height) + (f.offsetHeight - f.clientHeight) + 'px'; };
-        if ('ResizeObserver' in window) new ResizeObserver(fit).observe(doc);
-        fit();
+    // 메뉴 등으로 그 아래 단락(제출 서류 등)에 바로 가면, 지나가며 불러온 이 iframe이 뒤늦게 약 2,000px 늘어나
+    // 목적지가 밀려 내려간다. 그래서 이동 후 4초 동안은 늘어날 때마다 목적지를 다시 맞추고, 화면을 직접 만지면 그만둔다. (11-07)
+    (function () {
+      var pinned = null, pinUntil = 0;
+      function pinTo(id) {
+        pinned = (id && document.getElementById(id)) || null;
+        pinUntil = Date.now() + 4000;
+      }
+      function repin() {
+        if (!pinned || Date.now() > pinUntil) return;
+        var html = document.documentElement, sb = html.style.scrollBehavior;
+        html.style.scrollBehavior = 'auto';
+        pinned.scrollIntoView();
+        html.style.scrollBehavior = sb;
+      }
+      document.addEventListener('click', function (ev) {
+        var a = ev.target.closest('a[href^="#"]');
+        if (a) pinTo(decodeURIComponent(a.getAttribute('href').slice(1)));
       });
-    });
+      if (location.hash) pinTo(decodeURIComponent(location.hash.slice(1)));
+      ['wheel', 'touchstart', 'keydown'].forEach(function (type) {
+        window.addEventListener(type, function () { pinned = null; }, { passive: true });
+      });
+
+      document.querySelectorAll('iframe.nb-consent').forEach(function (f) {
+        f.addEventListener('load', function () {
+          var doc = f.contentDocument && f.contentDocument.documentElement;
+          if (!doc) return;
+          var fit = function () {
+            f.style.height = Math.ceil(doc.getBoundingClientRect().height) + (f.offsetHeight - f.clientHeight) + 'px';
+            repin();
+          };
+          if ('ResizeObserver' in window) new ResizeObserver(fit).observe(doc);
+          fit();
+        });
+      });
+    })();
 
   </script>
   <script>
