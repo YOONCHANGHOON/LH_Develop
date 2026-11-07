@@ -32,7 +32,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261107c" />
+  <link rel="stylesheet" href="style.css?v=20261107d" />
 </head>
 <body>
 
@@ -71,7 +71,7 @@
   <nav class="tabs" id="tabs" aria-label="페이지 메뉴">
     <div class="container">
       <div class="tabs-key">
-        <a href="#rate">동의율</a>
+        <a href="#consent-status">동의율</a>
         <a href="#documents">서류</a>
         <a href="#submit">접수</a>
         <a href="#faq">질문</a>
@@ -304,7 +304,7 @@
               <span class="nb-meta">9/30 &lsquo;보류&rsquo;(탈락 아님) · 1차 목표 동의율 30% 이상</span>
             </summary>
             <div class="nb-body">
-              <iframe class="nb-consent" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
+              <iframe class="nb-consent" id="consent-status" src="volunteer/" title="번지별 동의 현황" loading="lazy"></iframe>
               <p>9/30 후보지 발표에서 우리 구역(강서6)은 <strong>&lsquo;보류&rsquo;</strong>로 안내되었습니다 (탈락 아님). 내년 상반기에 추가 공모가 예정되어 있습니다.
               동의율 <strong>30% 이상</strong>을 1차 목표로 하고 있습니다. (<a href="#intent">지난 공모 12%</a>) <a href="volunteer/">번지별 동의 현황 보기</a></p>
               <div class="intent" id="intent-table">
@@ -1320,7 +1320,12 @@
       }
       document.addEventListener('click', function (ev) {
         var a = ev.target.closest('a[href^="#"]');
-        if (a) pinTo(decodeURIComponent(a.getAttribute('href').slice(1)));
+        if (!a) return;
+        var id = decodeURIComponent(a.getAttribute('href').slice(1));
+        // 메뉴 '동의율'은 ④ 현황 안의 동의 현황으로 간다. 접어 두었으면 펼친 뒤 이동한다.
+        var box = id && document.getElementById(id), d = box && box.closest('details');
+        if (d && !d.open) d.open = true;
+        pinTo(id);
       });
       if (location.hash) pinTo(decodeURIComponent(location.hash.slice(1)));
       ['wheel', 'touchstart', 'keydown'].forEach(function (type) {
