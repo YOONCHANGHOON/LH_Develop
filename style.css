@@ -883,6 +883,27 @@ body {
   stroke-linecap: round;
 }
 
+/* 국토교통부 발표 검색 띠: 위 띠 아래, 바탕만 연한 남색으로 구분 (11-07).
+   검색어가 길어서 작은 화면에선 글자를 조금 줄임(320px에서도 한 줄). 오른쪽에 '강서6구역 (보류)' 두 줄 */
+.naver-bar-molit {
+  background: #eef3fb;
+  border-bottom-color: #d5e0f0;
+}
+.naver-bar-molit .naver-bar-q { font-size: clamp(12.5px, 3.6vw, 13.5px); }
+.naver-bar-tag {
+  flex-shrink: 0;
+  text-align: center;
+  color: #4a5a53;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.naver-bar-tag b {
+  color: #b54708;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
 /* Toast */
 .toast {
   position: fixed;
