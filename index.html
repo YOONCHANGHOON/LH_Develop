@@ -1325,6 +1325,15 @@
         // 메뉴 '동의율'은 ④ 현황 안의 동의 현황으로 간다. 접어 두었으면 펼친 뒤 이동한다.
         var box = id && document.getElementById(id), d = box && box.closest('details');
         if (d && !d.open) d.open = true;
+        // 아직 안 나타난 블록(.reveal)은 20px 아래에서 0.7초 동안 올라오므로, 그 안으로 가면 도착한 뒤 20px 어긋난다.
+        // 이동하기 전에 효과 없이 바로 나타나게 한다.
+        var rv = box && box.closest('.reveal:not(.is-visible)');
+        if (rv) {
+          rv.style.transition = 'none';
+          rv.classList.add('is-visible');
+          void rv.offsetHeight;
+          requestAnimationFrame(function () { rv.style.transition = ''; });
+        }
         pinTo(id);
       });
       if (location.hash) pinTo(decodeURIComponent(location.hash.slice(1)));
