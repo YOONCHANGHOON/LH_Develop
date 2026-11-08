@@ -78,6 +78,31 @@ body {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
 }
+/* 소제목 줄 + 오른쪽 '국토교통부 공모 사업' 표시 (11-08).
+   좁은 화면에서 한 줄에 안 들어가면 표시가 다음 줄 오른쪽으로 내려감(소제목 글자와 겹치지 않게) */
+.hero-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 8px;
+  margin: 0 0 16px;
+}
+.hero-top .eyebrow { margin: 0; }
+.hero-gov {
+  margin: 0 0 0 auto;
+  padding: 4px 11px;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+@media (min-width: 880px) {
+  .hero-gov { font-size: 14px; padding: 5px 14px; }
+}
 
 .hero h1 {
   margin: 0 0 20px;
@@ -1795,13 +1820,15 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   /* Hero entrance */
   .hero .eyebrow,
+  .hero .hero-gov,
   .hero h1,
   .hero .lede {
     opacity: 0;
     transform: translateY(14px);
     animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-  .hero .eyebrow { animation-delay: 0.1s; }
+  .hero .eyebrow,
+  .hero .hero-gov { animation-delay: 0.1s; }
   .hero h1 { animation-delay: 0.25s; }
   .hero .lede { animation-delay: 0.45s; }
 
