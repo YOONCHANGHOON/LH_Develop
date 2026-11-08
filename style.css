@@ -832,10 +832,12 @@ body {
   font-weight: 800;
 }
 
-/* 네이버 검색 안내 띠 (카톡 띠 바로 아래, 11-07). '네이버에서' 글자는 연초록 바탕 대비 4.5:1을 넘게 #027a3a */
+/* 네이버 검색 안내 띠 (카톡 띠 바로 아래, 11-07).
+   11-08: 안내 글씨를 검색창 윗선에 걸친 이름표로 옮기고(휴대폰에서 검색어가 잘리지 않게), 검색어 앞에 네이버 N 표시.
+   이름표 글씨는 연초록 바탕 대비 4.5:1을 넘게 #027a3a */
 .naver-bar {
   display: block;
-  padding: 7px 12px;
+  padding: 13px 10px 7px;
   background: #e9f8ef;
   border-bottom: 1px solid #cfeedd;
   text-decoration: none;
@@ -847,22 +849,36 @@ body {
   max-width: 560px;
   margin: 0 auto;
 }
-.naver-bar-lead {
-  flex-shrink: 0;
-  color: #027a3a;
-  font-size: 13.5px;
-  font-weight: 800;
-}
 .naver-bar-box {
+  position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 5px;
+  padding: 8px 10px 6px;
   background: #fff;
   border: 1.5px solid #03c75a;
   border-radius: 999px;
+}
+/* 이름표: 검색창 윗선 위에 걸침. 바탕 위쪽 절반은 띠 색, 아래쪽 절반은 검색창 흰색이라 선이 글씨 뒤에서 끊겨 보임 */
+.naver-bar-legend {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  padding: 0 5px;
+  color: #027a3a;
+  background: linear-gradient(#e9f8ef 50%, #fff 50%);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.naver-bar-n {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  fill: #03c75a;
 }
 .naver-bar-q {
   flex: 1;
@@ -888,6 +904,10 @@ body {
 .naver-bar-molit {
   background: #eef3fb;
   border-bottom-color: #d5e0f0;
+}
+.naver-bar-molit .naver-bar-legend {
+  color: #1f4e8c;
+  background: linear-gradient(#eef3fb 50%, #fff 50%);
 }
 .naver-bar-molit .naver-bar-q { font-size: clamp(12.5px, 3.6vw, 13.5px); }
 .naver-bar-tag {
