@@ -73,10 +73,11 @@
     <section class="caution" aria-label="확인 전에 읽어 주세요">
       <h2>⚠️ 확인 전에 읽어 주세요</h2>
       <ol>
+        <li>접수 여부는 <strong>동의서를 내실 때 적은 전화번호</strong>로 찾습니다. 그때 가족 전화번호를 적으셨다면 <strong>가족분 번호</strong>를 넣어 주세요.</li>
         <li>동의서를 내신 뒤 추진위원회가 명단에 <strong>등록하기까지 1~2일</strong> 걸립니다. 오늘 내셨다면 1~2일 뒤에 확인해 주세요.</li>
         <li>동의서를 내셨어도 아래 경우에는 <strong>"확인되지 않음"</strong>으로 나올 수 있습니다. 이럴 때는 추진위원회로 연락 주세요.
           <ul>
-            <li>동의서에 적은 번호와 지금 넣은 번호가 다를 때 (번호를 바꾸셨거나 가족 번호를 적으신 경우)</li>
+            <li>동의서를 내신 뒤 번호를 바꾸셨거나, 어떤 번호를 적었는지 기억나지 않을 때</li>
             <li>명단에 번호가 빠졌거나 잘못 적혔을 때</li>
             <li>호수가 다르게 적혀 다른 집으로 등록됐을 때</li>
             <li>공동명의라 다른 분 번호로만 등록됐을 때</li>
@@ -111,7 +112,7 @@
         <input id="p1" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" aria-label="휴대폰 번호 가운데 4자리" />-
         <input id="p2" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" aria-label="휴대폰 번호 끝 4자리" />
       </div>
-      <p class="hint">동의서에 적으신 번호를 넣어 주세요. 가족 번호를 적으셨다면 그 번호로 확인하시면 됩니다.</p>
+      <p class="hint">동의서를 내실 때 적으신 번호를 넣어 주세요. 가족 번호를 적으셨다면 가족분 번호를 넣으시면 됩니다.</p>
       <p class="msg err" id="p-err" hidden></p>
       <button class="btn primary" type="submit" id="go" data-track="check-submit">접수 확인하기</button>
     </form>
