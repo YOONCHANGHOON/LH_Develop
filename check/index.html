@@ -48,6 +48,13 @@
     .result.none, .result.limit, .result.error { background: var(--no-bg); border: 2px solid #b9c2bd; }
     .stored { display: inline-block; margin-top: 4px; padding: 4px 10px; font-size: 19px; font-weight: 700; letter-spacing: 1px; background: #fff; border-radius: 8px; }
     .sms { display: inline-block; margin-top: 12px; padding: 11px 16px; font-size: 16px; font-weight: 700; color: #fff; background: #3a5a8c; border-radius: 10px; text-decoration: none; }
+    .caution { margin: 14px 0; padding: 14px 14px 12px; font-size: 15px; background: #fff8c5; border: 1px solid #e6cf6a; border-left: 5px solid #d4a72c; border-radius: 12px; }
+    .caution h2 { margin: 0 0 8px; font-size: 17px; }
+    .caution ol { margin: 0; padding-left: 20px; }
+    .caution ol > li { margin: 0 0 8px; }
+    .caution ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; }
+    .caution ul li { margin: 3px 0; }
+    .caution p { margin: 4px 0 0; font-weight: 700; }
     .note { margin: 18px 0 28px; padding: 0 0 0 18px; font-size: 14px; color: var(--muted); }
     .note li { margin: 4px 0; }
     [hidden] { display: none !important; }
@@ -63,6 +70,22 @@
   </header>
 
   <main class="wrap">
+    <section class="caution" aria-label="확인 전에 읽어 주세요">
+      <h2>⚠️ 확인 전에 읽어 주세요</h2>
+      <ol>
+        <li>동의서를 내신 뒤 추진위원회가 명단에 <strong>등록하기까지 1~2일</strong> 걸립니다. 오늘 내셨다면 1~2일 뒤에 확인해 주세요.</li>
+        <li>동의서를 내셨어도 아래 경우에는 <strong>"확인되지 않음"</strong>으로 나올 수 있습니다. 이럴 때는 추진위원회로 연락 주세요.
+          <ul>
+            <li>동의서에 적은 번호와 지금 넣은 번호가 다를 때 (번호를 바꾸셨거나 가족 번호를 적으신 경우)</li>
+            <li>명단에 번호가 빠졌거나 잘못 적혔을 때</li>
+            <li>호수가 다르게 적혀 다른 집으로 등록됐을 때</li>
+            <li>공동명의라 다른 분 번호로만 등록됐을 때</li>
+          </ul>
+        </li>
+      </ol>
+      <p>추진위원장님 <a data-track="check-sms-caution" href="sms:010-8367-2346">문자</a> · <a data-track="check-tel-caution" href="tel:010-8367-2346">010-8367-2346</a></p>
+    </section>
+
     <form class="step" id="f-find" autocomplete="off">
       <h2><b>1</b>우리 집 찾기</h2>
       <div class="row">
@@ -97,14 +120,13 @@
 
     <ul class="note">
       <li>추진위원회가 정리한 명단 기준이며, 국토교통부의 공식 확인은 아닙니다.</li>
-      <li>최근에 내신 동의서는 명단에 옮겨 적기까지 며칠 걸릴 수 있습니다.</li>
       <li>번호를 여러 번 틀리면 그날은 확인이 막힙니다.</li>
       <li>확인이 안 되시면 추진위원장님께 <a data-track="check-sms-note" href="sms:010-8367-2346">문자</a>(010-8367-2346)로 주소(번지·호수)와 성함을 보내 주세요.</li>
     </ul>
   </main>
 
   <script src="../volunteer/core.js?v=20261029a"></script>
-  <script src="app.js?v=20261111a"></script>
+  <script src="app.js?v=20261111b"></script>
   <script>
     // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
     (function () {

@@ -140,7 +140,7 @@ function render(d) {
     add("h3", "확인되지 않았습니다");
     add("p", "고르신 집과 번호로는 접수 기록을 찾지 못했습니다.");
     const ul = add("ul");
-    ["최근에 내셨다면 아직 명단에 옮겨 적기 전일 수 있습니다." + (since ? " (" + since + ")" : ""),
+    ["오늘·어제 내셨다면 아직 등록 전일 수 있습니다(등록까지 1~2일)." + (since ? " (" + since + ")" : ""),
       "동의서에 다른 번호(가족 번호 등)를 적으셨다면 그 번호로도 해 보세요.",
       "그래도 안 되면 위원장님께 문자로 확인해 주세요."].forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
     box.appendChild(smsLink("위원장님께 문자 보내기"));
