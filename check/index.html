@@ -12,7 +12,7 @@
   <meta property="og:description" content="주소와 휴대폰 번호로 내 동의서가 등록됐는지 확인하실 수 있습니다." />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="check.css?v=20261111c" />
+  <link rel="stylesheet" href="check.css?v=20261111d" />
   <style>
     /* 이 페이지 틀(머리·폭)만. 확인 기능 모양은 check.css (홈 첫 화면 칸과 같이 씀) */
     * { box-sizing: border-box; }
@@ -49,9 +49,10 @@
         <form class="lk-step" id="lk-find" autocomplete="off">
           <p class="lk-h"><b>1</b>우리 집 찾기</p>
           <div class="lk-row">
-            <input id="lk-q" type="text" enterkeyhint="search" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
+            <input id="lk-q" type="text" enterkeyhint="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lk-ac" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
             <button class="lk-btn" type="submit" data-track="check-find">찾기</button>
           </div>
+          <ul class="lk-ac" id="lk-ac" role="listbox" aria-label="주소 후보" hidden></ul>
           <p class="lk-hint">지번, 도로명 주소, 건물 이름 중 아무거나 넣으세요.</p>
           <p class="lk-msg" id="lk-find-msg" hidden></p>
         </form>
@@ -87,7 +88,7 @@
   </main>
 
   <script src="../volunteer/core.js?v=20261029a"></script>
-  <script src="app.js?v=20261111d"></script>
+  <script src="app.js?v=20261111e"></script>
   <script>
     // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
     (function () {

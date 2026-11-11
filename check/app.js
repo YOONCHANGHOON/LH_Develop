@@ -7,15 +7,127 @@
   if (!$("lk-find") || typeof resolveAddr !== "function") return;
   let addr = null, lot = null, buildings = [], asof = null;
 
-  fetch("/volunteer/addr.json?v=20261029a").then((r) => r.json()).then((d) => { addr = d; }).catch(() => {});
+  fetch("/volunteer/addr.json?v=20261029a").then((r) => r.json()).then((d) => {
+    addr = d;
+    if (document.activeElement === $("lk-q") && $("lk-q").value.trim()) acUpdate(); // 자료가 늦게 와도 치던 글자로 후보를 띄움
+  }).catch(() => {});
 
   const show = (id, on) => { $(id).hidden = !on; };
   const msg = (text, err) => { const m = $("lk-find-msg"); m.textContent = text; m.className = "lk-msg" + (err ? " lk-err" : ""); m.hidden = !text; };
   const hoLabel = (h) => (/^\d+$/.test(h) || /^B\d+$/i.test(h) ? h + "호" : h);
   const NOT_LISTED = "목록에 우리 집 호가 없어요";
 
+  // ── 자동완성(11-11): 치는 동안 입력 칸 바로 아래에 후보 집을 한 줄씩(지번 · 건물 이름, 오른쪽에 도로명).
+  // 자료는 addr.json(구역 안 지번·도로명·건축물대장 건물 이름, 공개 정보)만 쓴다. 고르면 그 지번으로 바로 찾는다.
+  const AC_SHOW = 5; // 처음 보여 주는 후보 수(휴대폰 키보드 위에 들어가는 만큼). 나머지는 '더 보기'
+  const qIn = $("lk-q"), acBox = $("lk-ac");
+  let acIdx = null, acRes = { items: [], pre: "", by: "" }, acActive = -1, acAll = false;
+
+  function acIndex() {
+    if (acIdx || !addr) return acIdx;
+    const by = {};
+    Object.keys(addr.lots).forEach((l) => { by[l] = { lot: l, names: [], roads: [] }; });
+    Object.entries(addr.names || {}).forEach(([n, ls]) => ls.forEach((l) => by[l] && by[l].names.push(n)));
+    Object.entries(addr.roads || {}).forEach(([r, l]) => by[l] && by[l].roads.push(r.replace(/(\D)(\d+(?:-\d+)?)$/, "$1 $2")));
+    const num = (l) => l.split("-").map(Number);
+    acIdx = Object.values(by).sort((a, b) => { const x = num(a.lot), y = num(b.lot); return x[0] - y[0] || x[1] - y[1]; });
+    return acIdx;
+  }
+
+  // 지번(345-1 · 345 1 · 3451 · 34515)이면 앞부분이 같은 지번, 아니면 건물 이름·도로명에 그 글자가 들어간 집
+  function acFind(text) {
+    const idx = acIndex();
+    const none = { items: [], pre: "", by: "" };
+    if (!idx) return none;
+    const raw = text.replace(/\(.*?\)/g, " ").replace(/서울특별시|서울시|서울|강서구|화곡제1동|화곡1동|화곡동|번지/g, " ").trim();
+    // '로·길'이 있으면 도로명(건물 번호의 숫자를 지번으로 읽지 않게, resolveAddr 와 같은 순서)
+    const m = /[로길]/.test(raw) ? null : raw.match(/(\d{3})(?:\s*-\s*|\s+)(\d{0,3})/) || raw.match(/^(\d{3})(\d{0,3})$/);
+    if (m) {
+      const pre = m[1] + (m[2] || /-/.test(raw) ? "-" + m[2] : "");
+      return { items: idx.filter((e) => e.lot.startsWith(pre)), pre, by: "lot" };
+    }
+    const nameKey = raw.replace(/[\s\d-]|호|층/g, ""), roadKey = raw.replace(/\s/g, "");
+    if (nameKey.length < 2) return none;
+    const nm = (n) => { const k = n.replace(/[\s\d-]/g, ""); return k.length >= 2 && (k.includes(nameKey) || nameKey.includes(k)); };
+    const byName = idx.filter((e) => e.names.some(nm));
+    const byRoad = idx.filter((e) => !byName.includes(e) && e.roads.some((r) => r.replace(/\s/g, "").includes(roadKey)));
+    return { items: byName.concat(byRoad), pre: "", by: byName.length ? "name" : "road" };
+  }
+
+  const acShown = () => acRes.items.slice(0, acAll ? 200 : AC_SHOW);
+  function acOpen(on) {
+    acBox.hidden = !on;
+    qIn.setAttribute("aria-expanded", on ? "true" : "false");
+    if (!on) qIn.removeAttribute("aria-activedescendant");
+  }
+  function acUpdate() {
+    acRes = acFind(qIn.value);
+    acAll = false;
+    acActive = acRes.items.length ? 0 : -1;
+    acDraw();
+  }
+  function acDraw() {
+    acBox.innerHTML = "";
+    if (!acRes.items.length) return acOpen(false);
+    const em = (t) => { const b = document.createElement("b"); b.className = "lk-ac-m"; b.textContent = t; return b; };
+    acShown().forEach((e, i) => {
+      const li = document.createElement("li"), main = document.createElement("span"), sub = document.createElement("span");
+      li.id = "lk-ac-" + i;
+      li.setAttribute("role", "option");
+      li.dataset.i = i;
+      if (i === acActive) { li.className = "is-active"; li.setAttribute("aria-selected", "true"); qIn.setAttribute("aria-activedescendant", li.id); }
+      if (acRes.pre) main.append(em(e.lot.slice(0, acRes.pre.length)), e.lot.slice(acRes.pre.length)); else main.append(e.lot);
+      if (e.names.length) { main.append(" · "); main.append(acRes.by === "name" ? em(e.names.join(", ")) : e.names.join(", ")); }
+      sub.className = "lk-ac-sub";
+      if (acRes.by === "road") sub.append(em(e.roads[0] || "")); else sub.textContent = e.roads[0] || "";
+      li.append(main, sub);
+      acBox.appendChild(li);
+    });
+    if (!acAll && acRes.items.length > AC_SHOW) {
+      const li = document.createElement("li");
+      li.className = "lk-ac-more";
+      li.dataset.more = "1";
+      li.textContent = acRes.items.length - AC_SHOW + "곳 더 보기";
+      acBox.appendChild(li);
+    }
+    acOpen(true);
+  }
+  function acPick(i) {
+    const e = acShown()[i];
+    if (!e) return;
+    qIn.value = e.lot + (e.names.length ? " (" + e.names[0] + ")" : ""); // 괄호 안은 resolveAddr 가 무시
+    acOpen(false);
+    qIn.blur(); // 휴대폰 키보드를 내려 2단계가 보이게
+    const f = $("lk-find");
+    if (f.requestSubmit) f.requestSubmit(); else f.dispatchEvent(new Event("submit", { cancelable: true }));
+  }
+  qIn.addEventListener("input", () => {
+    // 주소를 새로 치기 시작하면 앞서 찾은 집의 호·번호·결과는 접는다(다른 집 것이 남아 헷갈리지 않게)
+    show("lk-unit", false); show("lk-phone", false); show("lk-result", false); msg("");
+    acUpdate();
+  });
+  qIn.addEventListener("focus", () => { if (qIn.value.trim() && acBox.hidden) acUpdate(); });
+  qIn.addEventListener("keydown", (ev) => {
+    if (acBox.hidden) return;
+    const n = acShown().length;
+    if (ev.key === "ArrowDown") { ev.preventDefault(); acActive = (acActive + 1) % n; acDraw(); }
+    else if (ev.key === "ArrowUp") { ev.preventDefault(); acActive = (acActive - 1 + n) % n; acDraw(); }
+    else if (ev.key === "Enter" && acActive >= 0) { ev.preventDefault(); acPick(acActive); }
+    else if (ev.key === "Escape") acOpen(false);
+  });
+  acBox.addEventListener("mousedown", (ev) => ev.preventDefault()); // PC: 누르는 순간 입력 칸이 포커스를 잃지 않게
+  acBox.addEventListener("click", (ev) => {
+    const li = ev.target.closest("li");
+    if (!li) return;
+    if (li.dataset.more) { acAll = true; acDraw(); return; }
+    acPick(+li.dataset.i);
+  });
+  // 입력 칸·후보 목록 밖을 누르면 닫는다(휴대폰은 blur 가 누르기보다 먼저 와서 blur 로 닫지 않음)
+  document.addEventListener("pointerdown", (ev) => { if (!acBox.hidden && !ev.target.closest("#lk-ac, #lk-q")) acOpen(false); });
+
   $("lk-find").addEventListener("submit", async (ev) => {
     ev.preventDefault();
+    acOpen(false);
     show("lk-unit", false); show("lk-phone", false); show("lk-result", false);
     const res = resolveAddr($("lk-q").value, addr);
     if (res.warn) return msg(res.warn, true);

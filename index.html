@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="style.css?v=20261111a" />
-  <link rel="stylesheet" href="check/check.css?v=20261111c" />
+  <link rel="stylesheet" href="check/check.css?v=20261111d" />
 </head>
 <body>
 
@@ -188,9 +188,10 @@
           <form class="lk-step" id="lk-find" autocomplete="off">
             <p class="lk-h"><b>1</b>우리 집 찾기</p>
             <div class="lk-row">
-              <input id="lk-q" type="text" enterkeyhint="search" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
+              <input id="lk-q" type="text" enterkeyhint="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lk-ac" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
               <button class="lk-btn" type="submit" data-track="check-find">찾기</button>
             </div>
+            <ul class="lk-ac" id="lk-ac" role="listbox" aria-label="주소 후보" hidden></ul>
             <p class="lk-hint">지번, 도로명 주소, 건물 이름 중 아무거나 넣으세요.</p>
             <p class="lk-msg" id="lk-find-msg" hidden></p>
           </form>
@@ -1058,7 +1059,7 @@
   </footer>
 
   <script src="volunteer/core.js?v=20261029a"></script>
-  <script src="check/app.js?v=20261111d"></script>
+  <script src="check/app.js?v=20261111e"></script>
   <script>
     // Scroll reveal
     (function () {
