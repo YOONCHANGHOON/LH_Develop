@@ -36,7 +36,8 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261108b" />
+  <link rel="stylesheet" href="style.css?v=20261111a" />
+  <link rel="stylesheet" href="check/check.css?v=20261111c" />
 </head>
 <body>
 
@@ -97,7 +98,7 @@
   </div>
 
   <!-- 메뉴: 그림 바로 아래에 두고, 내려도 화면 위에 붙어 따라온다.
-       휴대폰은 핵심 4칸 + [전체](누르면 13개 펼침), PC(880px 이상)는 13개 한 줄 (11-07) -->
+       휴대폰은 핵심 4칸 + [전체](누르면 14개 펼침), PC(880px 이상)는 14개 한 줄 (11-07, 11-11 '등록 확인' 추가) -->
   <nav class="tabs" id="tabs" aria-label="페이지 메뉴">
     <div class="container">
       <div class="tabs-key">
@@ -119,6 +120,7 @@
         <a href="#overview">사업 개요</a>
         <a href="#map">구역도</a>
         <a href="#submit">접수</a>
+        <a href="#check" data-track="nav-check">등록 확인</a>
         <a href="#faq">FAQ</a>
         <a href="#volunteer">봉사</a>
         <a href="#donation">후원</a>
@@ -168,16 +170,66 @@
           <span class="flyer-hero-go">전단 보기 · 내려받기 →</span>
         </span>
       </a>
-      <section class="quick rate" id="rate" aria-label="우리 집 동의율 찾기">
-        <p class="quick-title">우리 집 동의율 찾기</p>
-        <p class="rate-total" id="rate-total">전체 동의율 불러오는 중…</p>
-        <form class="finder-row" id="rate-form" role="search" autocomplete="off">
-          <input id="rate-input" type="text" enterkeyhint="search" placeholder="예: 346-85, 곰달래로19나길 15, 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
-          <button type="submit" data-track="rate-hero">찾기</button>
-        </form>
-        <div class="rate-result" id="rate-result" aria-live="polite" hidden></div>
-        <p class="rate-foot">지번(재산세 고지서·등기부)이나 건물 번호판의 도로명 주소를 넣으세요. 집집마다의 동의 여부는 나오지 않고, 그 구역 전체의 동의율만 보여 드립니다.
-          <a href="volunteer/" data-track="consent-rate">번지별 동의 현황 전체 보기 →</a></p>
+      <!-- 내 동의서 등록 확인(11-11): 집 고르기 + 휴대폰 번호 → Worker /api/lookup. 모양 check/check.css, 동작 check/app.js (check/ 페이지와 같은 마크업) -->
+      <section class="quick lk-home" id="check" aria-labelledby="check-title">
+        <p class="quick-title" id="check-title">내 동의서 등록 확인</p>
+        <p class="lk-lead">동의서가 명단에 등록됐는지 주소와 휴대폰 번호로 확인하실 수 있습니다. 둘 다 맞을 때만 알려 드리고, 다른 분의 이름·주소·번호는 보이지 않습니다.</p>
+        <div class="lk">
+          <section class="lk-caution" aria-label="확인 전에 읽어 주세요">
+            <p class="lk-caution-title">⚠️ 확인 전에 읽어 주세요</p>
+            <ol>
+              <li>등록 여부는 <strong>동의서를 내실 때 적은 전화번호</strong>로 찾습니다. 그때 가족 전화번호를 적으셨다면 <strong>가족분 번호</strong>를 넣어 주세요.</li>
+              <li>동의서를 내신 뒤 추진위원회가 명단에 <strong>등록하기까지 1~2일</strong> 걸립니다. 오늘 내셨다면 1~2일 뒤에 확인해 주세요.</li>
+              <li>동의서를 내셨어도 아래 경우에는 <strong>"확인되지 않음"</strong>으로 나올 수 있습니다. 이럴 때는 추진위원회로 연락 주세요.
+                <ul>
+                  <li>동의서를 내신 뒤 번호를 바꾸셨거나, 어떤 번호를 적었는지 기억나지 않을 때</li>
+                  <li>명단에 번호가 빠졌거나 잘못 적혔을 때</li>
+                  <li>호수가 다르게 적혀 다른 집으로 등록됐을 때</li>
+                  <li>공동명의라 다른 분 번호로만 등록됐을 때</li>
+                </ul>
+              </li>
+            </ol>
+            <p class="lk-contact">추진위원장님 <a data-track="check-sms-caution" href="sms:010-8367-2346">문자</a> · <a data-track="check-tel-caution" href="tel:010-8367-2346">010-8367-2346</a></p>
+          </section>
+
+          <form class="lk-step" id="lk-find" autocomplete="off">
+            <p class="lk-h"><b>1</b>우리 집 찾기</p>
+            <div class="lk-row">
+              <input id="lk-q" type="text" enterkeyhint="search" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
+              <button class="lk-btn" type="submit" data-track="check-find">찾기</button>
+            </div>
+            <p class="lk-hint">지번, 도로명 주소, 건물 이름 중 아무거나 넣으세요.</p>
+            <p class="lk-msg" id="lk-find-msg" hidden></p>
+          </form>
+
+          <section class="lk-step" id="lk-unit" hidden>
+            <p class="lk-h"><b>2</b>호 고르기</p>
+            <select id="lk-bsel" aria-label="건물" hidden></select>
+            <p class="lk-bname" id="lk-bname"></p>
+            <select id="lk-usel" aria-label="호"></select>
+            <p class="lk-hint" id="lk-uhint" hidden>이 건물은 호수 없이 소유자별로 적혀 있습니다. 바로 휴대폰 번호를 넣어 주세요.</p>
+          </section>
+
+          <form class="lk-step" id="lk-phone" hidden autocomplete="off">
+            <p class="lk-h"><b>3</b>휴대폰 번호</p>
+            <div class="lk-tel">
+              <span class="lk-pre">010</span>-
+              <input id="lk-p1" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" aria-label="휴대폰 번호 가운데 4자리" />-
+              <input id="lk-p2" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" aria-label="휴대폰 번호 끝 4자리" />
+            </div>
+            <p class="lk-hint">동의서를 내실 때 적으신 번호를 넣어 주세요. 가족 번호를 적으셨다면 가족분 번호를 넣으시면 됩니다.</p>
+            <p class="lk-msg lk-err" id="lk-perr" hidden></p>
+            <button class="lk-btn lk-primary" type="submit" id="lk-go" data-track="check-submit">등록 확인하기</button>
+          </form>
+
+          <div class="lk-result" id="lk-result" role="status" aria-live="polite" hidden></div>
+
+          <ul class="lk-note">
+            <li>추진위원회가 정리한 명단 기준이며, 국토교통부의 공식 확인은 아닙니다.</li>
+            <li>번호를 여러 번 틀리면 그날은 확인이 막힙니다.</li>
+            <li>확인이 안 되시면 추진위원장님께 <a data-track="check-sms-note" href="sms:010-8367-2346">문자</a>(010-8367-2346)로 주소(번지·호수)와 성함을 보내 주세요.</li>
+          </ul>
+        </div>
       </section>
       <section class="quick intent-hero" id="intent" aria-labelledby="intent-title">
         <p class="quick-title" id="intent-title">지난 공모 사전의향률 · 강서구청 자료</p>
@@ -281,7 +333,7 @@
                 <li class="must"><span>준비물</span> <strong>주민등록증</strong>만 가져오시면 됩니다. 등기부등본은 접수처(유림부동산)에서 준비해 드립니다. (서류별 설명은 <a href="#documents">제출 서류</a>)</li>
                 <li class="must"><span>공유지분</span> <strong>공유지분자(공동명의)이신 경우, 두 분 모두의 주민등록증이 필요합니다.</strong> 두 분이 함께 방문해 주세요.</li>
                 <li><span>이미 내신 분</span> 지난 4월에 동의서를 내신 분은 다시 내실 필요가 없습니다.</li>
-                <li><span>접수 확인</span> 내 동의서가 접수됐는지 <a data-track="check-consent" href="check/"><strong>접수 확인 페이지</strong></a>에서 <strong>주소와 휴대폰 번호</strong>로 바로 확인하실 수 있습니다. 확인이 안 되시면 추진위원장님께 <a data-track="sms-consent-check" href="sms:010-8367-2346"><strong>문자</strong></a>로 <strong>주소(번지·호수)와 성함</strong>을 보내 주세요. (동의 여부는 개인정보라 카톡방이 아닌 문자로 한 분씩 알려 드립니다)</li>
+                <li><span>접수 확인</span> 내 동의서가 등록됐는지 첫 화면 <a data-track="check-consent" href="#check"><strong>내 동의서 등록 확인</strong></a>에서 <strong>주소와 휴대폰 번호</strong>로 바로 확인하실 수 있습니다. 확인이 안 되시면 추진위원장님께 <a data-track="sms-consent-check" href="sms:010-8367-2346"><strong>문자</strong></a>로 <strong>주소(번지·호수)와 성함</strong>을 보내 주세요. (동의 여부는 개인정보라 카톡방이 아닌 문자로 한 분씩 알려 드립니다)</li>
                 <li><span>동의 현황</span> <a href="volunteer/">번지별 동의 현황 보기</a> (실시간 업데이트 중 · 아직 기록되지 않은 동의서가 있을 수 있으며, 순차적으로 추가됩니다)</li>
               </ul>
               <details class="nb-more">
@@ -303,11 +355,11 @@
             <summary>
               <span class="nb-num">②</span>
               <span class="nb-title">홈페이지 이용 안내 · 건의사항</span>
-              <span class="nb-meta">우리 집 동의율 찾는 법 · 의견 남기기(익명)</span>
+              <span class="nb-meta">내 동의서 등록 확인하는 법 · 의견 남기기(익명)</span>
             </summary>
             <div class="nb-body">
               <ul class="nb-key">
-                <li><span>동의율 찾기</span> 첫 화면의 <a href="#rate">우리 집 동의율 찾기</a>에 지번(예: 346-85)이나 도로명 주소(예: 곰달래로19나길 15)를 넣고 <strong>[찾기]</strong>를 누르면, 우리 집이 속한 구역의 동의율이 나옵니다. 집집마다의 동의 여부는 나오지 않습니다.</li>
+                <li><span>등록 확인</span> 첫 화면의 <a href="#check">내 동의서 등록 확인</a>에서 집(지번·호수)을 고르고 동의서에 적으신 휴대폰 번호를 넣으면, 동의서가 명단에 등록됐는지 알려 드립니다. 다른 분의 정보는 보이지 않습니다.</li>
                 <li><span>번지별 현황</span> <a href="volunteer/">번지별 동의 현황</a>에서 구역도와 &lsquo;이번 주 우선순위&rsquo;(동의율 낮은 구역부터)를 보실 수 있습니다. 1차 목표는 동의율 <strong>30% 이상</strong>입니다.</li>
                 <li><span>건의사항</span> 홈페이지나 사업 진행에 대해 불편한 점, 있었으면 하는 기능, 궁금한 점은 <a data-track="feedback-notice" href="https://docs.google.com/forms/d/e/1FAIpQLSfRMDAkaPou5mFLzpERMNLMvjNURSSbVXI32zcRo4SdKUWR3g/viewform" target="_blank" rel="noopener noreferrer"><strong>건의사항 남기기</strong></a>로 보내 주세요. 익명이고 로그인 없이 1분이면 됩니다. 당장 다 반영하지는 못하더라도 하나씩 차근차근 개선하겠습니다.</li>
                 <li class="must"><span>꼭 읽어 주세요</span> 건의사항에는 <strong>이름·주소·연락처를 적지 마세요.</strong> 익명이라 따로 답장은 어렵고, 자주 나오는 내용은 <a href="#faq">FAQ</a>와 주민 카톡방에 반영해 알려 드립니다. 답변이 꼭 필요하시면 주민 카톡방이나 추진위원장님 <a data-track="sms-feedback" href="sms:010-8367-2346">문자</a>(<span class="tel">010-8367-2346</span>)로 문의해 주세요.</li>
@@ -453,7 +505,7 @@
           <div class="alert-body">
             <h3>지난 4월에 동의서를 내신 분은 다시 내실 필요가 없습니다</h3>
             <p>
-              아직 제출하지 않으신 분들만 이번 기간(11월 19일까지)에 주민등록증을 가져와 접수해 주세요. 4월에 내셨는지 기억이 안 나시면 <a data-track="check-consent-april" href="check/">접수 확인 페이지</a>에서 확인하시거나, 추진위원장님께 <a data-track="sms-consent-check-april" href="sms:010-8367-2346">문자</a>로 주소(번지·호수)와 성함을 보내 주세요.
+              아직 제출하지 않으신 분들만 이번 기간(11월 19일까지)에 주민등록증을 가져와 접수해 주세요. 4월에 내셨는지 기억이 안 나시면 첫 화면 <a data-track="check-consent-april" href="#check">내 동의서 등록 확인</a>에서 확인하시거나, 추진위원장님께 <a data-track="sms-consent-check-april" href="sms:010-8367-2346">문자</a>로 주소(번지·호수)와 성함을 보내 주세요.
             </p>
           </div>
         </div>
@@ -608,8 +660,7 @@
       <div class="container">
         <h2 class="reveal">사업 구역도</h2>
         <p class="section-lede reveal">
-          붉은 점선 안쪽이 본 사업의 대상 구역입니다. 첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에서
-          지번이나 도로명 주소를 찾은 뒤 &lsquo;구역도에서 위치 보기&rsquo;를 누르시면 이 지도에 표시됩니다.
+          붉은 점선 안쪽이 본 사업의 대상 구역입니다.
         </p>
 
 
@@ -621,9 +672,7 @@
                 <img src="assets/district-map-hd.jpg" width="1448" height="1086"
                      alt="화곡1동 도심 공공주택 복합사업 구역도" />
               </picture>
-              <svg viewBox="0 0 1448 1086" aria-hidden="true"><g id="finder-marks"></g></svg>
             </div>
-            <button type="button" class="finder-reset" id="finder-reset" hidden>전체 보기</button>
           </div>
           <figcaption>
             원본 구역도(자료 제공: 추진위원회)를 바탕으로 다시 그린 지도입니다.
@@ -631,16 +680,13 @@
           </figcaption>
         </figure>
 
-        <!-- 첫 화면 '우리 집 동의율 찾기'에서 '구역도에서 위치 보기'를 누르면 지도 아래에 결과가 나온다 -->
-        <div class="finder-result" id="finder-result" aria-live="polite" hidden></div>
-
         <!-- 제출 3단계 -->
         <ol class="steps reveal-stagger">
           <li>
             <span class="step-num">1</span>
             <div>
               <h3>우리 집 확인</h3>
-              <p>첫 화면 <a href="#rate">우리 집 동의율 찾기</a>에 지번이나 도로명 주소를 넣으면 구역 안인지 알려 드립니다.</p>
+              <p>첫 화면 <a href="#check">내 동의서 등록 확인</a>의 &lsquo;우리 집 찾기&rsquo;에 지번이나 도로명 주소를 넣으면 구역 안인지 알려 드립니다.</p>
             </div>
           </li>
           <li>
@@ -799,7 +845,7 @@
           </details>
           <details class="faq-item">
             <summary>제가 동의서를 냈는지 확인할 수 있나요?</summary>
-            <div class="faq-answer">네. <a data-track="check-consent-faq" href="check/"><strong>접수 확인 페이지</strong></a>에서 집(지번·호수)을 고르고 동의서에 적으신 <strong>휴대폰 번호</strong>를 넣으시면 바로 알려 드립니다. 4월에 내신 분도 확인됩니다. 집과 번호가 둘 다 맞을 때만 알려 드리고, 다른 분의 이름·주소·번호는 보이지 않습니다. 확인이 안 되시면 추진위원장님께 <a data-track="sms-consent-check-faq" href="sms:010-8367-2346"><strong>문자</strong></a>(<span class="tel">010-8367-2346</span>)로 <strong>주소(번지·호수)와 성함</strong>을 보내 주세요. 동의 여부는 카톡방에서 공개로 알려 드리지 않습니다.</div>
+            <div class="faq-answer">네. 첫 화면 <a data-track="check-consent-faq" href="#check"><strong>내 동의서 등록 확인</strong></a>에서 집(지번·호수)을 고르고 동의서에 적으신 <strong>휴대폰 번호</strong>를 넣으시면 명단에 등록됐는지 바로 알려 드립니다. 4월에 내신 분도 확인됩니다. 집과 번호가 둘 다 맞을 때만 알려 드리고, 다른 분의 이름·주소·번호는 보이지 않습니다. 확인이 안 되시면 추진위원장님께 <a data-track="sms-consent-check-faq" href="sms:010-8367-2346"><strong>문자</strong></a>(<span class="tel">010-8367-2346</span>)로 <strong>주소(번지·호수)와 성함</strong>을 보내 주세요. 동의 여부는 카톡방에서 공개로 알려 드리지 않습니다.</div>
           </details>
           <details class="faq-item">
             <summary>등기부등본은 제출해야 하나요, 확인만 하나요?</summary>
@@ -1019,6 +1065,7 @@
   </footer>
 
   <script src="volunteer/core.js?v=20261029a"></script>
+  <script src="check/app.js?v=20261111c"></script>
   <script>
     // Scroll reveal
     (function () {
@@ -1058,143 +1105,22 @@
       document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') setOpen(false); });
     })();
 
-    // 구역도에 우리 집 표시: 첫 화면 '우리 집 동의율 찾기' 결과의 '구역도에서 위치 보기'가 showOnMap(지번)을 부른다.
-    // 판정은 지도에 적힌 번호 기준이라, 못 찾은 번호를 '구역 밖'이라고 말하지 않는다.
+    // '지난 공모' 상자의 '지금 N%': 동의 현황 페이지(volunteer/)와 같은 주소 대응표·공개 집계 시트로 전체 동의율을 계산한다.
+    // (11-11 '우리 집 동의율 찾기' 칸을 '내 동의서 등록 확인'으로 바꾸면서 이 숫자 계산만 남김)
     (function () {
-      var map = document.getElementById('finder-map');
-      if (!map) return;
-      var result = document.getElementById('finder-result');
-      var stage = document.getElementById('finder-stage');
-      var marks = document.getElementById('finder-marks');
-      var reset = document.getElementById('finder-reset');
-      var W = 1448, H = 1086, ZOOM = 2.6;
-      var TEL = '<a href="tel:010-8367-2346" data-track="tel-chair-finder">010-8367-2346</a>';
-      var lots = null;
-
-      function load() {
-        if (lots) return Promise.resolve(lots);
-        return fetch('assets/lots.json').then(function (r) { return r.json(); }).then(function (rows) {
-          lots = rows.map(function (r) { return { id: r[0], x: r[1], y: r[2], s: r[3] }; });
-          return lots;
-        });
-      }
-
-      function zoomTo(pts) {
-        var cx = 0, cy = 0;
-        pts.forEach(function (p) { cx += p.x; cy += p.y; });
-        cx /= pts.length; cy /= pts.length;
-        var z = pts.length > 1 ? 1.6 : ZOOM;
-        var f = map.clientWidth / W, vw = map.clientWidth, vh = map.clientWidth * H / W;
-        var tx = Math.min(0, Math.max(vw - vw * z, vw / 2 - cx * f * z));
-        var ty = Math.min(0, Math.max(vh - vh * z, vh / 2 - cy * f * z));
-        stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + z + ')';
-        reset.hidden = false;
-      }
-
-      function unzoom() {
-        stage.style.transform = '';
-        marks.innerHTML = '';
-        reset.hidden = true;
-      }
-
-      function mark(pts) {
-        marks.innerHTML = pts.map(function (p) {
-          return '<circle class="finder-pin is-' + p.s + '" cx="' + p.x + '" cy="' + p.y + '" r="20"></circle>';
-        }).join('');
-      }
-
-      function say(html) {
-        result.innerHTML = html + '<p class="finder-foot">지도 기준 안내입니다. 정확한 포함 여부는 추진위원장님(' + TEL + ')께 확인해 주세요.</p>';
-        result.hidden = false;
-      }
-
-      var LABEL = {
-        i: '사업구역 <strong>안</strong>입니다. 동의서를 내실 수 있습니다.',
-        x: '사업구역에서 <strong>제외</strong>된 필지입니다.',
-        o: '지도상 사업구역 <strong>밖</strong>입니다.'
-      };
-
-      function show(id) {
-        var hits = lots.filter(function (l) { return l.id === id; });
-        if (!hits.length) {
-          unzoom();
-          say('<p class="finder-msg is-none">지도에서 <strong>' + id + '</strong> 번호를 찾지 못했습니다.</p>' +
-              '<p>큰 지번에 가려 번호가 보이지 않는 필지도 구역에 포함될 수 있습니다.</p>');
-          return;
-        }
-        mark(hits);
-        zoomTo(hits);
-        var msg = '<p class="finder-msg is-' + hits[0].s + '"><strong>' + id + '</strong> · ' + LABEL[hits[0].s] + '</p>';
-        if (hits.length > 1) msg += '<p>지도에 같은 번호가 ' + hits.length + '곳 있어 모두 표시했습니다.</p>';
-        say(msg);
-        map.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      window.showOnMap = function (id) { load().then(function () { show(id); }); };
-      reset.addEventListener('click', unzoom);
-    })();
-
-    // 우리 집 동의율 찾기(첫 화면): 동의 현황 페이지(volunteer/)와 같은 주소 대응표·공개 집계 시트를 읽어
-    // 그 구역 동의율만 보여 준다. 판정 로직은 volunteer/core.js를 같이 쓴다.
-    (function () {
-      var form = document.getElementById('rate-form');
-      if (!form || typeof resolveAddr !== 'function') return;
-      var input = document.getElementById('rate-input');
-      var result = document.getElementById('rate-result');
-      var total = document.getElementById('rate-total');
-      var addr = null, byId = {};
-
+      var now = document.getElementById('intent-now');
+      if (!now || typeof fetchSheet !== 'function') return;
       fetch('volunteer/addr.json?v=20261029a').then(function (r) { return r.json(); }).then(function (d) {
         return fetchSheet('volunteer/').then(function (csv) {
           // 지도에 있는 구역(대응표의 구역)만 센다 — 동의 현황 페이지 맨 위 숫자와 같아지게
-          var zones = {};
+          var zones = {}, byId = {};
           Object.keys(d.lots).forEach(function (k) { zones[d.lots[k]] = 1; });
           parseCsv(csv).forEach(function (r) { if (zones[r.id]) byId[r.id] = r; });
           var t = 0, a = 0;
           Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
-          total.textContent = t ? '지금 전체 ' + fmt(a / t * 100) + ' · 동의 ' + a + '명 / 소유자 ' + t + '명 · 30% 넘기려면 ' + Math.max(0, Math.ceil(t * TARGET / 100) - a) + '명 더' : '';
-          var now = document.getElementById('intent-now'); // ④ 현황의 '지난 공모 12% → 지금 N%'
-          if (now && t) now.textContent = fmt(a / t * 100);
-          addr = d; // 숫자까지 다 읽은 뒤에 찾기를 받는다(그 전에는 '불러오는 중' 안내)
+          if (t) now.textContent = fmt(a / t * 100);
         });
-      }).catch(function () {
-        total.textContent = '동의 현황을 불러오지 못했습니다. 새로고침해 주세요.';
-        var now = document.getElementById('intent-now');
-        if (now) now.textContent = '(불러오지 못함)';
-      });
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var q = input.value.trim();
-        var res = resolveAddr(q, addr);
-        result.replaceChildren();
-        result.classList.toggle('warn', !!res.warn);
-        addrLines(res, function (z) { return byId[z]; }).forEach(function (line) {
-          var p = document.createElement('p');
-          if (line[1]) p.className = line[1];
-          p.textContent = line[0];
-          result.appendChild(p);
-        });
-        if (res.zone) {
-          var links = document.createElement('div');
-          links.className = 'rate-links';
-          if (window.showOnMap) {
-            var b = document.createElement('button');
-            b.type = 'button';
-            b.setAttribute('data-track', 'rate-lot-map');
-            b.textContent = '구역도에서 위치 보기';
-            b.addEventListener('click', function () { window.showOnMap(res.lot); });
-            links.appendChild(b);
-          }
-          var a = document.createElement('a');
-          a.href = 'volunteer/?q=' + encodeURIComponent(q);
-          a.setAttribute('data-track', 'rate-map');
-          a.textContent = '동의율 지도에서 보기 →';
-          links.appendChild(a);
-          result.appendChild(links);
-        }
-        result.hidden = false;
-      });
+      }).catch(function () { now.textContent = '(불러오지 못함)'; });
     })();
 
     // 상단 띠 D-day: 동의서 접수 마감 11/19(목)까지 남은 날(한국 시간 기준). 마감 7일 전부터 빨간 강조
