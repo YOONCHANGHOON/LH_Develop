@@ -379,8 +379,10 @@ async function buildLookup(env) {
     if (!res.ok) throw new Error("sheet " + gid + " " + res.status);
     return parseCsvRows(await res.text());
   };
-  const tabs = await Promise.all(Object.values(LOOKUP_TABS).map((gid) => get(env.DETAIL_SHEET_ID, gid)));
-  const roster = await get(env.ROSTER_SHEET_ID, ROSTER_GID);
+  // 비밀값을 명령줄로 넣으면 끝에 줄바꿈이 붙을 수 있어 앞뒤 공백을 지운다
+  const detailId = String(env.DETAIL_SHEET_ID).trim(), rosterId = String(env.ROSTER_SHEET_ID).trim();
+  const tabs = await Promise.all(Object.values(LOOKUP_TABS).map((gid) => get(detailId, gid)));
+  const roster = await get(rosterId, ROSTER_GID);
   const units = new Map(), byLot = new Map();
   // 번지 탭은 모두 같은 열 순서(A 지번·B 건물·C 호·D 이름·E 연락처·F 소유자 수·G 제출)라 위치로 읽는다.
   // 머리글 글자는 손으로 고치다 밀리기도 해서(346-E의 B·C) 이름·연락처·제출 칸만 맞는지 확인한다.
