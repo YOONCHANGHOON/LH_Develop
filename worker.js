@@ -317,7 +317,9 @@ const MAX_EDITS = 2;  // 번호가 이만큼(숫자 바꾸기·빼기·넣기·�
 const UNIT_FAILS = 5; // 한 집에 하루 '확인되지 않음'이 이만큼 나오면 그날은 막는다(번호 짐작 막기)
 const IP_TRIES = 30;  // 한 접속 주소의 하루 확인 횟수
 
-let lookupIndex = null, lookupLoading = null;
+const SHEET_TIMEOUT = 10e3; // 시트 한 장 읽기 제한 시간 — 구글 응답 하나가 멈춰도 모든 조회가 같이 멈추지 않게(11-11 미리보기에서 실제로 멈춤)
+
+let lookupIndex = null, lookupLoading = null, lookupLoadingAt = 0;
 
 async function lookupApi(request, env, ctx, host) {
   if (!env.DETAIL_SHEET_ID || !env.ROSTER_SHEET_ID) return json({ error: "준비 중입니다" }, 503);
@@ -362,7 +364,12 @@ async function lookupApi(request, env, ctx, host) {
 // 상세 시트 번지 탭 + 명부를 읽어 집 목록을 만든다. 10분 안에 다시 부르면 들고 있던 것을 쓴다.
 async function loadLookup(env) {
   if (lookupIndex && Date.now() - lookupIndex.at < LOOKUP_TTL) return lookupIndex;
-  lookupLoading ||= buildLookup(env).then((idx) => (lookupIndex = idx)).finally(() => { lookupLoading = null; });
+  // 읽는 중이면 같이 기다리되, 제한 시간을 넘긴(멈춘) 읽기는 버리고 새로 읽는다
+  if (!lookupLoading || Date.now() - lookupLoadingAt > SHEET_TIMEOUT * 2) {
+    lookupLoadingAt = Date.now();
+    const p = buildLookup(env).then((idx) => (lookupIndex = idx)).finally(() => { if (lookupLoading === p) lookupLoading = null; });
+    lookupLoading = p;
+  }
   try {
     return await lookupLoading;
   } catch (e) {
@@ -375,7 +382,7 @@ async function loadLookup(env) {
 async function buildLookup(env) {
   const get = async (sheet, gid) => {
     // gviz 주소는 한 열에 숫자·글자가 섞이면 적은 쪽 값을 빈칸으로 만들어서(호·연락처가 빠짐) 원본 그대로인 내보내기 주소를 쓴다
-    const res = await fetch(`https://docs.google.com/spreadsheets/d/${sheet}/export?format=csv&gid=${gid}`);
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${sheet}/export?format=csv&gid=${gid}`, { signal: AbortSignal.timeout(SHEET_TIMEOUT) });
     if (!res.ok) throw new Error("sheet " + gid + " " + res.status);
     return parseCsvRows(await res.text());
   };
