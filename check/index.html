@@ -12,7 +12,7 @@
   <meta property="og:description" content="주소와 휴대폰 번호로 내 동의서가 등록됐는지 확인하실 수 있습니다." />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="check.css?v=20261111c" />
+  <link rel="stylesheet" href="check.css?v=20261111d" />
   <style>
     /* 이 페이지 틀(머리·폭)만. 확인 기능 모양은 check.css (홈 첫 화면 칸과 같이 씀) */
     * { box-sizing: border-box; }
@@ -40,25 +40,19 @@
           <p class="lk-caution-title">⚠️ 확인 전에 읽어 주세요</p>
           <ol>
             <li>등록 여부는 <strong>동의서를 내실 때 적은 전화번호</strong>로 찾습니다. 그때 가족 전화번호를 적으셨다면 <strong>가족분 번호</strong>를 넣어 주세요.</li>
-            <li>동의서를 내신 뒤 추진위원회가 명단에 <strong>등록하기까지 1~2일</strong> 걸립니다. 오늘 내셨다면 1~2일 뒤에 확인해 주세요.</li>
-            <li>동의서를 내셨어도 아래 경우에는 <strong>"확인되지 않음"</strong>으로 나올 수 있습니다. 이럴 때는 추진위원회로 연락 주세요.
-              <ul>
-                <li>동의서를 내신 뒤 번호를 바꾸셨거나, 어떤 번호를 적었는지 기억나지 않을 때</li>
-                <li>명단에 번호가 빠졌거나 잘못 적혔을 때</li>
-                <li>호수가 다르게 적혀 다른 집으로 등록됐을 때</li>
-                <li>공동명의라 다른 분 번호로만 등록됐을 때</li>
-              </ul>
-            </li>
+            <li>받은 동의서는 추진위원회가 <strong>매일 저녁에 합산</strong>합니다. 오늘 제출한 동의서는 <strong>저녁 9시 이후</strong> 확인해 주세요.</li>
+            <li>만약 동의서를 제출했는데 <strong>2일 이상 확인이 되지 않으면</strong> 카카오톡방에 문의 한번 해 주세요. 확인해 드리겠습니다.</li>
           </ol>
-          <p class="lk-contact">추진위원장님 <a data-track="check-sms-caution" href="sms:010-8367-2346">문자</a> · <a data-track="check-tel-caution" href="tel:010-8367-2346">010-8367-2346</a></p>
+          <p class="lk-contact"><a data-track="check-kakao-caution" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">주민 카카오톡방</a> · 비밀번호 1016</p>
         </section>
 
         <form class="lk-step" id="lk-find" autocomplete="off">
           <p class="lk-h"><b>1</b>우리 집 찾기</p>
           <div class="lk-row">
-            <input id="lk-q" type="text" enterkeyhint="search" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
+            <input id="lk-q" type="text" enterkeyhint="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lk-ac" placeholder="예: 346-85 · 곰달래로19나길 15 · 다솜" aria-label="지번, 도로명 주소 또는 건물 이름" />
             <button class="lk-btn" type="submit" data-track="check-find">찾기</button>
           </div>
+          <ul class="lk-ac" id="lk-ac" role="listbox" aria-label="주소 후보" hidden></ul>
           <p class="lk-hint">지번, 도로명 주소, 건물 이름 중 아무거나 넣으세요.</p>
           <p class="lk-msg" id="lk-find-msg" hidden></p>
         </form>
@@ -94,7 +88,7 @@
   </main>
 
   <script src="../volunteer/core.js?v=20261029a"></script>
-  <script src="app.js?v=20261111c"></script>
+  <script src="app.js?v=20261112a"></script>
   <script>
     // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
     (function () {
