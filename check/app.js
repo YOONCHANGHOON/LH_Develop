@@ -91,7 +91,17 @@
       acBox.appendChild(li);
     }
     acOpen(true);
+    acReveal();
   }
+  // 휴대폰: 키보드가 화면 아래 절반을 덮으면 브라우저는 입력 칸만 키보드 바로 위로 올려서 그 아래 후보 목록이 통째로 가려진다
+  // (11-12 실측: 보이는 높이 554px에서 목록 0px 보임) → 목록이 보이는 화면 밖으로 나가면 입력 칸을 화면 위쪽(메뉴 아래)으로 올린다
+  function acReveal() {
+    const vv = window.visualViewport;
+    const top = vv ? vv.offsetTop : 0, bottom = top + (vv ? vv.height : window.innerHeight);
+    const q = qIn.getBoundingClientRect(), a = acBox.getBoundingClientRect();
+    if (a.bottom > bottom - 8 && q.top > top + 80) window.scrollBy({ top: q.top - top - 76, behavior: "smooth" });
+  }
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", () => { if (!acBox.hidden) acReveal(); });
   function acPick(i) {
     const e = acShown()[i];
     if (!e) return;
