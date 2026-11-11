@@ -153,6 +153,8 @@ body {
 }
 /* 메뉴 13개(동의율 찾기·지난 공모 추가)가 PC 폭 880px 안에 가로 스크롤 없이 들어가게: 14px, 간격 6px (11-07) */
 .tabs a:last-child { margin-right: 0; }
+/* 14개('등록 확인' 추가, 11-11)도 PC 840px 안에 한 줄로: PC만 간격 6→3px */
+@media (min-width: 880px) { .tabs a { margin-right: 3px; } }
 
 /* 휴대폰: 핵심 4칸 + [전체]. 옆으로 밀 필요 없이 누르면 13개가 아래로 펼쳐짐 */
 .tabs-key { display: none; }
@@ -312,33 +314,6 @@ body {
   margin-bottom: 8px;
 }
 
-.finder-row {
-  display: flex;
-  gap: 8px;
-}
-
-.finder-row input {
-  flex: 1;
-  min-width: 0;
-  font: inherit;
-  font-size: 18px;
-  padding: 12px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: #fff;
-}
-
-.finder-row button {
-  font: inherit;
-  font-size: 17px;
-  font-weight: 700;
-  padding: 0 20px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--color-accent);
-  color: #fff;
-  cursor: pointer;
-}
 
 .finder-help {
   margin: 8px 0 0;
@@ -348,33 +323,8 @@ body {
 
 .finder-map { scroll-margin-top: 64px; }
 
-.finder-result {
-  margin-top: 12px;
-  padding: 14px 16px;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-}
 
-.finder-result p {
-  margin: 0 0 6px;
-}
 
-.finder-msg {
-  font-size: 17px;
-  padding-left: 10px;
-  border-left: 4px solid var(--color-muted);
-}
-
-.finder-msg.is-i { border-color: #1a7f37; }
-.finder-msg.is-x { border-color: #cf222e; }
-.finder-msg.is-o,
-.finder-msg.is-none { border-color: #9a6700; }
-
-.finder-foot {
-  font-size: 13px;
-  color: var(--color-muted);
-}
 
 .finder-cands {
   display: flex;
@@ -409,40 +359,7 @@ body {
   display: block;
 }
 
-.finder-stage svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
 
-.finder-pin {
-  fill: none;
-  stroke-width: 5;
-  animation: finder-pulse 1.4s ease-in-out infinite;
-}
-
-.finder-pin.is-i { stroke: #1a7f37; }
-.finder-pin.is-x { stroke: #cf222e; }
-.finder-pin.is-o { stroke: #9a6700; }
-
-@keyframes finder-pulse {
-  50% { stroke-opacity: 0.35; }
-}
-
-.finder-reset {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  font: inherit;
-  font-weight: 700;
-  padding: 8px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: var(--shadow-md);
-  cursor: pointer;
-}
 
 .steps {
   list-style: none;
@@ -2317,34 +2234,6 @@ body {
 .quick-route .quick-warn dt { background: none; color: #7a4b00; }
 
 /* 첫 화면 '우리 집 동의율 찾기' (판정은 volunteer/core.js) */
-.quick.rate { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
-.rate-total { margin: 0 0 10px; font-size: 14px; color: #4a5a53; }
-.rate-result {
-  margin-top: 10px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #eef6f0;
-  border-left: 4px solid #1f7a3f;
-}
-.rate-result.warn { background: #fbf6e6; border-left-color: #c9a227; }
-.rate-result p { margin: 2px 0; }
-.rate-result .big { font-size: 24px; font-weight: 800; color: var(--color-accent); }
-.rate-result a { display: inline-block; margin-top: 6px; font-weight: 700; color: var(--color-accent); }
-.rate-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 8px; }
-.rate-links a { margin-top: 0; }
-.rate-links button {
-  font: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--color-accent);
-  cursor: pointer;
-}
-.rate-foot { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: #4a5a53; }
-.rate-foot a { font-weight: 700; color: var(--color-accent); white-space: nowrap; }
 
 /* 첫 화면: 지난 공모 사전의향률 (구청 자료를 그대로 보여 줌) */
 .quick.intent-hero { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
@@ -2407,3 +2296,8 @@ body {
 
 /* 전화번호가 줄 끝에서 "010-" / "8367-2346"처럼 쪼개지지 않게 */
 .tel, a[href^="tel:"] { white-space: nowrap; }
+
+/* 첫 화면 '내 동의서 등록 확인' 칸(11-11, 예전 '우리 집 동의율 찾기' 자리). 안쪽 모양은 check/check.css */
+.quick.lk-home { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
+.lk-lead { margin: 0 0 12px; font-size: 14px; line-height: 1.55; color: #4a5a53; }
+.lk-home .lk .lk-step { background: #f7f9f8; }

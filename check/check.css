@@ -1,0 +1,41 @@
+/* 동의서 등록 확인 — 홈 첫 화면 칸(#check)과 check/ 페이지가 같이 쓰는 모양.
+   .lk 안에서만 적용되고, 홈 style.css 와 이름이 겹치지 않게 모두 lk- 로 시작한다. 동작은 check/app.js */
+.lk { --lk-text: #1a1f1c; --lk-muted: #5a6560; --lk-accent: #1f4a3a; --lk-border: #e3e7e4;
+  color: var(--lk-text); line-height: 1.55; word-break: keep-all; }
+.lk [hidden] { display: none !important; }
+.lk .lk-caution { margin: 0 0 14px; padding: 14px 14px 12px; font-size: 15px; background: #fff8c5; border: 1px solid #e6cf6a; border-left: 5px solid #d4a72c; border-radius: 12px; }
+.lk .lk-caution-title { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
+.lk .lk-caution ol { margin: 0; padding-left: 20px; }
+.lk .lk-caution ol > li { margin: 0 0 8px; }
+.lk .lk-caution ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; }
+.lk .lk-caution ul li { margin: 3px 0; }
+.lk .lk-caution .lk-contact { margin: 4px 0 0; font-weight: 700; }
+.lk .lk-step { margin: 14px 0; padding: 16px 14px; background: #fff; border: 1px solid var(--lk-border); border-radius: 14px; }
+.lk .lk-h { margin: 0 0 10px; font-size: 18px; font-weight: 700; line-height: 1.4; }
+.lk .lk-h b { display: inline-block; width: 26px; height: 26px; margin-right: 6px; font-size: 15px; line-height: 26px; text-align: center; color: #fff; background: var(--lk-accent); border-radius: 50%; vertical-align: 1px; }
+.lk input, .lk select, .lk button { font: inherit; }
+.lk .lk-row { display: flex; gap: 8px; }
+.lk .lk-row input { flex: 1; min-width: 0; }
+.lk input[type=text], .lk input[type=tel], .lk select { width: 100%; padding: 12px; font-size: 17px; color: var(--lk-text); background: #fff; border: 1px solid #c3ccc7; border-radius: 10px; }
+.lk .lk-btn { padding: 12px 16px; font-size: 17px; font-weight: 700; color: #fff; background: var(--lk-accent); border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; }
+.lk .lk-primary { display: block; width: 100%; margin: 4px 0 0; padding: 15px; font-size: 18px; }
+.lk .lk-hint { margin: 8px 0 0; font-size: 14px; color: var(--lk-muted); }
+.lk .lk-msg { margin: 10px 0 0; font-size: 15px; }
+.lk .lk-err { color: #b3261e; font-weight: 700; }
+.lk .lk-bname { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+.lk .lk-tel { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; }
+.lk .lk-tel input { flex: 1; min-width: 0; text-align: center; font-size: 20px; letter-spacing: 2px; }
+.lk .lk-pre { padding: 10px 4px; }
+.lk .lk-result { margin: 14px 0; padding: 16px 14px; font-size: 16px; border-radius: 14px; }
+.lk .lk-rt { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+.lk .lk-result p { margin: 6px 0 0; }
+.lk .lk-result ul { margin: 6px 0 0; padding-left: 20px; }
+.lk .lk-result.ok { background: #e6f4ea; border: 2px solid #1f7a3f; }
+.lk .lk-result.ok .lk-rt { color: #1f7a3f; }
+.lk .lk-result.sup, .lk .lk-result.near { background: #fff6dc; border: 2px solid #d9a400; }
+.lk .lk-result.sup .lk-rt { color: #8a5a00; }
+.lk .lk-result.none, .lk .lk-result.limit, .lk .lk-result.error { background: #f0f2f1; border: 2px solid #b9c2bd; }
+.lk .lk-stored { display: inline-block; margin-top: 4px; padding: 4px 10px; font-size: 19px; font-weight: 700; letter-spacing: 1px; background: #fff; border-radius: 8px; }
+.lk .lk-sms { display: inline-block; margin-top: 12px; padding: 11px 16px; font-size: 16px; font-weight: 700; color: #fff; background: #3a5a8c; border-radius: 10px; text-decoration: none; }
+.lk .lk-note { margin: 18px 0 0; padding: 0 0 0 18px; font-size: 14px; color: var(--lk-muted); }
+.lk .lk-note li { margin: 4px 0; }
