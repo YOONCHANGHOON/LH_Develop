@@ -525,8 +525,12 @@ function maskedStored(input, stored) {
   return s.length === 11 ? s.slice(0, 3) + "-" + s.slice(3, 7) + "-" + s.slice(7) : s.length === 10 ? s.slice(0, 3) + "-" + s.slice(3, 6) + "-" + s.slice(6) : s;
 }
 
+// 가운데 글자만 가린다(11-12 사용자 요청): 윤창민 → 윤*민, 남궁민수 → 남**수. 두 글자는 끝 글자를 가림(윤민 → 윤*)
 function maskName(n) {
-  return n ? n[0] + "*".repeat(Math.max(1, n.length - 1)) : "";
+  const s = [...String(n || "").trim()];
+  if (!s.length) return "";
+  if (s.length <= 2) return s[0] + "*";
+  return s[0] + "*".repeat(s.length - 2) + s[s.length - 1];
 }
 
 // 따옴표 안의 쉼표·줄바꿈까지 읽는 CSV 읽기(구글 시트 내보내기용)
