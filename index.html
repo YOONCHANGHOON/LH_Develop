@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="style.css?v=20261112a" />
-  <link rel="stylesheet" href="check/check.css?v=20261112f" />
+  <link rel="stylesheet" href="check/check.css?v=20261112g" />
 </head>
 <body>
 
@@ -172,6 +172,14 @@
       </a>
       <!-- 내 동의서 등록 조회하기(11-11): 집 고르기 + 휴대폰 번호 → Worker /api/lookup. 모양 check/check.css, 동작 check/app.js (check/ 페이지와 같은 마크업) -->
       <section class="quick lk-home" id="check" aria-labelledby="check-title">
+        <!-- 사용법 만화 보기(11-12): 버튼 시안 ⑥ + 손가락 ⑤, 누르면 한 컷씩 넘기는 창(check/app.js) -->
+        <div class="lk-howto">
+          <p class="lk-howto-arr" aria-hidden="true">사용법은 여기! <b>▼</b></p>
+          <div class="lk-howto-bw">
+            <button type="button" class="lk-howto-btn" id="lk-howto-open" data-track="check-howto-open" aria-haspopup="dialog"><span class="lk-howto-label">📖 기능 사용법 보기</span><i>8컷</i></button>
+            <span class="lk-howto-hand" aria-hidden="true"><svg viewBox="0 0 22 26"><g fill="#5a3a22" stroke="#5a3a22" stroke-width="3.0" stroke-linejoin="round"><rect x="5" y=".8" width="4.4" height="15" rx="2.2"/><rect x="9.1" y="8.2" width="3.9" height="7.2" rx="1.95"/><rect x="12.8" y="9.2" width="3.8" height="6.6" rx="1.9"/><rect x="16.4" y="10.6" width="3.4" height="6" rx="1.7"/><rect x="5" y="12.2" width="14.8" height="9.6" rx="4"/></g><g fill="#f6c7a1"><rect x="5" y=".8" width="4.4" height="15" rx="2.2"/><rect x="9.1" y="8.2" width="3.9" height="7.2" rx="1.95"/><rect x="12.8" y="9.2" width="3.8" height="6.6" rx="1.9"/><rect x="16.4" y="10.6" width="3.4" height="6" rx="1.7"/><rect x="5" y="12.2" width="14.8" height="9.6" rx="4"/></g><path d="M9.3 12.2V14.4M13 13V15M16.6 13.8V15.8M6.2 19.2Q9.4 18.6 12.8 15.8" fill="none" stroke="#5a3a22" stroke-width="1.12" stroke-linecap="round"/></svg></span>
+          </div>
+        </div>
         <p class="quick-title" id="check-title">내 동의서 등록 조회하기</p>
         <p class="lk-lead">동의서가 명단에 등록됐는지 주소와 휴대폰 번호로 확인하실 수 있습니다. 둘 다 맞을 때만 알려 드리고, 다른 분의 이름·주소·번호는 보이지 않습니다.</p>
         <div class="lk">
@@ -1059,7 +1067,7 @@
   </footer>
 
   <script src="volunteer/core.js?v=20261029a"></script>
-  <script src="check/app.js?v=20261112d"></script>
+  <script src="check/app.js?v=20261112e"></script>
   <script>
     // Scroll reveal
     (function () {
