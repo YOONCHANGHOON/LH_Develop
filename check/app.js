@@ -6,6 +6,7 @@
   const $ = (id) => document.getElementById(id);
   if (!$("lk-find") || typeof resolveAddr !== "function") return;
   let addr = null, lot = null, buildings = [], asof = null;
+  let lastAsk = null; // 마지막 등록 확인에 쓴 집·번호(이름 수정 요청 때 서버가 다시 확인)
 
   fetch("/volunteer/addr.json?v=20261112a").then((r) => r.json()).then((d) => {
     addr = d;
@@ -238,7 +239,8 @@
     if (unit === "-") return render({ r: "none", asof });
     $("lk-go").disabled = true;
     try {
-      const r = await fetch("/api/lookup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ unit, phone: "010" + p1 + p2 }) });
+      lastAsk = { unit, phone: "010" + p1 + p2 };
+      const r = await fetch("/api/lookup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(lastAsk) });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || r.status);
       render(d);
@@ -283,9 +285,57 @@
     a.rel = "noopener noreferrer";
     a.dataset.track = "check-name-kakao";
     a.textContent = "카카오톡방";
-    li(b("이름 수정하는 방법: "), a, "(비밀번호 1016)에 말씀해 주세요. 고쳐 드리겠습니다.");
-    det.append(sm, ol);
+    li(b("이름 수정하는 방법: "), "아래에 바른 이름을 적고 [이름 수정 요청]을 눌러 주세요. 추진위원회가 모아서 고쳐 드립니다. ", a, "(비밀번호 1016)에 말씀하셔도 됩니다.");
+    det.append(sm, ol, renameForm());
     return det;
+  }
+
+  // 이름 수정 요청(11-12): 방금 등록 확인에 쓴 집·번호로 서버가 다시 확인한 뒤 추진위원회 요청 시트에 남긴다
+  function renameForm() {
+    const f = document.createElement("form");
+    f.className = "lk-rename";
+    f.autocomplete = "off";
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.maxLength = 20;
+    inp.placeholder = "바른 이름 (예: 홍길동)";
+    inp.setAttribute("aria-label", "바른 이름");
+    const btn = document.createElement("button");
+    btn.type = "submit";
+    btn.className = "lk-btn";
+    btn.textContent = "이름 수정 요청";
+    btn.dataset.track = "check-rename";
+    const out = document.createElement("p");
+    out.className = "lk-msg";
+    out.hidden = true;
+    const say = (t, err) => { out.textContent = t; out.className = "lk-msg" + (err ? " lk-err" : ""); out.hidden = false; };
+    const row = document.createElement("div");
+    row.className = "lk-row";
+    row.append(inp, btn);
+    f.append(row, out);
+    f.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const name = inp.value.replace(/\s+/g, " ").trim();
+      if (!/^[가-힣a-zA-Z ]{2,20}$/.test(name)) return say("이름은 한글이나 영문 2~20자로 적어 주세요.", true);
+      if (!lastAsk) return say("먼저 위에서 등록 확인을 해 주세요.", true);
+      btn.disabled = true;
+      try {
+        const r = await fetch("/api/lookup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "rename", unit: lastAsk.unit, phone: lastAsk.phone, name }) });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || r.status);
+        if (d.r === "renamed") {
+          say("요청을 받았습니다. 추진위원회가 확인한 뒤 고쳐 드립니다. (며칠 걸릴 수 있어요)");
+          inp.disabled = true;
+          return;
+        }
+        say(d.r === "limit" ? "오늘은 더 요청할 수 없습니다. 카카오톡방에 말씀해 주세요." : "번호가 맞지 않아 요청하지 못했습니다. 카카오톡방에 말씀해 주세요.", true);
+      } catch (e) {
+        say("잠시 후 다시 시도해 주세요. (" + e.message + ")", true);
+      } finally {
+        if (!inp.disabled) btn.disabled = false;
+      }
+    });
+    return f;
   }
 
   function render(d) {

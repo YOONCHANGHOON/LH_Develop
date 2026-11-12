@@ -316,6 +316,11 @@ const LOOKUP_STALE = 6 * 3600e3; // 시트를 못 읽을 때 직전 자료를 �
 const MAX_EDITS = 2;  // 번호가 이만큼(숫자 바꾸기·빼기·넣기·이웃 순서 바꿈 횟수)까지 달라도 같은 번호로 본다
 const UNIT_FAILS = 5; // 한 집에 하루 '확인되지 않음'이 이만큼 나오면 그날은 막는다(번호 짐작 막기)
 const IP_TRIES = 30;  // 한 접속 주소의 하루 확인 횟수
+// 이름 수정 요청(11-12): 받는 곳 = 구글 설문지 '이름 수정 요청 (등록 조회)'(rkfmvk1117) → 연결된 응답 시트 '이름 수정 요청 (등록 조회) 응답'(소유자만 열람).
+// 설문지 주소는 공개 저장소에 보이므로 누가 직접 아무 값이나 넣을 수는 있다 — 사이트를 거친 요청은 번호·집이 맞은 사람만 보냄.
+const RENAME_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSdlQRpq_92xEBJ4WOExZrlzBPnhgg2dqvf9vosFdAz3J5M8hg/formResponse";
+const RENAME_FIELDS = { home: "entry.1714666651", masked: "entry.1024022375", name: "entry.1257609288", last4: "entry.714049435" };
+const RENAME_PER_DAY = 3; // 한 집에서 하루 보낼 수 있는 이름 수정 요청 수
 
 const SHEET_TIMEOUT = 10e3; // 시트 한 장 읽기 제한 시간 — 구글 응답 하나가 멈춰도 모든 조회가 같이 멈추지 않게(11-11 미리보기에서 실제로 멈춤)
 
@@ -338,6 +343,7 @@ async function lookupApi(request, env, ctx, host) {
   const phone = String((d && d.phone) || "").replace(/\D/g, "");
   if (!/^010\d{8}$/.test(phone)) return json({ error: "휴대폰 번호 11자리(010-0000-0000)를 넣어 주세요." }, 400);
   const unitKey = String((d && d.unit) || "").slice(0, 200);
+  if (d && d.action === "rename") return renameRequest(d, phone, unitKey, idx, env, ctx, request, host);
   const day = kstDay(0);
   await ensureLookupTables(env);
   const ipKey = "ip:" + (await sha256(env.DETAIL_SHEET_ID + "|" + host + "|" + (request.headers.get("CF-Connecting-IP") || "")));
@@ -359,6 +365,34 @@ async function lookupApi(request, env, ctx, host) {
   out.asof = idx.asof;
   ctx.waitUntil(record(JSON.stringify({ k: "click", n: "lookup-" + out.r + (out.near ? "-near" : ""), p: "/check/", s: "" }), request, env, host).catch(() => {}));
   return json(out);
+}
+
+// 이름 수정 요청: 집·번호가 다시 맞아야(등록 확인된 사람만) 설문지로 보낸다.
+// 응답 시트에 남는 것 = 집(지번 / 건물 / 호), 지금 명단 이름(가림), 바꿀 이름, 맞은 번호 끝 4자리(같은 집 공동명의자 구분용)
+async function renameRequest(d, phone, unitKey, idx, env, ctx, request, host) {
+  const name = String((d && d.name) || "").normalize("NFC").replace(/\s+/g, " ").trim();
+  if (!/^[가-힣a-zA-Z ]{2,20}$/.test(name)) return json({ error: "이름은 한글이나 영문 2~20자로 적어 주세요." }, 400);
+  const day = kstDay(0);
+  await ensureLookupTables(env);
+  const rKey = "rename:" + (await sha256(env.DETAIL_SHEET_ID + "|" + host + "|" + unitKey));
+  if ((await tries(env, rKey, day)) >= RENAME_PER_DAY) return json({ r: "limit" });
+  const unit = idx.units.get(unitKey);
+  const best = unit ? bestRecord(unit, phone) : null;
+  if (!best || (!best.rec.ok && !best.rec.sup)) return json({ r: "none" });
+  const body = new URLSearchParams({
+    [RENAME_FIELDS.home]: [unit.lot, unit.b, unit.ho].filter(Boolean).join(" / "),
+    [RENAME_FIELDS.masked]: maskName(best.rec.names[0] || ""),
+    [RENAME_FIELDS.name]: name,
+    [RENAME_FIELDS.last4]: best.p.slice(-4),
+  });
+  const res = await fetch(RENAME_FORM, { method: "POST", body, signal: AbortSignal.timeout(SHEET_TIMEOUT) });
+  if (!res.ok) {
+    console.error("rename: 설문지 전송 실패", res.status);
+    return json({ error: "잠시 후 다시 시도해 주세요" }, 502);
+  }
+  await bump(env, rKey, day);
+  ctx.waitUntil(record(JSON.stringify({ k: "click", n: "lookup-rename", p: "/check/", s: "" }), request, env, host).catch(() => {}));
+  return json({ r: "renamed" });
 }
 
 // 상세 시트 번지 탭 + 명부를 읽어 집 목록을 만든다. 10분 안에 다시 부르면 들고 있던 것을 쓴다.
