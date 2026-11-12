@@ -7,7 +7,7 @@
   if (!$("lk-find") || typeof resolveAddr !== "function") return;
   let addr = null, lot = null, buildings = [], asof = null;
 
-  fetch("/volunteer/addr.json?v=20261029a").then((r) => r.json()).then((d) => {
+  fetch("/volunteer/addr.json?v=20261112a").then((r) => r.json()).then((d) => {
     addr = d;
     if (document.activeElement === $("lk-q") && $("lk-q").value.trim()) acUpdate(); // 자료가 늦게 와도 치던 글자로 후보를 띄움
   }).catch(() => {});
@@ -29,6 +29,12 @@
     Object.keys(addr.lots).forEach((l) => { by[l] = { lot: l, names: [], roads: [] }; });
     Object.entries(addr.names || {}).forEach(([n, ls]) => ls.forEach((l) => by[l] && by[l].names.push(n)));
     Object.entries(addr.roads || {}).forEach(([r, l]) => by[l] && by[l].roads.push(r.replace(/(\D)(\d+(?:-\d+)?)$/, "$1 $2")));
+    // 부속 지번은 본 건물의 이름·도로명으로 보여 준다(예: 347-17 · 다솜). 고르면 찾을 때 본 건물로 바뀐다
+    Object.entries(addr.atch || {}).forEach(([l, m]) => {
+      if (!by[l] || !by[m]) return;
+      if (!by[l].names.length) by[l].names = by[m].names.slice();
+      if (!by[l].roads.length) by[l].roads = by[m].roads.slice();
+    });
     const num = (l) => l.split("-").map(Number);
     acIdx = Object.values(by).sort((a, b) => { const x = num(a.lot), y = num(b.lot); return x[0] - y[0] || x[1] - y[1]; });
     return acIdx;
@@ -143,6 +149,14 @@
     if (res.warn) return msg(res.warn, true);
     if (res.base) return msg(res.base + "번지는 뒷번호까지 넣어 주세요. (예: " + res.base + "-12)", true);
     lot = res.lot;
+    // 다른 건물이 함께 쓰는 땅(부속 지번, 건축물대장 기준 addr.json atch)이면 그 본 건물로 찾는다. 예: 347-17 → 422-3(다솜)
+    let note = "";
+    const main = addr && addr.atch && addr.atch[lot];
+    if (main) {
+      const nm = (Object.entries(addr.names || {}).find(([, ls]) => ls.includes(main)) || [])[0];
+      note = lot + "은(는) " + (nm ? nm + "(" + main + ")" : main) + " 건물이 함께 쓰는 땅이라 " + main + "(으)로 찾았습니다.";
+      lot = main;
+    }
     msg("찾는 중…");
     try {
       const r = await fetch("/api/lookup?lot=" + encodeURIComponent(lot));
@@ -153,7 +167,7 @@
       return msg("잠시 후 다시 시도해 주세요. (" + e.message + ")", true);
     }
     if (!buildings.length) return msg(lot + "는 아직 명단에 집 목록이 없습니다. 추진위원장님께 문자로 문의해 주세요.", true);
-    msg((res.how && res.how !== lot ? res.how + " → " : "") + lot + " 을(를) 찾았습니다.");
+    msg(note || (res.how && res.how !== lot ? res.how + " → " : "") + lot + " 을(를) 찾았습니다.");
     const bs = $("lk-bsel");
     bs.innerHTML = "";
     buildings.forEach((b, i) => bs.add(new Option(b.b || "(건물 이름 없음)", i)));
