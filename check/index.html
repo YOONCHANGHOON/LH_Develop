@@ -12,7 +12,7 @@
   <meta property="og:description" content="주소와 휴대폰 번호로 내 동의서가 등록됐는지 확인하실 수 있습니다." />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="check.css?v=20261112e" />
+  <link rel="stylesheet" href="check.css?v=20261112g" />
   <style>
     /* 이 페이지 틀(머리·폭)만. 확인 기능 모양은 check.css (홈 첫 화면 칸과 같이 씀) */
     * { box-sizing: border-box; }
@@ -35,6 +35,13 @@
   </header>
 
   <main class="wrap">
+    <div class="lk-howto">
+      <p class="lk-howto-arr" aria-hidden="true">사용법은 여기! <b>▼</b></p>
+      <div class="lk-howto-bw">
+        <button type="button" class="lk-howto-btn" id="lk-howto-open" data-track="check-howto-open" aria-haspopup="dialog"><span class="lk-howto-label">📖 기능 사용법 보기</span><i>8컷</i></button>
+        <span class="lk-howto-hand" aria-hidden="true"><svg viewBox="0 0 22 26"><g fill="#5a3a22" stroke="#5a3a22" stroke-width="3.0" stroke-linejoin="round"><rect x="5" y=".8" width="4.4" height="15" rx="2.2"/><rect x="9.1" y="8.2" width="3.9" height="7.2" rx="1.95"/><rect x="12.8" y="9.2" width="3.8" height="6.6" rx="1.9"/><rect x="16.4" y="10.6" width="3.4" height="6" rx="1.7"/><rect x="5" y="12.2" width="14.8" height="9.6" rx="4"/></g><g fill="#f6c7a1"><rect x="5" y=".8" width="4.4" height="15" rx="2.2"/><rect x="9.1" y="8.2" width="3.9" height="7.2" rx="1.95"/><rect x="12.8" y="9.2" width="3.8" height="6.6" rx="1.9"/><rect x="16.4" y="10.6" width="3.4" height="6" rx="1.7"/><rect x="5" y="12.2" width="14.8" height="9.6" rx="4"/></g><path d="M9.3 12.2V14.4M13 13V15M16.6 13.8V15.8M6.2 19.2Q9.4 18.6 12.8 15.8" fill="none" stroke="#5a3a22" stroke-width="1.12" stroke-linecap="round"/></svg></span>
+      </div>
+    </div>
       <div class="lk">
         <section class="lk-caution" aria-label="확인 전에 읽어 주세요">
           <p class="lk-caution-title">⚠️ 확인 전에 읽어 주세요</p>
@@ -88,7 +95,7 @@
   </main>
 
   <script src="../volunteer/core.js?v=20261029a"></script>
-  <script src="app.js?v=20261112c"></script>
+  <script src="app.js?v=20261112e"></script>
   <script>
     // 방문·클릭 집계(홈페이지와 같은 /api/hit). 세션 구분용 임의 번호만 보낸다.
     (function () {

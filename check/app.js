@@ -265,6 +265,29 @@
     return a;
   }
 
+  // '등록 확인됨'인데 이름이 다르게 보일 때의 설명(11-12 사용자 문구). 필요한 사람만 펼쳐 보게 접어 둔다
+  function nameNote() {
+    const det = document.createElement("details");
+    det.className = "lk-why";
+    const sm = document.createElement("summary");
+    sm.textContent = "이름이 다르게 나오나요?";
+    sm.dataset.track = "check-name-why";
+    const ol = document.createElement("ol");
+    const li = (...parts) => { const e = document.createElement("li"); e.append(...parts); ol.appendChild(e); return e; };
+    const b = (t) => { const e = document.createElement("strong"); e.textContent = t; return e; };
+    li(b("괜찮습니다."), " 국토교통부는 추진위원회가 제출한 주민등록증 스캔본을 직접 조회합니다.");
+    li(b("이름이 다른 이유: "), "추진위원회는 시간과 일손이 부족해 주민등록증이 아니라 봉사자분이 손으로 적은 표를 옮겨 적습니다. 그 과정에서 담당자의 오타로 생긴 경우입니다.");
+    const a = document.createElement("a");
+    a.href = "https://open.kakao.com/o/gW0je9He";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.dataset.track = "check-name-kakao";
+    a.textContent = "카카오톡방";
+    li(b("고치고 싶으시면 "), a, "(비밀번호 1016)에 말씀해 주세요. 고쳐 드리겠습니다.");
+    det.append(sm, ol);
+    return det;
+  }
+
   function render(d) {
     const box = $("lk-result");
     box.innerHTML = "";
@@ -281,6 +304,7 @@
         box.appendChild(smsLink("위원장님께 번호 수정 요청 문자"));
       }
       if (since) add("p", since, "lk-hint");
+      if (d.name) box.appendChild(nameNote());
     } else if (d.r === "sup") {
       add("p", "⚠️ 등록됐지만 서류 보완이 필요합니다", "lk-rt");
       add("p", (d.name ? d.name + " 님 동의서가 " : "동의서가 ") + "등록되어 있지만 보완할 서류가 있습니다. 위원장님께 문자로 문의해 주세요.");
@@ -303,5 +327,89 @@
     }
     box.hidden = false;
     box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  // ── 사용법 만화(11-12): 칸 맨 위 '기능 사용법 보기' → 한 컷씩 크게 넘겨 보는 창(시안 ④).
+  // 만화 한 장(2열)을 휴대폰 폭에 통째로 띄우면 글씨가 3분의 1로 줄어 못 읽어서 컷마다 따로(check/howto/1~8.webp, 주소·번호·이름은 예시).
+  // ✕·휴대폰 '뒤로 가기'·Esc 로 닫힘(뒤로 가기가 홈페이지를 떠나지 않게 history 한 칸을 쌓음), ◀ ▶·좌우로 밀기·방향키로 넘김
+  const HOWTO = ["카톡방 링크를 누르면 바로 이 칸이 열려요", "우리 집 지번이나 건물 이름을 쳐요", "아래에 뜬 우리 집을 톡!",
+    "돋보기가 우리 집을 찾는 중이에요", "우리 집 호를 골라요", "동의서에 적은 번호를 넣고 [등록 확인하기]",
+    "\"등록 확인됨\"이 나오면 끝!", "안 나오면? 오늘 냈으면 저녁 9시 이후 다시, 2일이 지나도 안 되면 카톡방에 말해 주세요"];
+  const howBtn = $("lk-howto-open");
+  if (howBtn) {
+    const src = (n) => "/check/howto/" + (n + 1) + ".webp?v=20261112";
+    let v = null, img, count, prev, next, dots, at = 0, pushed = false, x0 = null;
+    const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    function build() {
+      if (v) return;
+      v = mk("div", "lk-viewer");
+      v.hidden = true;
+      v.setAttribute("role", "dialog");
+      v.setAttribute("aria-modal", "true");
+      v.setAttribute("aria-label", "등록 조회 사용법");
+      const top = mk("div", "lk-v-top");
+      count = mk("span", "lk-v-count");
+      const x = mk("button", "lk-v-close", "✕ 닫기");
+      x.type = "button";
+      x.dataset.track = "check-howto-close";
+      x.addEventListener("click", () => close());
+      top.append(count, x);
+      const stage = mk("div", "lk-v-stage");
+      img = mk("img");
+      img.decoding = "async";
+      stage.appendChild(img);
+      stage.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener("touchend", (e) => {
+        if (x0 == null) return;
+        const dx = e.changedTouches[0].clientX - x0;
+        x0 = null;
+        if (Math.abs(dx) > 50) show(at + (dx < 0 ? 1 : -1));
+      });
+      const nav = mk("div", "lk-v-nav");
+      prev = mk("button", "lk-v-prev", "◀ 이전");
+      prev.type = "button";
+      prev.addEventListener("click", () => show(at - 1));
+      dots = mk("span", "lk-v-dots");
+      next = mk("button", "lk-v-next");
+      next.type = "button";
+      next.dataset.track = "check-howto-next";
+      next.addEventListener("click", () => (at === HOWTO.length - 1 ? close() : show(at + 1)));
+      nav.append(prev, dots, next);
+      v.append(top, stage, nav);
+      v.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") close();
+        else if (e.key === "ArrowRight") show(at + 1);
+        else if (e.key === "ArrowLeft") show(at - 1);
+      });
+      document.body.appendChild(v);
+    }
+    function show(n) {
+      at = Math.max(0, Math.min(HOWTO.length - 1, n));
+      img.src = src(at);
+      img.alt = at + 1 + "컷: " + HOWTO[at] + " (그림의 주소·번호·이름은 예시)";
+      count.textContent = "사용법 " + (at + 1) + " / " + HOWTO.length;
+      prev.disabled = at === 0;
+      next.textContent = at === HOWTO.length - 1 ? "닫기" : "다음 ▶";
+      dots.textContent = HOWTO.map((_, k) => (k === at ? "●" : "○")).join("");
+      if (at + 1 < HOWTO.length) new Image().src = src(at + 1); // 다음 컷 미리 받기
+    }
+    function open() {
+      build();
+      v.hidden = false;
+      document.documentElement.classList.add("lk-noscroll");
+      history.pushState({ lkHowto: 1 }, "");
+      pushed = true;
+      show(0);
+      v.querySelector(".lk-v-close").focus();
+    }
+    function close(fromBack) {
+      if (!v || v.hidden) return;
+      v.hidden = true;
+      document.documentElement.classList.remove("lk-noscroll");
+      if (pushed && !fromBack) history.back(); // 쌓아 둔 history 한 칸을 되돌림
+      pushed = false;
+      howBtn.focus();
+    }
+    window.addEventListener("popstate", () => { if (v && !v.hidden) { pushed = false; close(true); } });
+    howBtn.addEventListener("click", open);
   }
 })();
