@@ -141,8 +141,23 @@
   // 입력 칸·후보 목록 밖을 누르면 닫는다(휴대폰은 blur 가 누르기보다 먼저 와서 blur 로 닫지 않음)
   document.addEventListener("pointerdown", (ev) => { if (!acBox.hidden && !ev.target.closest("#lk-ac, #lk-q")) acOpen(false); });
 
+  // 찾는 동안(시트를 읽느라 2~4초): 집 그림 위로 돋보기가 오가는 애니메이션(시안 ④, 11-12). [찾기]는 잠가 두 번 눌리지 않게
+  const HOUSE = '<svg viewBox="0 0 40 40"><path d="M4 19 20 6l16 13" fill="none" stroke="#1f4a3a" stroke-width="3" stroke-linejoin="round"/><rect x="9" y="18" width="22" height="18" rx="2" fill="#fff" stroke="#1f4a3a" stroke-width="3"/><rect x="16" y="23" width="8" height="8" rx="1" fill="#dfe6e2"/></svg>';
+  const town = document.createElement("div");
+  town.className = "lk-town";
+  town.hidden = true;
+  town.setAttribute("aria-hidden", "true");
+  town.innerHTML = HOUSE.repeat(6) + '<span class="lk-mag"><svg viewBox="0 0 40 40"><circle cx="16" cy="16" r="11" fill="rgba(255,255,255,.55)" stroke="#e5484d" stroke-width="4"/><path d="M24 24l11 11" stroke="#e5484d" stroke-width="5" stroke-linecap="round"/></svg></span>';
+  $("lk-find-msg").before(town);
+  const findBtn = $("lk-find").querySelector("button");
+  function loading(on) {
+    town.hidden = !on;
+    findBtn.disabled = on;
+  }
+
   $("lk-find").addEventListener("submit", async (ev) => {
     ev.preventDefault();
+    if (findBtn.disabled) return;
     acOpen(false);
     show("lk-unit", false); show("lk-phone", false); show("lk-result", false);
     const res = resolveAddr($("lk-q").value, addr);
@@ -157,7 +172,8 @@
       note = lot + "은(는) " + (nm ? nm + "(" + main + ")" : main) + " 건물이 함께 쓰는 땅이라 " + main + "(으)로 찾았습니다.";
       lot = main;
     }
-    msg("찾는 중…");
+    msg("우리 집을 찾고 있어요…");
+    loading(true);
     try {
       const r = await fetch("/api/lookup?lot=" + encodeURIComponent(lot));
       const d = await r.json();
@@ -165,6 +181,8 @@
       buildings = d.buildings; asof = d.asof;
     } catch (e) {
       return msg("잠시 후 다시 시도해 주세요. (" + e.message + ")", true);
+    } finally {
+      loading(false);
     }
     if (!buildings.length) return msg(lot + "는 아직 명단에 집 목록이 없습니다. 추진위원장님께 문자로 문의해 주세요.", true);
     msg(note || (res.how && res.how !== lot ? res.how + " → " : "") + lot + " 을(를) 찾았습니다.");
