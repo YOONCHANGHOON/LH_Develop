@@ -283,7 +283,7 @@
     a.rel = "noopener noreferrer";
     a.dataset.track = "check-name-kakao";
     a.textContent = "카카오톡방";
-    li(b("고치고 싶으시면 "), a, "(비밀번호 1016)에 말씀해 주세요. 고쳐 드리겠습니다.");
+    li(b("이름 수정하는 방법: "), a, "(비밀번호 1016)에 말씀해 주세요. 고쳐 드리겠습니다.");
     det.append(sm, ol);
     return det;
   }
