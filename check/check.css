@@ -58,3 +58,8 @@
 @keyframes lk-scan { 0%, 100% { left: 0; } 50% { left: calc(100% - 52px); } }
 @media (prefers-reduced-motion: reduce) { .lk .lk-mag { animation: none; left: calc(50% - 26px); } }
 .lk .lk-btn:disabled { opacity: .6; cursor: wait; }
+/* '등록 확인됨' 결과 안 '이름이 다르게 나오나요?' 접힌 설명(11-12) */
+.lk .lk-why { margin: 12px 0 0; padding: 10px 12px; font-size: 15px; background: #fff; border: 1px solid #cfe3d8; border-radius: 10px; }
+.lk .lk-why summary { font-weight: 700; color: #1f4a3a; cursor: pointer; }
+.lk .lk-why ol { margin: 8px 0 0; padding-left: 20px; line-height: 1.6; }
+.lk .lk-why li { margin: 4px 0; }

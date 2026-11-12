@@ -265,6 +265,29 @@
     return a;
   }
 
+  // '등록 확인됨'인데 이름이 다르게 보일 때의 설명(11-12 사용자 문구). 필요한 사람만 펼쳐 보게 접어 둔다
+  function nameNote() {
+    const det = document.createElement("details");
+    det.className = "lk-why";
+    const sm = document.createElement("summary");
+    sm.textContent = "이름이 다르게 나오나요?";
+    sm.dataset.track = "check-name-why";
+    const ol = document.createElement("ol");
+    const li = (...parts) => { const e = document.createElement("li"); e.append(...parts); ol.appendChild(e); return e; };
+    const b = (t) => { const e = document.createElement("strong"); e.textContent = t; return e; };
+    li(b("괜찮습니다."), " 국토교통부는 추진위원회가 제출한 주민등록증 스캔본을 직접 조회합니다.");
+    li(b("이름이 다른 이유: "), "추진위원회는 시간과 일손이 부족해 주민등록증이 아니라 봉사자분이 손으로 적은 표를 옮겨 적습니다. 그 과정에서 담당자의 오타로 생긴 경우입니다.");
+    const a = document.createElement("a");
+    a.href = "https://open.kakao.com/o/gW0je9He";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.dataset.track = "check-name-kakao";
+    a.textContent = "카카오톡방";
+    li(b("고치고 싶으시면 "), a, "(비밀번호 1016)에 말씀해 주세요. 고쳐 드리겠습니다.");
+    det.append(sm, ol);
+    return det;
+  }
+
   function render(d) {
     const box = $("lk-result");
     box.innerHTML = "";
@@ -281,6 +304,7 @@
         box.appendChild(smsLink("위원장님께 번호 수정 요청 문자"));
       }
       if (since) add("p", since, "lk-hint");
+      if (d.name) box.appendChild(nameNote());
     } else if (d.r === "sup") {
       add("p", "⚠️ 등록됐지만 서류 보완이 필요합니다", "lk-rt");
       add("p", (d.name ? d.name + " 님 동의서가 " : "동의서가 ") + "등록되어 있지만 보완할 서류가 있습니다. 위원장님께 문자로 문의해 주세요.");
