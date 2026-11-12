@@ -93,3 +93,7 @@
 .lk-v-nav button { min-width: 96px; min-height: 52px; padding: 10px 14px; font: inherit; font-size: 17px; font-weight: 800; color: #1b1f1d; background: #ffe066; border: 0; border-radius: 12px; cursor: pointer; }
 .lk-v-nav button:disabled { opacity: .35; cursor: default; }
 .lk-v-dots { font-size: 12px; letter-spacing: 2px; color: #cfd8d3; text-align: center; }
+/* 이름 수정 요청 칸(11-12) */
+.lk .lk-rename { margin: 10px 0 2px; }
+.lk .lk-rename input { font-size: 16px; }
+.lk .lk-rename .lk-btn { font-size: 15px; padding: 10px 12px; }
