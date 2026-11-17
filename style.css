@@ -1764,6 +1764,65 @@ body {
   73.5%, 95% { opacity: 1; transform: scale(1); }
   97%, 100% { opacity: 0; transform: scale(1); }
 }
+/* 장면 차례: ① 가가호호 방문 12초 → ② 전단 붙이기 7초 → ③ 팜플렛 세우기 7초 (index.html 스크립트가 data-case 를 바꿈).
+   보이지 않던 장면이 나타나면 그 장면의 애니메이션이 처음부터 다시 돈다 */
+.dn-case, .dn-cap { display: none; }
+.donation-scene[data-case="1"] .dn-c1, .donation-scene[data-case="2"] .dn-c2, .donation-scene[data-case="3"] .dn-c3 { display: inline; }
+.dn-c1 { animation: dn-fade1 12s linear infinite both; }
+.dn-c2, .dn-c3 { animation: dn-fade2 7s linear infinite both; }
+@keyframes dn-fade1 { 0% { opacity: 0; } 2%, 98% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes dn-fade2 { 0% { opacity: 0; } 4%, 96% { opacity: 1; } 100% { opacity: 0; } }
+.dn-dots { display: inline-flex; gap: 5px; margin-right: 8px; vertical-align: 1px; }
+.dn-dots i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #c9d6cf; }
+.donation-scene[data-case="1"] .dn-dots i:nth-child(1), .donation-scene[data-case="2"] .dn-dots i:nth-child(2), .donation-scene[data-case="3"] .dn-dots i:nth-child(3) { background: var(--color-accent); }
+.dn-lg { transform-box: fill-box; transform-origin: 50% 0; }
+.dn-sign, .dn-sign2, .dn-tag { font-weight: 800; fill: #fff; }
+.dn-sign { font-size: 8.5px; } .dn-sign2 { font-size: 10px; letter-spacing: 1px; } .dn-tag { font-size: 6.5px; }
+.dn-win { font-size: 8px; font-weight: 700; fill: #1f4a3a; }
+.dn-say { font-size: 8.5px; font-weight: 800; fill: #c2410c; }
+.dn2-v { animation: dn2-v 7s linear infinite both; }
+@keyframes dn2-v { 0% { transform: translateX(-20px); } 30% { transform: translateX(222px); } 48% { transform: translateX(222px); } 72% { transform: translateX(390px); } 100% { transform: translateX(390px); } }
+@keyframes dn2v-1 { 0%{transform:rotate(0deg)} 3%{transform:rotate(22deg)} 6%{transform:rotate(-22deg)} 9%{transform:rotate(22deg)} 12%{transform:rotate(-22deg)} 15%{transform:rotate(22deg)} 18%{transform:rotate(-22deg)} 21%{transform:rotate(22deg)} 24%{transform:rotate(-22deg)} 27%{transform:rotate(22deg)} 30%{transform:rotate(0deg)} 48%{transform:rotate(0deg)} 51%{transform:rotate(22deg)} 54%{transform:rotate(-22deg)} 57%{transform:rotate(22deg)} 60%{transform:rotate(-22deg)} 63%{transform:rotate(22deg)} 66%{transform:rotate(-22deg)} 69%{transform:rotate(22deg)} 72%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn2v-2 { 0%{transform:rotate(0deg)} 3%{transform:rotate(-22deg)} 6%{transform:rotate(22deg)} 9%{transform:rotate(-22deg)} 12%{transform:rotate(22deg)} 15%{transform:rotate(-22deg)} 18%{transform:rotate(22deg)} 21%{transform:rotate(-22deg)} 24%{transform:rotate(22deg)} 27%{transform:rotate(-22deg)} 30%{transform:rotate(0deg)} 48%{transform:rotate(0deg)} 51%{transform:rotate(-22deg)} 54%{transform:rotate(22deg)} 57%{transform:rotate(-22deg)} 60%{transform:rotate(22deg)} 63%{transform:rotate(-22deg)} 66%{transform:rotate(22deg)} 69%{transform:rotate(-22deg)} 72%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+.dn2-v .dn-l1 { animation: dn2v-1 7s linear infinite both; }
+.dn2-v .dn-l2 { animation: dn2v-2 7s linear infinite both; }
+.dn2-v .dn-arm { animation: dn2-arm 7s step-end infinite both; }
+.dn2-v .dn-armup { animation: dn2-armup 7s step-end infinite both; }
+@keyframes dn2-arm { 0% { opacity: 1; } 32% { opacity: 0; } 47% { opacity: 1; } }
+@keyframes dn2-armup { 0% { opacity: 0; } 32% { opacity: 1; } 47% { opacity: 0; } }
+.dn2-flyer { transform-box: fill-box; transform-origin: 50% 50%; animation: dn2-flyer 7s ease-out infinite both; }
+@keyframes dn2-flyer { 0%, 33.5% { opacity: 0; transform: translate(-15px, 17px) scale(0.35); } 34% { opacity: 1; transform: translate(-15px, 17px) scale(0.35); } 42%, 100% { opacity: 1; transform: translate(0, 0) scale(1); } }
+.dn2-tape { animation: dn2-tape 7s linear infinite both; }
+@keyframes dn2-tape { 0%, 43.5% { opacity: 0; } 45%, 100% { opacity: 1; } }
+.dn2-p { animation: dn2-p 7s linear infinite both; }
+@keyframes dn2-p { 0% { transform: translateX(-20px); } 54% { transform: translateX(-20px); } 78% { transform: translateX(192px); } 100% { transform: translateX(192px); } }
+@keyframes dn2p-1 { 0%{transform:rotate(0deg)} 54%{transform:rotate(0deg)} 57%{transform:rotate(22deg)} 60%{transform:rotate(-22deg)} 63%{transform:rotate(22deg)} 66%{transform:rotate(-22deg)} 69%{transform:rotate(22deg)} 72%{transform:rotate(-22deg)} 75%{transform:rotate(22deg)} 78%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn2p-2 { 0%{transform:rotate(0deg)} 54%{transform:rotate(0deg)} 57%{transform:rotate(-22deg)} 60%{transform:rotate(22deg)} 63%{transform:rotate(-22deg)} 66%{transform:rotate(22deg)} 69%{transform:rotate(-22deg)} 72%{transform:rotate(22deg)} 75%{transform:rotate(-22deg)} 78%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+.dn2-p .dn-l1 { animation: dn2p-1 7s linear infinite both; }
+.dn2-p .dn-l2 { animation: dn2p-2 7s linear infinite both; }
+.dn2-bang { animation: dn2-bang 7s ease-out infinite both; }
+@keyframes dn2-bang { 0%, 80% { opacity: 0; transform: translateY(3px); } 82.5%, 100% { opacity: 1; transform: translateY(0); } }
+.dn3-v { animation: dn3-v 7s linear infinite both; }
+@keyframes dn3-v { 0% { transform: translateX(-20px); } 30% { transform: translateX(146px); } 100% { transform: translateX(146px); } }
+@keyframes dn3v-1 { 0%{transform:rotate(0deg)} 3%{transform:rotate(22deg)} 6%{transform:rotate(-22deg)} 9%{transform:rotate(22deg)} 12%{transform:rotate(-22deg)} 15%{transform:rotate(22deg)} 18%{transform:rotate(-22deg)} 21%{transform:rotate(22deg)} 24%{transform:rotate(-22deg)} 27%{transform:rotate(22deg)} 30%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn3v-2 { 0%{transform:rotate(0deg)} 3%{transform:rotate(-22deg)} 6%{transform:rotate(22deg)} 9%{transform:rotate(-22deg)} 12%{transform:rotate(22deg)} 15%{transform:rotate(-22deg)} 18%{transform:rotate(22deg)} 21%{transform:rotate(-22deg)} 24%{transform:rotate(22deg)} 27%{transform:rotate(-22deg)} 30%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+.dn3-v .dn-l1 { animation: dn3v-1 7s linear infinite both; }
+.dn3-v .dn-l2 { animation: dn3v-2 7s linear infinite both; }
+.dn3-stand { animation: dn3-stand 7s linear infinite both; }
+@keyframes dn3-stand { 0% { transform: translate(-184px, -6px); } 30%, 33% { transform: translate(-18px, -6px); } 38%, 100% { transform: translate(0, 0); } }
+.dn3-pm { animation: dn3-pm 7s ease-out infinite both; }
+.donation-scene .dn3-pm2 { animation-delay: 0.21s; } .donation-scene .dn3-pm3 { animation-delay: 0.42s; }
+@keyframes dn3-pm { 0%, 40% { opacity: 0; transform: translateY(-6px); } 42.5%, 100% { opacity: 1; transform: translateY(0); } }
+.donation-scene .dn3-pm1 { animation-name: dn3-pm1; }
+@keyframes dn3-pm1 { 0%, 40% { opacity: 0; transform: translate(0, -6px); } 42.5%, 80% { opacity: 1; transform: translate(0, 0); } 86%, 100% { opacity: 1; transform: translate(22.5px, 6px); } }
+.dn3-r { animation: dn3-r 7s linear infinite both; }
+@keyframes dn3-r { 0%, 55% { opacity: 0; transform: translateX(304px); } 57% { opacity: 1; transform: translateX(304px); } 74%, 100% { opacity: 1; transform: translateX(200px); } }
+@keyframes dn3r-1 { 0%{transform:rotate(0deg)} 57%{transform:rotate(0deg)} 60%{transform:rotate(22deg)} 63%{transform:rotate(-22deg)} 66%{transform:rotate(22deg)} 69%{transform:rotate(-22deg)} 72%{transform:rotate(22deg)} 74%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn3r-2 { 0%{transform:rotate(0deg)} 57%{transform:rotate(0deg)} 60%{transform:rotate(-22deg)} 63%{transform:rotate(22deg)} 66%{transform:rotate(-22deg)} 69%{transform:rotate(22deg)} 72%{transform:rotate(-22deg)} 74%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+.dn3-r .dn-l1 { animation: dn3r-1 7s linear infinite both; }
+.dn3-r .dn-l2 { animation: dn3r-2 7s linear infinite both; }
+.dn3-note { animation: dn3-note 7s ease-out infinite both; }
+@keyframes dn3-note { 0%, 87% { opacity: 0; transform: translateY(3px); } 89.5%, 100% { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) {
   .donation-scene * { animation: none !important; }
   .dn-walker { transform: translateX(70px); }
