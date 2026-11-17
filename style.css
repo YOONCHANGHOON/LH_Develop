@@ -1701,140 +1701,56 @@ body {
   cursor: pointer;
 }
 .donation-copy:hover { background: #000; }
-/* 세 장면을 가로 한 줄로(휴대폰에서도 세 칸) */
-.donation-scenes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
-.donation-scene {
-  padding: 10px 10px 8px;
-  background: #eef6f1;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-}
-.donation-scene svg { display: block; width: 100%; height: auto; }
-.donation-scene-cap { margin: 6px 0 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); white-space: nowrap; }
-/* 그림 세 장면(가까이 잡은 판, 11-17): ① 전단 안내 6초 · ② 가가호호 방문 7초 · ③ 팜플렛 설치 7초.
-   각 장면은 따로 반복하고, 한 바퀴 끝에 살짝 흐렸다가 처음부터. 애니메이션이 없을 때(움직임 줄이기) 보이는 기본 상태 = 장면의 대표 한 컷 */
-.dn-c1 { animation: dn-fade 6s linear infinite both; }
-.dn-c2, .dn-c3 { animation: dn-fade 7s linear infinite both; }
-@keyframes dn-fade { 0% { opacity: 0; } 3%, 97% { opacity: 1; } 100% { opacity: 0; } }
-.dn-lg { transform-box: fill-box; transform-origin: 50% 0; }
-.dn-arm { transform-box: view-box; transform-origin: 4px 64px; }
-/* ① 전단 안내 (6초): 걸어옴 0~34% → 팔 올려 붙임 34~44% → 테이프·반짝 → 주민 60~74% → 아하! */
-.dn1-v { transform: translateX(190px); animation: dn1-v 6s linear infinite both; }
-@keyframes dn1-v { 0% { transform: translateX(-30px); } 34%, 100% { transform: translateX(190px); } }
-.dn1-arm { animation: dn1-arm 6s ease-in-out infinite both; }
-@keyframes dn1-arm { 0%, 34% { transform: rotate(-15deg); } 40%, 50% { transform: rotate(-90deg); } 57%, 100% { transform: rotate(0deg); } }
-.dn1-hf { opacity: 0; animation: dn1-hf 6s step-end infinite both; }
-@keyframes dn1-hf { 0% { opacity: 1; } 44% { opacity: 0; } }
-.dn1-f { transform-box: view-box; transform-origin: 249px 70px; animation: dn1-f 6s ease-out infinite both; }
-@keyframes dn1-f { 0%, 43.9% { opacity: 0; transform: scale(0.5); } 44% { opacity: 1; transform: scale(0.5); } 48% { transform: scale(1.08); } 51%, 100% { opacity: 1; transform: scale(1); } }
-.dn1-t { animation: dn1-t 6s step-end infinite both; }
-@keyframes dn1-t { 0% { opacity: 0; } 51% { opacity: 1; } }
-.dn1-sp { opacity: 0; animation: dn1-sp 6s ease-out infinite both; }
-@keyframes dn1-sp { 0%, 51% { opacity: 0; } 54%, 64% { opacity: 1; } 70%, 100% { opacity: 0; } }
-.dn1-r { transform: translateX(338px); animation: dn1-r 6s linear infinite both; }
-@keyframes dn1-r { 0%, 60% { transform: translateX(400px); } 74%, 100% { transform: translateX(338px); } }
-.dn1-b { animation: dn1-b 6s ease-out infinite both; }
-@keyframes dn1-b { 0%, 76% { opacity: 0; transform: translateY(4px); } 80%, 100% { opacity: 1; transform: translateY(0); } }
-/* ② 가가호호 방문 (7초): 걸어옴 0~28% → 초인종 30~36%(딩동) → 문 열림 40~50% → 동의서 건넴 55~66% → ✓ */
-.dn2-v { transform: translateX(204px); animation: dn2-v 7s linear infinite both; }
-@keyframes dn2-v { 0% { transform: translateX(-30px); } 28%, 100% { transform: translateX(204px); } }
-.dn2-arm { animation: dn2-arm 7s ease-in-out infinite both; }
-@keyframes dn2-arm { 0%, 28% { transform: rotate(-12deg); } 31%, 35% { transform: rotate(-88deg); } 39%, 54% { transform: rotate(-12deg); } 59%, 65% { transform: rotate(-82deg); } 71%, 100% { transform: rotate(0deg); } }
-.dn2-hp { opacity: 0; animation: dn2-hp 7s step-end infinite both; }
-@keyframes dn2-hp { 0% { opacity: 1; } 63% { opacity: 0; } }
-.dn2-ding { opacity: 0; transform-box: view-box; transform-origin: 231px 17px; animation: dn2-ding 7s ease-out infinite both; }
-@keyframes dn2-ding { 0%, 31% { opacity: 0; transform: scale(0.5); } 33% { opacity: 1; transform: scale(1.1); } 35%, 45% { opacity: 1; transform: scale(1); } 48%, 100% { opacity: 0; transform: scale(1); } }
-.dn2-door { transform-box: view-box; transform-origin: 248px 80px; transform: scaleX(0.12); animation: dn2-door 7s ease-in-out infinite both; }
-@keyframes dn2-door { 0%, 40% { transform: scaleX(1); } 50%, 100% { transform: scaleX(0.12); } }
-.dn2-rarm { transform: rotate(-20deg); animation: dn2-rarm 7s ease-in-out infinite both; }
-@keyframes dn2-rarm { 0%, 57% { transform: rotate(0deg); } 61%, 66% { transform: rotate(-78deg); } 73%, 100% { transform: rotate(-20deg); } }
-.dn2-rp { animation: dn2-rp 7s step-end infinite both; }
-@keyframes dn2-rp { 0% { opacity: 0; } 63% { opacity: 1; } }
-.dn2-badge { transform-box: view-box; transform-origin: 272px 14px; animation: dn2-badge 7s ease-out infinite both; }
-@keyframes dn2-badge { 0%, 70% { opacity: 0; transform: scale(0.4); } 74% { opacity: 1; transform: scale(1.1); } 77%, 100% { opacity: 1; transform: scale(1); } }
-/* ③ 팜플렛 설치 (7초): 거치대 들고 걸어옴 0~30% → 내려놓음 34~39% → 팜플렛 41~47% → 주민 52~68% → 한 부 가져감 72~78% → 고마워요 */
-.dn3-v { transform: translateX(128px); animation: dn3-v 7s linear infinite both; }
-@keyframes dn3-v { 0% { transform: translateX(-40px); } 30%, 100% { transform: translateX(128px); } }
-.dn3-arm { animation: dn3-arm 7s ease-in-out infinite both; }
-@keyframes dn3-arm { 0%, 33% { transform: rotate(-60deg); } 39%, 100% { transform: rotate(0deg); } }
-.dn3-st { animation: dn3-st 7s linear infinite both; }
-@keyframes dn3-st { 0% { transform: translate(-181px, -10px); } 30%, 33% { transform: translate(-13px, -10px); } 39%, 100% { transform: translate(0, 0); } }
-.dn3-pm { animation: dn3-pm 7s ease-out infinite both; }
-.donation-scene .dn3-pm2 { animation-delay: 0.21s; }
-.donation-scene .dn3-pm3 { animation-name: dn3-pm3; }
-@keyframes dn3-pm { 0%, 40% { opacity: 0; transform: translateY(-10px); } 43%, 100% { opacity: 1; transform: translateY(0); } }
-.dn3-pm3 { opacity: 0; }
-@keyframes dn3-pm3 { 0%, 46% { opacity: 0; transform: translateY(-10px); } 49%, 75.9% { opacity: 1; transform: translateY(0); } 76%, 100% { opacity: 0; transform: translateY(0); } }
-.dn3-r { transform: translateX(236px); animation: dn3-r 7s linear infinite both; }
-@keyframes dn3-r { 0%, 52% { transform: translateX(400px); } 68%, 100% { transform: translateX(236px); } }
-.dn3-rarm { transform: rotate(-20deg); animation: dn3-rarm 7s ease-in-out infinite both; }
-@keyframes dn3-rarm { 0%, 70% { transform: rotate(0deg); } 74%, 77% { transform: rotate(-58deg); } 83%, 100% { transform: rotate(-20deg); } }
-.dn3-hp { animation: dn3-hp 7s step-end infinite both; }
-@keyframes dn3-hp { 0% { opacity: 0; } 76% { opacity: 1; } }
-.dn3-b { animation: dn3-b 7s ease-out infinite both; }
-@keyframes dn3-b { 0%, 80% { opacity: 0; transform: translateY(4px); } 84%, 100% { opacity: 1; transform: translateY(0); } }
-@keyframes dn1v-1 { 0%{transform:rotate(0deg)} 3.33%{transform:rotate(22deg)} 6.67%{transform:rotate(-22deg)} 10%{transform:rotate(22deg)} 13.33%{transform:rotate(-22deg)} 16.67%{transform:rotate(22deg)} 20%{transform:rotate(-22deg)} 23.33%{transform:rotate(22deg)} 26.67%{transform:rotate(-22deg)} 30%{transform:rotate(22deg)} 34%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-@keyframes dn1v-2 { 0%{transform:rotate(0deg)} 3.33%{transform:rotate(-22deg)} 6.67%{transform:rotate(22deg)} 10%{transform:rotate(-22deg)} 13.33%{transform:rotate(22deg)} 16.67%{transform:rotate(-22deg)} 20%{transform:rotate(22deg)} 23.33%{transform:rotate(-22deg)} 26.67%{transform:rotate(22deg)} 30%{transform:rotate(-22deg)} 34%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-.dn1-v .dn-l1 { animation: dn1v-1 6s linear infinite both; }
-.dn1-v .dn-l2 { animation: dn1v-2 6s linear infinite both; }
-@keyframes dn1r-1 { 0%{transform:rotate(0deg)} 60%{transform:rotate(0deg)} 63.33%{transform:rotate(22deg)} 66.67%{transform:rotate(-22deg)} 70%{transform:rotate(22deg)} 74%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-@keyframes dn1r-2 { 0%{transform:rotate(0deg)} 60%{transform:rotate(0deg)} 63.33%{transform:rotate(-22deg)} 66.67%{transform:rotate(22deg)} 70%{transform:rotate(-22deg)} 74%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-.dn1-r .dn-l1 { animation: dn1r-1 6s linear infinite both; }
-.dn1-r .dn-l2 { animation: dn1r-2 6s linear infinite both; }
-@keyframes dn2v-1 { 0%{transform:rotate(0deg)} 2.86%{transform:rotate(22deg)} 5.71%{transform:rotate(-22deg)} 8.57%{transform:rotate(22deg)} 11.43%{transform:rotate(-22deg)} 14.29%{transform:rotate(22deg)} 17.14%{transform:rotate(-22deg)} 20%{transform:rotate(22deg)} 22.86%{transform:rotate(-22deg)} 25.71%{transform:rotate(22deg)} 28%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-@keyframes dn2v-2 { 0%{transform:rotate(0deg)} 2.86%{transform:rotate(-22deg)} 5.71%{transform:rotate(22deg)} 8.57%{transform:rotate(-22deg)} 11.43%{transform:rotate(22deg)} 14.29%{transform:rotate(-22deg)} 17.14%{transform:rotate(22deg)} 20%{transform:rotate(-22deg)} 22.86%{transform:rotate(22deg)} 25.71%{transform:rotate(-22deg)} 28%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-.dn2-v .dn-l1 { animation: dn2v-1 7s linear infinite both; }
-.dn2-v .dn-l2 { animation: dn2v-2 7s linear infinite both; }
-@keyframes dn3v-1 { 0%{transform:rotate(0deg)} 2.86%{transform:rotate(22deg)} 5.71%{transform:rotate(-22deg)} 8.57%{transform:rotate(22deg)} 11.43%{transform:rotate(-22deg)} 14.29%{transform:rotate(22deg)} 17.14%{transform:rotate(-22deg)} 20%{transform:rotate(22deg)} 22.86%{transform:rotate(-22deg)} 25.71%{transform:rotate(22deg)} 30%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-@keyframes dn3v-2 { 0%{transform:rotate(0deg)} 2.86%{transform:rotate(-22deg)} 5.71%{transform:rotate(22deg)} 8.57%{transform:rotate(-22deg)} 11.43%{transform:rotate(22deg)} 14.29%{transform:rotate(-22deg)} 17.14%{transform:rotate(22deg)} 20%{transform:rotate(-22deg)} 22.86%{transform:rotate(22deg)} 25.71%{transform:rotate(-22deg)} 30%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-.dn3-v .dn-l1 { animation: dn3v-1 7s linear infinite both; }
-.dn3-v .dn-l2 { animation: dn3v-2 7s linear infinite both; }
-@keyframes dn3r-1 { 0%{transform:rotate(0deg)} 52%{transform:rotate(0deg)} 54.86%{transform:rotate(22deg)} 57.71%{transform:rotate(-22deg)} 60.57%{transform:rotate(22deg)} 63.43%{transform:rotate(-22deg)} 66.29%{transform:rotate(22deg)} 68%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-@keyframes dn3r-2 { 0%{transform:rotate(0deg)} 52%{transform:rotate(0deg)} 54.86%{transform:rotate(-22deg)} 57.71%{transform:rotate(22deg)} 60.57%{transform:rotate(-22deg)} 63.43%{transform:rotate(22deg)} 66.29%{transform:rotate(-22deg)} 68%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
-.dn3-r .dn-l1 { animation: dn3r-1 7s linear infinite both; }
-.dn3-r .dn-l2 { animation: dn3r-2 7s linear infinite both; }
-@media (prefers-reduced-motion: reduce) {
-  .donation-scene * { animation: none !important; }
-}
-/* 쓰는 곳 3칸 + 관리 문구 */
-.donation-uses { padding: 18px 24px 20px; }
+/* 쓰는 곳: 영수증 모양(11-18) — 아이보리 종이, 점선 구분, 아래 톱니 가장자리, 오른쪽 위 '투명 관리' 도장.
+   톱니는 종이(.donation-paper)에 mask 로 자르고, 그림자는 바깥(.donation-receipt)의 drop-shadow 로 톱니를 따라가게 함 */
+.donation-uses { padding: 18px 24px 22px; }
 .donation-uses p.donation-k { margin: 0; }
-.donation-uses ul {
-  list-style: none;
-  margin: 10px 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+.donation-receipt { position: relative; margin-top: 12px; filter: drop-shadow(0 1px 1.5px rgba(31, 43, 37, 0.22)); }
+.donation-paper {
+  --zz: 7px;
+  padding: 4px 18px calc(14px + var(--zz));
+  background: #fffdf4;
+  border-radius: 10px 10px 0 0;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--zz)) 100%;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--zz)) 100%;
 }
-.donation-uses li {
-  padding: 14px 6px 12px;
-  border-radius: 12px;
-  background: var(--color-bg-alt);
-  text-align: center;
-  font-size: 14px;
+.donation-paper ul { list-style: none; margin: 0; padding: 0; }
+.donation-paper li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1.5px dashed #d8d1bd;
+  font-size: 15.5px;
   font-weight: 700;
   line-height: 1.4;
+  color: #1c2b25;
 }
-.donation-uses svg {
-  display: block;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto 6px;
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.donation-note {
-  margin: 12px 0 0;
-  padding: 10px 12px;
-  border-left: 3px solid var(--color-accent);
-  border-radius: 0 8px 8px 0;
-  background: var(--color-callout);
-  font-size: 13.5px;
-  line-height: 1.6;
+.donation-paper li:first-child { padding-right: 68px; }  /* 도장 자리 */
+.donation-ico { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #e2f2e7; }
+.donation-ico svg { width: 22px; height: 22px; fill: none; stroke: var(--color-accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.donation-ico-b { background: #fdebc8; }
+.donation-ico-b svg { stroke: #a8540a; }
+.donation-note { margin: 12px 0 0; font-size: 13px; line-height: 1.6; color: #5b6b63; }
+.donation-stamp {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 2.5px solid #d9480f;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px #fffdf4, inset 0 0 0 3.5px #d9480f;  /* 도장 안쪽 테두리 */
+  color: #d9480f;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-align: center;
+  transform: rotate(-14deg);
+  opacity: 0.88;
 }
 
 /* ─── Contact grid (확장) ─── */
@@ -1889,9 +1805,6 @@ body {
 @media (max-width: 640px) {
   .donation-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 20px; }
   .donation-acct, .donation-uses { padding: 16px 20px; }
-  .donation-scenes { gap: 6px; margin-top: 12px; }
-  .donation-scene { padding: 5px 4px 6px; border-radius: 10px; }
-  .donation-scene-cap { margin-top: 4px; font-size: 11.5px; letter-spacing: -0.02em; }
   .donation-acct { display: block; }
   .donation-copy { width: 100%; margin-top: 14px; }
   .donation-acct .donation-share { font-size: 13px; }
