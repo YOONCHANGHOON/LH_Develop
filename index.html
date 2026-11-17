@@ -36,7 +36,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261117d" />
+  <link rel="stylesheet" href="style.css?v=20261117e" />
   <link rel="stylesheet" href="check/check.css?v=20261112h" />
 </head>
 <body>
@@ -971,15 +971,35 @@
             <p class="donation-holder">예금주 최고야 (추진위원장)</p>
             <button type="button" class="donation-copy" id="donation-copy" data-track="donation-copy" data-acct="3333298229236">계좌번호 복사하기</button>
           </div>
-          <!-- 후원금이 쓰이는 일 세 장면: ① 가가호호 방문 ② 전단 붙이기 ③ 팜플렛 세우기 (움직임 줄이기 설정이면 ① 한 장면) -->
-          <div class="donation-scene" data-case="1">
+          <div class="donation-row">
+            <span class="donation-k">금액</span>
+            <span class="donation-v">1만원 <em>(이상은 자발적으로)</em></span>
+          </div>
+          <div class="donation-uses">
+            <p class="donation-k">후원금은 이렇게 쓰입니다</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
+            </ul>
+            <p class="donation-note">
+              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
+              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 후원금이 쓰이는 일 세 장면을 한꺼번에 세로로 보여 준다. 움직임 줄이기 설정이면 세 장면 모두 멈춘 그림 -->
+        <div class="donation-scenes reveal">
+          <!-- ① 가가호호 방문 (12초 반복) -->
+          <div class="donation-scene">
             <svg viewBox="0 0 360 140" aria-hidden="true">
               <rect width="360" height="140" fill="#eef6f1"/>
               <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
-              <linearGradient id="dn-gnd"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
-              <rect y="126" width="360" height="14" fill="url(#dn-gnd)"/>
+              <linearGradient id="dn-gnd1"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd1)"/>
               <path d="M12 126.5h336" stroke="#c4cec8"/>
-              <g class="dn-case dn-c1">
+              <g class="dn-c1">
                 <!-- 빌라 A -->
                 <rect x="38" y="26" width="134" height="7" rx="2" fill="#c9b49a"/>
                 <rect x="40" y="31" width="130" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
@@ -1017,8 +1037,18 @@
                 <g class="dn-badge dn-badge-a"><rect x="79" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="105" y="69.2" text-anchor="middle">✓ 동의서</text></g>
                 <g class="dn-badge dn-badge-b"><rect x="239" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="265" y="69.2" text-anchor="middle">✓ 동의서</text></g>
               </g>
-              <!-- ② 전단 붙이기 -->
-              <g class="dn-case dn-c2">
+            </svg>
+            <p class="donation-scene-cap">후원금으로 집집마다 찾아가 동의서를 받습니다</p>
+          </div>
+          <!-- ② 알림판에 전단 붙이기 (7초 반복) -->
+          <div class="donation-scene">
+            <svg viewBox="0 0 360 140" aria-hidden="true">
+              <rect width="360" height="140" fill="#eef6f1"/>
+              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
+              <linearGradient id="dn-gnd2"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd2)"/>
+              <path d="M12 126.5h336" stroke="#c4cec8"/>
+              <g class="dn-c2">
                 <rect x="18" y="26" width="124" height="7" rx="2" fill="#c9b49a"/><rect x="20" y="31" width="120" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
                 <g fill="#dfe9ef" stroke="#b89f84" stroke-width="1"><rect x="32" y="40" width="18" height="16"/><rect x="71" y="40" width="18" height="16"/><rect x="110" y="40" width="18" height="16"/><rect x="32" y="66" width="18" height="16"/><rect x="71" y="66" width="18" height="16"/><rect x="110" y="66" width="18" height="16"/><rect x="32" y="96" width="18" height="14"/><rect x="110" y="96" width="18" height="14"/></g>
                 <rect x="67" y="94" width="26" height="32" fill="#9a6b47" stroke="#6e4a30" stroke-width="1"/><circle cx="71.5" cy="111" r="1.4" fill="#f3d27a"/>
@@ -1033,8 +1063,18 @@
                 <g class="dn2-p"><rect class="dn-lg dn-l1" x="-4" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect class="dn-lg dn-l2" x="0.5" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect x="-7" y="98" width="14" height="20" rx="4" fill="#8a6bb8"/><circle cy="91" r="6.5" fill="#f2c9a0"/><path d="M-6.5 90a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#d5d8d6"/><path d="M-12.5 107a3 3 0 0 1 6 0" fill="none" stroke="#b08a3a" stroke-width="1.2"/><rect x="-14" y="106" width="9" height="9" rx="1.5" fill="#f3d27a"/></g>
                 <g class="dn2-bang"><rect x="158" y="70" width="30" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="173" y="80.6" text-anchor="middle">아하!</text></g>
               </g>
-              <!-- ③ 팜플렛 세우기 -->
-              <g class="dn-case dn-c3">
+            </svg>
+            <p class="donation-scene-cap">후원금으로 동네 알림판에 전단 안내문을 붙입니다</p>
+          </div>
+          <!-- ③ 접수처 앞에 팜플렛 세우기 (7초 반복) -->
+          <div class="donation-scene">
+            <svg viewBox="0 0 360 140" aria-hidden="true">
+              <rect width="360" height="140" fill="#eef6f1"/>
+              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
+              <linearGradient id="dn-gnd3"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd3)"/>
+              <path d="M12 126.5h336" stroke="#c4cec8"/>
+              <g class="dn-c3">
                 <rect x="67.5" y="104" width="5" height="22" fill="#8a6a4a"/>
                 <g fill="#6fbf8a"><circle cx="70" cy="98" r="12"/><circle cx="62" cy="105" r="8"/><circle cx="78" cy="105" r="8"/></g>
                 <rect x="152" y="70" width="186" height="56" fill="#f7f3ec" stroke="#b8ab98" stroke-width="1.2"/>
@@ -1051,23 +1091,7 @@
                 <g class="dn3-note"><rect x="206" y="69" width="40" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="226" y="79.6" text-anchor="middle">고마워요</text></g>
               </g>
             </svg>
-            <p class="donation-scene-cap"><span class="dn-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="dn-cap dn-c1">후원금으로 집집마다 찾아가 동의서를 받습니다</span><span class="dn-cap dn-c2">후원금으로 동네 알림판에 전단 안내문을 붙입니다</span><span class="dn-cap dn-c3">후원금으로 접수처 앞에 팜플렛을 세워 둡니다</span></p>
-          </div>
-          <div class="donation-row">
-            <span class="donation-k">금액</span>
-            <span class="donation-v">1만원 <em>(이상은 자발적으로)</em></span>
-          </div>
-          <div class="donation-uses">
-            <p class="donation-k">후원금은 이렇게 쓰입니다</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
-            </ul>
-            <p class="donation-note">
-              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
-              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
-            </p>
+            <p class="donation-scene-cap">후원금으로 접수처 앞에 팜플렛을 세워 둡니다</p>
           </div>
         </div>
       </div>
@@ -1312,18 +1336,6 @@
           fallback();
         }
       });
-    })();
-
-    // 후원 칸 그림: ① 가가호호 방문(12초) → ② 전단 붙이기(7초) → ③ 팜플렛 세우기(7초) 차례로 보여 준다.
-    // 움직임 줄이기 설정이면 ① 한 장면에 멈춰 둔다(CSS가 애니메이션을 끔)
-    (function () {
-      var sc = document.querySelector('.donation-scene');
-      if (!sc || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-      var dur = [12000, 7000, 7000], k = 0;
-      (function next() {
-        sc.setAttribute('data-case', String(k + 1));
-        setTimeout(function () { k = (k + 1) % 3; next(); }, dur[k]);
-      })();
     })();
 
     // 방문·클릭 전수 집계(worker.js → D1). Cloudflare 방문 통계는 10건 중 1건만 표본으로 남겨서 따로 센다.

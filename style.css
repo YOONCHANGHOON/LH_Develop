@@ -1700,10 +1700,12 @@ body {
 .donation-copy:hover { background: var(--color-accent-light); }
 /* 봉사자 방문 그림: 12초 한 바퀴. 걷기 0~9% → 집 A 9~37% → 걷기 37~53% → 집 B 53~81% → 걷기 81~97%
    집 B의 문·주민·서류·딩동은 집 A와 같은 움직임을 44%(5.28초) 늦춰 재생 */
+.donation-scenes { display: grid; gap: 12px; margin-top: 16px; }
 .donation-scene {
   padding: 14px 24px 12px;
   background: #eef6f1;
-  border-bottom: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 .donation-scene svg { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
 .donation-scene-cap { margin: 8px 0 0; text-align: center; font-size: 13px; color: var(--color-muted); }
@@ -1764,17 +1766,11 @@ body {
   73.5%, 95% { opacity: 1; transform: scale(1); }
   97%, 100% { opacity: 0; transform: scale(1); }
 }
-/* 장면 차례: ① 가가호호 방문 12초 → ② 전단 붙이기 7초 → ③ 팜플렛 세우기 7초 (index.html 스크립트가 data-case 를 바꿈).
-   보이지 않던 장면이 나타나면 그 장면의 애니메이션이 처음부터 다시 돈다 */
-.dn-case, .dn-cap { display: none; }
-.donation-scene[data-case="1"] .dn-c1, .donation-scene[data-case="2"] .dn-c2, .donation-scene[data-case="3"] .dn-c3 { display: inline; }
+/* 세 장면은 각자 반복한다(① 12초, ② ③ 7초). 한 바퀴 끝에 장면을 살짝 흐렸다가 처음부터 다시 */
 .dn-c1 { animation: dn-fade1 12s linear infinite both; }
 .dn-c2, .dn-c3 { animation: dn-fade2 7s linear infinite both; }
 @keyframes dn-fade1 { 0% { opacity: 0; } 2%, 98% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes dn-fade2 { 0% { opacity: 0; } 4%, 96% { opacity: 1; } 100% { opacity: 0; } }
-.dn-dots { display: inline-flex; gap: 5px; margin-right: 8px; vertical-align: 1px; }
-.dn-dots i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #c9d6cf; }
-.donation-scene[data-case="1"] .dn-dots i:nth-child(1), .donation-scene[data-case="2"] .dn-dots i:nth-child(2), .donation-scene[data-case="3"] .dn-dots i:nth-child(3) { background: var(--color-accent); }
 .dn-lg { transform-box: fill-box; transform-origin: 50% 0; }
 .dn-sign, .dn-sign2, .dn-tag { font-weight: 800; fill: #fff; }
 .dn-sign { font-size: 8.5px; } .dn-sign2 { font-size: 10px; letter-spacing: 1px; } .dn-tag { font-size: 6.5px; }
@@ -1829,6 +1825,11 @@ body {
   .dn-door.dn-a { transform: scaleX(0.15); }
   .dn-paper.dn-a { transform: translate(-8px, -4px); }
   .dn-res.dn-b, .dn-paper.dn-b, .dn-ding, .dn-badge { opacity: 0; }
+  /* ② 팔을 뻗어 전단을 붙이는 모습, ③ 거치대를 세워 둔 모습 */
+  .dn2-v { transform: translateX(222px); }
+  .dn2-v .dn-arm, .dn2-p, .dn2-bang { opacity: 0; }
+  .dn3-v { transform: translateX(146px); }
+  .dn3-r, .dn3-note { opacity: 0; }
 }
 /* 쓰는 곳 3칸 + 관리 문구 */
 .donation-uses { padding: 18px 24px 20px; }
