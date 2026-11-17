@@ -1700,15 +1700,16 @@ body {
 .donation-copy:hover { background: var(--color-accent-light); }
 /* 봉사자 방문 그림: 12초 한 바퀴. 걷기 0~9% → 집 A 9~37% → 걷기 37~53% → 집 B 53~81% → 걷기 81~97%
    집 B의 문·주민·서류·딩동은 집 A와 같은 움직임을 44%(5.28초) 늦춰 재생 */
-.donation-scenes { display: grid; gap: 12px; margin-top: 16px; }
+/* 세 장면을 가로 한 줄로(휴대폰에서도 세 칸) */
+.donation-scenes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
 .donation-scene {
-  padding: 14px 24px 12px;
+  padding: 10px 10px 8px;
   background: #eef6f1;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
 }
-.donation-scene svg { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
-.donation-scene-cap { margin: 8px 0 0; text-align: center; font-size: 13px; color: var(--color-muted); }
+.donation-scene svg { display: block; width: 100%; height: auto; }
+.donation-scene-cap { margin: 6px 0 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); white-space: nowrap; }
 .dn-walker { animation: dn-walk 12s linear infinite; }
 .dn-leg { transform-box: fill-box; transform-origin: 50% 0; animation: dn-leg1 12s linear infinite; }
 .dn-leg2 { animation-name: dn-leg2; }
@@ -1924,7 +1925,9 @@ body {
 @media (max-width: 640px) {
   .donation-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 20px; }
   .donation-acct, .donation-uses { padding: 16px 20px; }
-  .donation-scene { padding: 12px 12px 10px; }
+  .donation-scenes { gap: 6px; margin-top: 12px; }
+  .donation-scene { padding: 5px 4px 6px; border-radius: 10px; }
+  .donation-scene-cap { margin-top: 4px; font-size: 11.5px; letter-spacing: -0.02em; }
   .donation-acct { display: block; }
   .donation-copy { width: 100%; margin-top: 12px; }
   .alert { flex-direction: column; gap: 12px; }
