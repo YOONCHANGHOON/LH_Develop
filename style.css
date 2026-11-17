@@ -1685,7 +1685,7 @@ body {
   font-weight: 700;
   line-height: 1.4;
 }
-.donation-share svg { flex: none; width: 16px; height: 16px; fill: none; stroke: #222; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.donation-share svg { flex: none; width: 24px; height: 24px; }  /* 웃는 사람: 색은 그림 안에 */
 .donation-copy {
   grid-column: 2;
   grid-row: 1 / span 4;
