@@ -33,9 +33,10 @@ export default {
     }
     return env.ASSETS.fetch(request);
   },
-  // 매일 밤 동의 수를 저장한다(wrangler.jsonc 의 triggers.crons)
+  // 매일 23:55·05:55(한국 시간)에 동의 수를 저장한다(wrangler.jsonc 의 triggers.crons).
+  // 05:55 저장은 자정 넘어 입력한 값이라 trendDay 가 전날 날짜를 준다.
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(saveAgree(env));
+    ctx.waitUntil(saveAgree(env, trendDay(event.scheduledTime)));
   },
 };
 
@@ -67,7 +68,13 @@ async function trend(env) {
   });
 }
 
-async function saveAgree(env) {
+// 그래프 날짜(한국 시간 'YYYY-MM-DD'). 새벽 6시 전은 전날로 친다 — 전날 명부를 자정 넘어 옮겨 적는 경우.
+// volunteer/app.js 의 끝점 날짜 계산과 같아야 한다.
+function trendDay(t) {
+  return new Date(t + (9 - 6) * 3600e3).toISOString().slice(0, 10);
+}
+
+async function saveAgree(env, day) {
   const res = await fetch(SHEET_CSV);
   const agree = res.ok ? sumAgree(await res.text()) : null;
   if (agree === null) {
@@ -77,7 +84,7 @@ async function saveAgree(env) {
   await ensureTrend(env);
   const last = await env.DB.prepare("SELECT agree FROM trend ORDER BY day DESC LIMIT 1").first();
   if (last && last.agree === agree) return;
-  await env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(kstDay(0), agree).run();
+  await env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree).run();
 }
 
 // '번지' 머리글 아래 번지 줄의 '동의' 칸을 더한다('합계' 줄은 번지가 아니라서 빠진다). 형식이 다르면 null.

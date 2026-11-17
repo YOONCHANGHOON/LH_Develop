@@ -207,7 +207,7 @@ function drawTrend(rows) {
   if (key === TREND_KEY) return; // 30초마다 다시 읽어도 값이 같으면 그대로 둔다
   TREND_KEY = key;
 
-  const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  const today = new Date(Date.now() + (9 - 6) * 3600e3).toISOString().slice(0, 10); // 새벽 6시 전은 전날로 친다(worker.js 의 trendDay 와 같게)
   const pts = TREND.map((p) => ({ ...p }));
   const end = pts[pts.length - 1];
   if (end.agree !== agree) {
