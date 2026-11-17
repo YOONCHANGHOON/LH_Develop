@@ -36,7 +36,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261112a" />
+  <link rel="stylesheet" href="style.css?v=20261117a" />
   <link rel="stylesheet" href="check/check.css?v=20261112h" />
 </head>
 <body>
@@ -961,38 +961,31 @@
       <div class="container">
         <h2 class="reveal">후원금 안내</h2>
         <p class="section-lede reveal">
-          홍보물 인쇄·우편비, 설명회 대관료, 사무용품 등 운영 실비를 위한 자발적 후원입니다.
+          동의서를 모으는 데 드는 운영 실비를 위한 자발적 후원입니다.
         </p>
 
         <div class="donation-card reveal">
+          <div class="donation-acct">
+            <p class="donation-bank"><span class="donation-bank-tag">카카오뱅크</span> 모임통장</p>
+            <p class="donation-num">3333-29-8229236</p>
+            <p class="donation-holder">예금주 최고야 (추진위원장)</p>
+            <button type="button" class="donation-copy" id="donation-copy" data-track="donation-copy" data-acct="3333298229236">계좌번호 복사하기</button>
+          </div>
           <div class="donation-row">
             <span class="donation-k">금액</span>
             <span class="donation-v">1만원 <em>(이상은 자발적으로)</em></span>
           </div>
-          <div class="donation-row">
-            <span class="donation-k">입금 계좌</span>
-            <span class="donation-v donation-account">
-              3333-29-8229236
-              <small>예금주: 최고야</small>
-            </span>
-          </div>
-          <div class="donation-row">
-            <span class="donation-k">용도</span>
-            <span class="donation-v">
-              <ul class="donation-use">
-                <li>홍보물 인쇄비 및 우편 발송비</li>
-                <li>주민 설명회 등 장소 대관료</li>
-                <li>사무용품 및 소모품비</li>
-                <li>자원봉사자 음료 및 식대 등 실비</li>
-              </ul>
-            </span>
-          </div>
-          <div class="donation-row">
-            <span class="donation-k">회계 투명성</span>
-            <span class="donation-v">
-              카카오뱅크 모임통장으로 관리하며,
-              주민 누구나 정산 내역을 확인하실 수 있도록 공지합니다.
-            </span>
+          <div class="donation-uses">
+            <p class="donation-k">후원금은 이렇게 쓰입니다</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
+            </ul>
+            <p class="donation-note">
+              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
+              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
+            </p>
           </div>
         </div>
       </div>
@@ -1197,6 +1190,46 @@
         }
         document.body.removeChild(ta);
       }
+    })();
+
+    // 후원 계좌번호 복사: 은행 앱 입력칸에 그대로 붙도록 숫자만 복사한다.
+    // 카톡 안 브라우저는 clipboard API가 막힐 때가 있어 textarea 복사로 한 번 더 시도한다(공유 버튼과 같은 방식).
+    (function () {
+      var btn = document.getElementById('donation-copy');
+      var toast = document.getElementById('toast');
+      if (!btn) return;
+      var acct = btn.getAttribute('data-acct');
+
+      function say(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function () { toast.classList.remove('show'); }, 2600);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = acct;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { /* 아래 안내로 */ }
+        document.body.removeChild(ta);
+        say(ok ? '계좌번호를 복사했어요. 은행 앱에 붙여 넣으세요'
+               : '복사가 안 됐어요. 번호를 길게 눌러 복사해 주세요');
+      }
+
+      btn.addEventListener('click', function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(acct).then(
+            function () { say('계좌번호를 복사했어요. 은행 앱에 붙여 넣으세요'); },
+            fallback
+          );
+        } else {
+          fallback();
+        }
+      });
     })();
 
     // 방문·클릭 전수 집계(worker.js → D1). Cloudflare 방문 통계는 10건 중 1건만 표본으로 남겨서 따로 센다.
