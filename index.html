@@ -36,7 +36,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261117g" />
+  <link rel="stylesheet" href="style.css?v=20261117h" />
   <link rel="stylesheet" href="check/check.css?v=20261112h" />
 </head>
 <body>
@@ -161,6 +161,143 @@
           </p>
         </div>
       </div>
+      <!-- 후원금 안내(11-17): 「동의서, 이렇게 하시면 됩니다」 바로 아래로 옮김. 노랑 계좌 칸 + 쓰이는 곳 + 그림 세 장면 -->
+      <section class="quick donation-hero" id="donation" aria-labelledby="donation-title">
+        <p class="quick-title" id="donation-title">후원금 안내</p>
+        <p class="donation-lead">동의서를 모으는 데 드는 운영 실비를 위한 자발적 후원입니다.</p>
+
+        <div class="donation-card">
+          <div class="donation-acct">
+            <p class="donation-bank">카카오뱅크 모임통장</p>
+            <p class="donation-num">3333-29-8229236</p>
+            <p class="donation-holder">예금주 최고야 (추진위원장)</p>
+            <p class="donation-share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>공유 계좌라서 금액을 투명하게 관리할 수 있습니다!</p>
+            <button type="button" class="donation-copy" id="donation-copy" data-track="donation-copy" data-acct="3333298229236">계좌번호 복사하기</button>
+          </div>
+          <div class="donation-row">
+            <span class="donation-k">금액</span>
+            <span class="donation-v">1만원 <em>(이상은 자발적으로)</em></span>
+          </div>
+          <div class="donation-uses">
+            <p class="donation-k">후원금은 이렇게 쓰입니다</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
+            </ul>
+            <p class="donation-note">
+              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
+              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 후원금이 쓰이는 일 세 장면을 한꺼번에 가로 한 줄로 보여 준다(칸이 좁아 설명은 짧은 이름만). 움직임 줄이기 설정이면 세 장면 모두 멈춘 그림 -->
+        <div class="donation-scenes">
+          <!-- ① 가가호호 방문 (12초 반복) -->
+          <div class="donation-scene">
+            <svg viewBox="0 0 360 140" aria-hidden="true">
+              <rect width="360" height="140" fill="#eef6f1"/>
+              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
+              <linearGradient id="dn-gnd1"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd1)"/>
+              <path d="M12 126.5h336" stroke="#c4cec8"/>
+              <g class="dn-c1">
+                <!-- 빌라 A -->
+                <rect x="38" y="26" width="134" height="7" rx="2" fill="#c9b49a"/>
+                <rect x="40" y="31" width="130" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
+                <g fill="#dfe9ef" stroke="#b89f84" stroke-width="1"><rect x="54" y="40" width="18" height="16"/><rect x="96" y="40" width="18" height="16"/><rect x="138" y="40" width="18" height="16"/><rect x="54" y="66" width="18" height="16"/><rect x="96" y="66" width="18" height="16"/><rect x="138" y="66" width="18" height="16"/><rect x="54" y="96" width="18" height="14"/><rect x="138" y="96" width="18" height="14"/></g>
+                <rect x="92" y="94" width="26" height="32" fill="#2b3a33"/>
+                <!-- 빌라 B -->
+                <rect x="198" y="26" width="134" height="7" rx="2" fill="#b9c9bf"/>
+                <rect x="200" y="31" width="130" height="95" fill="#e4ece7" stroke="#9fb3a8" stroke-width="1.2"/>
+                <g fill="#dfe9ef" stroke="#9fb3a8" stroke-width="1"><rect x="214" y="40" width="18" height="16"/><rect x="256" y="40" width="18" height="16"/><rect x="298" y="40" width="18" height="16"/><rect x="214" y="66" width="18" height="16"/><rect x="256" y="66" width="18" height="16"/><rect x="298" y="66" width="18" height="16"/><rect x="214" y="96" width="18" height="14"/><rect x="298" y="96" width="18" height="14"/></g>
+                <rect x="252" y="94" width="26" height="32" fill="#2b3a33"/>
+                <rect x="182.5" y="104" width="5" height="22" fill="#8a6a4a"/>
+                <g fill="#6fbf8a"><circle cx="185" cy="98" r="12"/><circle cx="177" cy="105" r="8"/><circle cx="193" cy="105" r="8"/></g>
+                <!-- 주민(문 안) -->
+                <g class="dn-res dn-a"><rect x="98" y="110" width="14" height="16" rx="4" fill="#e8a33d"/><circle cx="105" cy="104" r="6.5" fill="#f2c9a0"/><path d="M98.5 103a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#d5d8d6"/><circle cx="105" cy="97" r="2.6" fill="#d5d8d6"/></g>
+                <g class="dn-res dn-b"><rect x="258" y="110" width="14" height="16" rx="4" fill="#4a7fb0"/><circle cx="265" cy="104" r="6.5" fill="#f2c9a0"/><path d="M258.5 103a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#3a3a3a"/></g>
+                <!-- 문 -->
+                <g class="dn-door dn-a"><rect x="92" y="94" width="26" height="32" fill="#9a6b47" stroke="#6e4a30" stroke-width="1"/><circle cx="96.5" cy="111" r="1.4" fill="#f3d27a"/></g>
+                <g class="dn-door dn-b"><rect x="252" y="94" width="26" height="32" fill="#4f7a64" stroke="#355544" stroke-width="1"/><circle cx="256.5" cy="111" r="1.4" fill="#f3d27a"/></g>
+                <!-- 봉사자(초록 조끼·모자, 서류철) -->
+                <g class="dn-walker">
+                  <rect class="dn-leg dn-leg1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/>
+                  <rect class="dn-leg dn-leg2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/>
+                  <rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/>
+                  <rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/>
+                  <circle cy="87" r="7" fill="#f2c9a0"/>
+                  <path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/>
+                  <path d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/>
+                  <rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/>
+                </g>
+                <!-- 건네는 동의서 -->
+                <g class="dn-paper dn-a"><rect x="93" y="108" width="9" height="11" rx="1" fill="#fff" stroke="#5a6560" stroke-width=".8"/><path d="M95 111.5h5M95 114h5M95 116.5h3" stroke="#9aa9a1" stroke-width=".8"/></g>
+                <g class="dn-paper dn-b"><rect x="253" y="108" width="9" height="11" rx="1" fill="#fff" stroke="#5a6560" stroke-width=".8"/><path d="M255 111.5h5M255 114h5M255 116.5h3" stroke="#9aa9a1" stroke-width=".8"/></g>
+                <text class="dn-ding dn-a" x="105" y="89" text-anchor="middle">딩동♪</text>
+                <text class="dn-ding dn-b" x="265" y="89" text-anchor="middle">딩동♪</text>
+                <g class="dn-badge dn-badge-a"><rect x="79" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="105" y="69.2" text-anchor="middle">✓ 동의서</text></g>
+                <g class="dn-badge dn-badge-b"><rect x="239" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="265" y="69.2" text-anchor="middle">✓ 동의서</text></g>
+              </g>
+            </svg>
+            <p class="donation-scene-cap">가가호호 방문</p>
+          </div>
+          <!-- ② 알림판에 전단 붙이기 (7초 반복) -->
+          <div class="donation-scene">
+            <svg viewBox="0 0 360 140" aria-hidden="true">
+              <rect width="360" height="140" fill="#eef6f1"/>
+              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
+              <linearGradient id="dn-gnd2"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd2)"/>
+              <path d="M12 126.5h336" stroke="#c4cec8"/>
+              <g class="dn-c2">
+                <rect x="18" y="26" width="124" height="7" rx="2" fill="#c9b49a"/><rect x="20" y="31" width="120" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
+                <g fill="#dfe9ef" stroke="#b89f84" stroke-width="1"><rect x="32" y="40" width="18" height="16"/><rect x="71" y="40" width="18" height="16"/><rect x="110" y="40" width="18" height="16"/><rect x="32" y="66" width="18" height="16"/><rect x="71" y="66" width="18" height="16"/><rect x="110" y="66" width="18" height="16"/><rect x="32" y="96" width="18" height="14"/><rect x="110" y="96" width="18" height="14"/></g>
+                <rect x="67" y="94" width="26" height="32" fill="#9a6b47" stroke="#6e4a30" stroke-width="1"/><circle cx="71.5" cy="111" r="1.4" fill="#f3d27a"/>
+                <rect x="212" y="96" width="4" height="30" fill="#8a6a4a"/><rect x="284" y="96" width="4" height="30" fill="#8a6a4a"/>
+                <rect x="200" y="52" width="100" height="50" rx="3" fill="#b98b5a"/><rect x="204" y="56" width="92" height="42" rx="1.5" fill="#ecd9b4"/>
+                <rect x="226" y="41" width="48" height="13" rx="3" fill="#1f4a3a"/><text class="dn-sign" x="250" y="50.6" text-anchor="middle">알림판</text>
+                <g transform="rotate(-4 217 72)"><rect x="208" y="60" width="18" height="24" fill="#fff" stroke="#cbbfa8" stroke-width=".6"/><path d="M211 66h12M211 70h12M211 74h8" stroke="#cbbfa8"/></g>
+                <g transform="rotate(3 283 73)"><rect x="274" y="62" width="18" height="22" fill="#fde9a8" stroke="#d8c27a" stroke-width=".6"/><path d="M277 68h12M277 72h12M277 76h7" stroke="#d8c27a"/></g>
+                <g class="dn2-flyer"><rect x="236" y="58" width="26" height="36" rx="1" fill="#fff" stroke="#9aa9a1" stroke-width=".6"/><rect x="236" y="58" width="26" height="8" fill="#2f9e44"/><path d="M240 72h18M240 77h18M240 82h12" stroke="#9aa9a1"/><circle cx="255" cy="88" r="3" fill="none" stroke="#2f9e44" stroke-width="1.2"/></g>
+                <g class="dn2-tape" fill="#f6e7a8"><rect x="233" y="55" width="8" height="4" transform="rotate(-30 237 57)"/><rect x="257" y="55" width="8" height="4" transform="rotate(30 261 57)"/><rect x="233" y="91" width="8" height="4" transform="rotate(30 237 93)"/><rect x="257" y="91" width="8" height="4" transform="rotate(-30 261 93)"/></g>
+                <g class="dn2-v"><rect class="dn-lg dn-l1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect class="dn-lg dn-l2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/><rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/><circle cy="87" r="7" fill="#f2c9a0"/><path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/><path class="dn-arm" d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><path class="dn-armup" d="M4 98l7-12" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/></g>
+                <g class="dn2-p"><rect class="dn-lg dn-l1" x="-4" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect class="dn-lg dn-l2" x="0.5" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect x="-7" y="98" width="14" height="20" rx="4" fill="#8a6bb8"/><circle cy="91" r="6.5" fill="#f2c9a0"/><path d="M-6.5 90a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#d5d8d6"/><path d="M-12.5 107a3 3 0 0 1 6 0" fill="none" stroke="#b08a3a" stroke-width="1.2"/><rect x="-14" y="106" width="9" height="9" rx="1.5" fill="#f3d27a"/></g>
+                <g class="dn2-bang"><rect x="158" y="70" width="30" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="173" y="80.6" text-anchor="middle">아하!</text></g>
+              </g>
+            </svg>
+            <p class="donation-scene-cap">전단 붙이기</p>
+          </div>
+          <!-- ③ 접수처 앞에 팜플렛 세우기 (7초 반복) -->
+          <div class="donation-scene">
+            <svg viewBox="0 0 360 140" aria-hidden="true">
+              <rect width="360" height="140" fill="#eef6f1"/>
+              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
+              <linearGradient id="dn-gnd3"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
+              <rect y="126" width="360" height="14" fill="url(#dn-gnd3)"/>
+              <path d="M12 126.5h336" stroke="#c4cec8"/>
+              <g class="dn-c3">
+                <rect x="67.5" y="104" width="5" height="22" fill="#8a6a4a"/>
+                <g fill="#6fbf8a"><circle cx="70" cy="98" r="12"/><circle cx="62" cy="105" r="8"/><circle cx="78" cy="105" r="8"/></g>
+                <rect x="152" y="70" width="186" height="56" fill="#f7f3ec" stroke="#b8ab98" stroke-width="1.2"/>
+                <rect x="150" y="44" width="190" height="16" fill="#1f4a3a"/><text class="dn-sign2" x="245" y="55.8" text-anchor="middle">접수처</text><rect x="150" y="60" width="19" height="10" fill="#2f9e44"/><rect x="169" y="60" width="19" height="10" fill="#fff"/><rect x="188" y="60" width="19" height="10" fill="#2f9e44"/><rect x="207" y="60" width="19" height="10" fill="#fff"/>
+                <rect x="226" y="60" width="19" height="10" fill="#2f9e44"/><rect x="245" y="60" width="19" height="10" fill="#fff"/><rect x="264" y="60" width="19" height="10" fill="#2f9e44"/><rect x="283" y="60" width="19" height="10" fill="#fff"/><rect x="302" y="60" width="19" height="10" fill="#2f9e44"/><rect x="321" y="60" width="19" height="10" fill="#fff"/><path d="M150 70h190" stroke="#b8ab98"/>
+                <rect x="164" y="80" width="104" height="38" fill="#dfe9ef" stroke="#b8ab98"/><text class="dn-win" x="236" y="93" text-anchor="middle">동의서 접수 중</text>
+                <rect x="290" y="82" width="30" height="44" fill="#9a6b47" stroke="#6e4a30"/><rect x="295" y="87" width="20" height="18" fill="#dfe9ef"/><circle cx="294" cy="108" r="1.4" fill="#f3d27a"/>
+                <g class="dn3-stand"><path d="M169 126l4-22M183 126l-4-22" stroke="#6e4a30" stroke-width="2" stroke-linecap="round"/><rect x="165" y="96" width="22" height="16" rx="2" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="167" y="86" width="18" height="10" rx="2" fill="#2f9e44"/><text class="dn-tag" x="176" y="93.3" text-anchor="middle">안내</text></g>
+                <rect class="dn3-pm dn3-pm1" x="168" y="99" width="5" height="10" fill="#e8a33d"/>
+                <rect class="dn3-pm dn3-pm2" x="173.5" y="99" width="5" height="10" fill="#4a7fb0"/>
+                <rect class="dn3-pm dn3-pm3" x="179" y="99" width="5" height="10" fill="#2f9e44"/>
+                <g class="dn3-v"><rect class="dn-lg dn-l1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect class="dn-lg dn-l2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/><rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/><circle cy="87" r="7" fill="#f2c9a0"/><path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/><path class="dn-arm" d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/></g>
+                <g class="dn3-r"><rect class="dn-lg dn-l1" x="-4" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect class="dn-lg dn-l2" x="0.5" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect x="-7" y="98" width="14" height="20" rx="4" fill="#e07a5f"/><circle cy="91" r="6.5" fill="#f2c9a0"/><path d="M-6.5 90a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#3a3a3a"/></g>
+                <g class="dn3-note"><rect x="206" y="69" width="40" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="226" y="79.6" text-anchor="middle">고마워요</text></g>
+              </g>
+            </svg>
+            <p class="donation-scene-cap">팜플렛 세우기</p>
+          </div>
+        </div>
+      </section>
       <a class="quick flyer-hero" href="flyer/" data-track="flyer-hero">
         <img src="flyer/preview-color.jpg" width="720" height="1018" loading="lazy" alt="배포용 전단 미리보기: 공모용 동의서를 받습니다, 2·5호선 까치산역 더블역세권 그림, 홈페이지·주민 카톡방 QR 코드" />
         <span class="flyer-hero-text">
@@ -956,150 +1093,8 @@
       </div>
     </section>
 
-    <!-- 후원금 -->
-    <section id="donation" class="section">
-      <div class="container">
-        <h2 class="reveal">후원금 안내</h2>
-        <p class="section-lede reveal">
-          동의서를 모으는 데 드는 운영 실비를 위한 자발적 후원입니다.
-        </p>
-
-        <div class="donation-card reveal">
-          <div class="donation-acct">
-            <p class="donation-bank">카카오뱅크 모임통장</p>
-            <p class="donation-num">3333-29-8229236</p>
-            <p class="donation-holder">예금주 최고야 (추진위원장)</p>
-            <p class="donation-share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>공유 계좌라서 금액을 투명하게 관리할 수 있습니다!</p>
-            <button type="button" class="donation-copy" id="donation-copy" data-track="donation-copy" data-acct="3333298229236">계좌번호 복사하기</button>
-          </div>
-          <div class="donation-row">
-            <span class="donation-k">금액</span>
-            <span class="donation-v">1만원 <em>(이상은 자발적으로)</em></span>
-          </div>
-          <div class="donation-uses">
-            <p class="donation-k">후원금은 이렇게 쓰입니다</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
-            </ul>
-            <p class="donation-note">
-              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
-              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
-            </p>
-          </div>
-        </div>
-
-        <!-- 후원금이 쓰이는 일 세 장면을 한꺼번에 가로 한 줄로 보여 준다(칸이 좁아 설명은 짧은 이름만). 움직임 줄이기 설정이면 세 장면 모두 멈춘 그림 -->
-        <div class="donation-scenes reveal">
-          <!-- ① 가가호호 방문 (12초 반복) -->
-          <div class="donation-scene">
-            <svg viewBox="0 0 360 140" aria-hidden="true">
-              <rect width="360" height="140" fill="#eef6f1"/>
-              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
-              <linearGradient id="dn-gnd1"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
-              <rect y="126" width="360" height="14" fill="url(#dn-gnd1)"/>
-              <path d="M12 126.5h336" stroke="#c4cec8"/>
-              <g class="dn-c1">
-                <!-- 빌라 A -->
-                <rect x="38" y="26" width="134" height="7" rx="2" fill="#c9b49a"/>
-                <rect x="40" y="31" width="130" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
-                <g fill="#dfe9ef" stroke="#b89f84" stroke-width="1"><rect x="54" y="40" width="18" height="16"/><rect x="96" y="40" width="18" height="16"/><rect x="138" y="40" width="18" height="16"/><rect x="54" y="66" width="18" height="16"/><rect x="96" y="66" width="18" height="16"/><rect x="138" y="66" width="18" height="16"/><rect x="54" y="96" width="18" height="14"/><rect x="138" y="96" width="18" height="14"/></g>
-                <rect x="92" y="94" width="26" height="32" fill="#2b3a33"/>
-                <!-- 빌라 B -->
-                <rect x="198" y="26" width="134" height="7" rx="2" fill="#b9c9bf"/>
-                <rect x="200" y="31" width="130" height="95" fill="#e4ece7" stroke="#9fb3a8" stroke-width="1.2"/>
-                <g fill="#dfe9ef" stroke="#9fb3a8" stroke-width="1"><rect x="214" y="40" width="18" height="16"/><rect x="256" y="40" width="18" height="16"/><rect x="298" y="40" width="18" height="16"/><rect x="214" y="66" width="18" height="16"/><rect x="256" y="66" width="18" height="16"/><rect x="298" y="66" width="18" height="16"/><rect x="214" y="96" width="18" height="14"/><rect x="298" y="96" width="18" height="14"/></g>
-                <rect x="252" y="94" width="26" height="32" fill="#2b3a33"/>
-                <rect x="182.5" y="104" width="5" height="22" fill="#8a6a4a"/>
-                <g fill="#6fbf8a"><circle cx="185" cy="98" r="12"/><circle cx="177" cy="105" r="8"/><circle cx="193" cy="105" r="8"/></g>
-                <!-- 주민(문 안) -->
-                <g class="dn-res dn-a"><rect x="98" y="110" width="14" height="16" rx="4" fill="#e8a33d"/><circle cx="105" cy="104" r="6.5" fill="#f2c9a0"/><path d="M98.5 103a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#d5d8d6"/><circle cx="105" cy="97" r="2.6" fill="#d5d8d6"/></g>
-                <g class="dn-res dn-b"><rect x="258" y="110" width="14" height="16" rx="4" fill="#4a7fb0"/><circle cx="265" cy="104" r="6.5" fill="#f2c9a0"/><path d="M258.5 103a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#3a3a3a"/></g>
-                <!-- 문 -->
-                <g class="dn-door dn-a"><rect x="92" y="94" width="26" height="32" fill="#9a6b47" stroke="#6e4a30" stroke-width="1"/><circle cx="96.5" cy="111" r="1.4" fill="#f3d27a"/></g>
-                <g class="dn-door dn-b"><rect x="252" y="94" width="26" height="32" fill="#4f7a64" stroke="#355544" stroke-width="1"/><circle cx="256.5" cy="111" r="1.4" fill="#f3d27a"/></g>
-                <!-- 봉사자(초록 조끼·모자, 서류철) -->
-                <g class="dn-walker">
-                  <rect class="dn-leg dn-leg1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/>
-                  <rect class="dn-leg dn-leg2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/>
-                  <rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/>
-                  <rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/>
-                  <circle cy="87" r="7" fill="#f2c9a0"/>
-                  <path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/>
-                  <path d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/>
-                  <rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/>
-                </g>
-                <!-- 건네는 동의서 -->
-                <g class="dn-paper dn-a"><rect x="93" y="108" width="9" height="11" rx="1" fill="#fff" stroke="#5a6560" stroke-width=".8"/><path d="M95 111.5h5M95 114h5M95 116.5h3" stroke="#9aa9a1" stroke-width=".8"/></g>
-                <g class="dn-paper dn-b"><rect x="253" y="108" width="9" height="11" rx="1" fill="#fff" stroke="#5a6560" stroke-width=".8"/><path d="M255 111.5h5M255 114h5M255 116.5h3" stroke="#9aa9a1" stroke-width=".8"/></g>
-                <text class="dn-ding dn-a" x="105" y="89" text-anchor="middle">딩동♪</text>
-                <text class="dn-ding dn-b" x="265" y="89" text-anchor="middle">딩동♪</text>
-                <g class="dn-badge dn-badge-a"><rect x="79" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="105" y="69.2" text-anchor="middle">✓ 동의서</text></g>
-                <g class="dn-badge dn-badge-b"><rect x="239" y="57" width="52" height="17" rx="8.5" fill="#2f9e44"/><text x="265" y="69.2" text-anchor="middle">✓ 동의서</text></g>
-              </g>
-            </svg>
-            <p class="donation-scene-cap">가가호호 방문</p>
-          </div>
-          <!-- ② 알림판에 전단 붙이기 (7초 반복) -->
-          <div class="donation-scene">
-            <svg viewBox="0 0 360 140" aria-hidden="true">
-              <rect width="360" height="140" fill="#eef6f1"/>
-              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
-              <linearGradient id="dn-gnd2"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
-              <rect y="126" width="360" height="14" fill="url(#dn-gnd2)"/>
-              <path d="M12 126.5h336" stroke="#c4cec8"/>
-              <g class="dn-c2">
-                <rect x="18" y="26" width="124" height="7" rx="2" fill="#c9b49a"/><rect x="20" y="31" width="120" height="95" fill="#f3e6d6" stroke="#b89f84" stroke-width="1.2"/>
-                <g fill="#dfe9ef" stroke="#b89f84" stroke-width="1"><rect x="32" y="40" width="18" height="16"/><rect x="71" y="40" width="18" height="16"/><rect x="110" y="40" width="18" height="16"/><rect x="32" y="66" width="18" height="16"/><rect x="71" y="66" width="18" height="16"/><rect x="110" y="66" width="18" height="16"/><rect x="32" y="96" width="18" height="14"/><rect x="110" y="96" width="18" height="14"/></g>
-                <rect x="67" y="94" width="26" height="32" fill="#9a6b47" stroke="#6e4a30" stroke-width="1"/><circle cx="71.5" cy="111" r="1.4" fill="#f3d27a"/>
-                <rect x="212" y="96" width="4" height="30" fill="#8a6a4a"/><rect x="284" y="96" width="4" height="30" fill="#8a6a4a"/>
-                <rect x="200" y="52" width="100" height="50" rx="3" fill="#b98b5a"/><rect x="204" y="56" width="92" height="42" rx="1.5" fill="#ecd9b4"/>
-                <rect x="226" y="41" width="48" height="13" rx="3" fill="#1f4a3a"/><text class="dn-sign" x="250" y="50.6" text-anchor="middle">알림판</text>
-                <g transform="rotate(-4 217 72)"><rect x="208" y="60" width="18" height="24" fill="#fff" stroke="#cbbfa8" stroke-width=".6"/><path d="M211 66h12M211 70h12M211 74h8" stroke="#cbbfa8"/></g>
-                <g transform="rotate(3 283 73)"><rect x="274" y="62" width="18" height="22" fill="#fde9a8" stroke="#d8c27a" stroke-width=".6"/><path d="M277 68h12M277 72h12M277 76h7" stroke="#d8c27a"/></g>
-                <g class="dn2-flyer"><rect x="236" y="58" width="26" height="36" rx="1" fill="#fff" stroke="#9aa9a1" stroke-width=".6"/><rect x="236" y="58" width="26" height="8" fill="#2f9e44"/><path d="M240 72h18M240 77h18M240 82h12" stroke="#9aa9a1"/><circle cx="255" cy="88" r="3" fill="none" stroke="#2f9e44" stroke-width="1.2"/></g>
-                <g class="dn2-tape" fill="#f6e7a8"><rect x="233" y="55" width="8" height="4" transform="rotate(-30 237 57)"/><rect x="257" y="55" width="8" height="4" transform="rotate(30 261 57)"/><rect x="233" y="91" width="8" height="4" transform="rotate(30 237 93)"/><rect x="257" y="91" width="8" height="4" transform="rotate(-30 261 93)"/></g>
-                <g class="dn2-v"><rect class="dn-lg dn-l1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect class="dn-lg dn-l2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/><rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/><circle cy="87" r="7" fill="#f2c9a0"/><path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/><path class="dn-arm" d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><path class="dn-armup" d="M4 98l7-12" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/></g>
-                <g class="dn2-p"><rect class="dn-lg dn-l1" x="-4" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect class="dn-lg dn-l2" x="0.5" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect x="-7" y="98" width="14" height="20" rx="4" fill="#8a6bb8"/><circle cy="91" r="6.5" fill="#f2c9a0"/><path d="M-6.5 90a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#d5d8d6"/><path d="M-12.5 107a3 3 0 0 1 6 0" fill="none" stroke="#b08a3a" stroke-width="1.2"/><rect x="-14" y="106" width="9" height="9" rx="1.5" fill="#f3d27a"/></g>
-                <g class="dn2-bang"><rect x="158" y="70" width="30" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="173" y="80.6" text-anchor="middle">아하!</text></g>
-              </g>
-            </svg>
-            <p class="donation-scene-cap">전단 붙이기</p>
-          </div>
-          <!-- ③ 접수처 앞에 팜플렛 세우기 (7초 반복) -->
-          <div class="donation-scene">
-            <svg viewBox="0 0 360 140" aria-hidden="true">
-              <rect width="360" height="140" fill="#eef6f1"/>
-              <g fill="#fff"><ellipse cx="300" cy="16" rx="18" ry="6"/><ellipse cx="312" cy="12" rx="10" ry="6"/><ellipse cx="22" cy="20" rx="14" ry="5"/></g>
-              <linearGradient id="dn-gnd3"><stop offset="0" stop-color="#dfe5e1" stop-opacity="0"/><stop offset=".07" stop-color="#dfe5e1"/><stop offset=".93" stop-color="#dfe5e1"/><stop offset="1" stop-color="#dfe5e1" stop-opacity="0"/></linearGradient>
-              <rect y="126" width="360" height="14" fill="url(#dn-gnd3)"/>
-              <path d="M12 126.5h336" stroke="#c4cec8"/>
-              <g class="dn-c3">
-                <rect x="67.5" y="104" width="5" height="22" fill="#8a6a4a"/>
-                <g fill="#6fbf8a"><circle cx="70" cy="98" r="12"/><circle cx="62" cy="105" r="8"/><circle cx="78" cy="105" r="8"/></g>
-                <rect x="152" y="70" width="186" height="56" fill="#f7f3ec" stroke="#b8ab98" stroke-width="1.2"/>
-                <rect x="150" y="44" width="190" height="16" fill="#1f4a3a"/><text class="dn-sign2" x="245" y="55.8" text-anchor="middle">접수처</text><rect x="150" y="60" width="19" height="10" fill="#2f9e44"/><rect x="169" y="60" width="19" height="10" fill="#fff"/><rect x="188" y="60" width="19" height="10" fill="#2f9e44"/><rect x="207" y="60" width="19" height="10" fill="#fff"/>
-                <rect x="226" y="60" width="19" height="10" fill="#2f9e44"/><rect x="245" y="60" width="19" height="10" fill="#fff"/><rect x="264" y="60" width="19" height="10" fill="#2f9e44"/><rect x="283" y="60" width="19" height="10" fill="#fff"/><rect x="302" y="60" width="19" height="10" fill="#2f9e44"/><rect x="321" y="60" width="19" height="10" fill="#fff"/><path d="M150 70h190" stroke="#b8ab98"/>
-                <rect x="164" y="80" width="104" height="38" fill="#dfe9ef" stroke="#b8ab98"/><text class="dn-win" x="236" y="93" text-anchor="middle">동의서 접수 중</text>
-                <rect x="290" y="82" width="30" height="44" fill="#9a6b47" stroke="#6e4a30"/><rect x="295" y="87" width="20" height="18" fill="#dfe9ef"/><circle cx="294" cy="108" r="1.4" fill="#f3d27a"/>
-                <g class="dn3-stand"><path d="M169 126l4-22M183 126l-4-22" stroke="#6e4a30" stroke-width="2" stroke-linecap="round"/><rect x="165" y="96" width="22" height="16" rx="2" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="167" y="86" width="18" height="10" rx="2" fill="#2f9e44"/><text class="dn-tag" x="176" y="93.3" text-anchor="middle">안내</text></g>
-                <rect class="dn3-pm dn3-pm1" x="168" y="99" width="5" height="10" fill="#e8a33d"/>
-                <rect class="dn3-pm dn3-pm2" x="173.5" y="99" width="5" height="10" fill="#4a7fb0"/>
-                <rect class="dn3-pm dn3-pm3" x="179" y="99" width="5" height="10" fill="#2f9e44"/>
-                <g class="dn3-v"><rect class="dn-lg dn-l1" x="-4" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect class="dn-lg dn-l2" x="0.5" y="115" width="4" height="11" rx="2" fill="#3a4a43"/><rect x="-8" y="95" width="16" height="22" rx="5" fill="#1f4a3a"/><rect x="-8" y="105" width="16" height="3" fill="#c8f0d4"/><circle cy="87" r="7" fill="#f2c9a0"/><path d="M-7.5 85a7.5 6 0 0 1 15 0z" fill="#2f9e44"/><rect x="2" y="83.6" width="8" height="2" rx="1" fill="#2f9e44"/><path class="dn-arm" d="M4 99l5 6" stroke="#f2c9a0" stroke-width="3" stroke-linecap="round"/><rect x="6" y="98" width="10" height="13" rx="1.5" fill="#fff" stroke="#1f4a3a" stroke-width="1.2"/><rect x="9" y="96.8" width="4" height="2.5" rx="1" fill="#1f4a3a"/></g>
-                <g class="dn3-r"><rect class="dn-lg dn-l1" x="-4" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect class="dn-lg dn-l2" x="0.5" y="116" width="4" height="10" rx="2" fill="#55524e"/><rect x="-7" y="98" width="14" height="20" rx="4" fill="#e07a5f"/><circle cy="91" r="6.5" fill="#f2c9a0"/><path d="M-6.5 90a6.5 6.5 0 0 1 13 0c-2-2.5-11-2.5-13 0z" fill="#3a3a3a"/></g>
-                <g class="dn3-note"><rect x="206" y="69" width="40" height="15" rx="7.5" fill="#fff" stroke="#c2410c"/><text class="dn-say" x="226" y="79.6" text-anchor="middle">고마워요</text></g>
-              </g>
-            </svg>
-            <p class="donation-scene-cap">팜플렛 세우기</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 연락처 -->
-    <section id="contact" class="section alt">
+    <section id="contact" class="section">
       <div class="container">
         <h2 class="reveal">연락처</h2>
         <p class="section-lede reveal">

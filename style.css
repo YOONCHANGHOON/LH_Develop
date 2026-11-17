@@ -1934,6 +1934,8 @@ body {
   .donation-acct { display: block; }
   .donation-copy { width: 100%; margin-top: 14px; }
   .donation-acct .donation-share { font-size: 13px; }
+  /* 첫 화면 상자 안이라 칸이 좁다: 번호가 두 줄로 끊기지 않게 글씨를 줄이고 한 줄로 고정 (360px 폰 기준) */
+  .donation-acct .donation-num { font-size: 24px; white-space: nowrap; }
   .alert { flex-direction: column; gap: 12px; }
   .alert-badge { width: 44px; height: 44px; font-size: 12px; }
   .mail-box { flex-direction: column; }
@@ -2445,6 +2447,10 @@ body {
 .quick-route .quick-warn dt { background: none; color: #7a4b00; }
 
 /* 첫 화면 '우리 집 동의율 찾기' (판정은 volunteer/core.js) */
+
+/* 첫 화면: 후원금 안내 (「동의서, 이렇게 하시면 됩니다」 바로 아래) */
+.quick.donation-hero { margin-top: 14px; padding-bottom: 16px; scroll-margin-top: 72px; }
+.donation-lead { margin: 0 0 12px; font-size: 15px; line-height: 1.55; color: #4a5a53; }
 
 /* 첫 화면: 지난 공모 사전의향률 (구청 자료를 그대로 보여 줌) */
 .quick.intent-hero { margin-top: 14px; padding-bottom: 14px; scroll-margin-top: 72px; }
