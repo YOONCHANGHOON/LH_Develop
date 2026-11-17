@@ -1648,56 +1648,59 @@ body {
   line-height: 1.7;
 }
 .donation-v em { font-style: normal; color: var(--color-muted); font-size: 13px; margin-left: 6px; }
-/* 계좌: 은행 이름 + 큰 번호 + 복사 버튼 */
+/* 계좌: 카카오뱅크 느낌(노랑 바탕 + 검정 굵은 글씨) — 은행 이름 + 큰 번호 + 공유 계좌 안내 + 복사 버튼.
+   카카오 캐릭터·로고는 저작물·상표라 쓰지 않고 색과 글씨로만 나타낸다. 예금주 글씨 #5c5100 은 노랑 위 대비 6.2:1 */
 .donation-acct {
   display: grid;
   grid-template-columns: 1fr auto;  /* PC: 번호는 왼쪽, 복사 버튼은 오른쪽 */
   align-items: center;
   column-gap: 24px;
-  padding: 20px 24px;
-  background: var(--color-bg-alt);
-  border-bottom: 1px solid var(--color-border);
+  padding: 22px 24px;
+  background: #ffe300;
+  border-bottom: 1px solid #e8cf00;
+  color: #222;
 }
 .donation-acct p { grid-column: 1; margin: 0; }
-.donation-bank {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--color-muted);
-}
-.donation-bank-tag {
-  padding: 1px 8px;
-  border-radius: 6px;
-  background: var(--color-accent);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
+.donation-bank { font-size: 17px; font-weight: 800; color: #222; letter-spacing: -0.01em; }
 .donation-acct .donation-num {
-  margin: 6px 0 2px;
-  font-size: 26px;
+  margin: 4px 0 2px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--color-accent);
+  color: #222;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
 }
-.donation-holder { font-size: 13px; color: var(--color-muted); }
+.donation-holder { font-size: 13px; font-weight: 600; color: #5c5100; }
+.donation-acct .donation-share {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.donation-share svg { flex: none; width: 16px; height: 16px; fill: none; stroke: #222; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .donation-copy {
   grid-column: 2;
-  grid-row: 1 / span 3;
+  grid-row: 1 / span 4;
   width: 240px;
   padding: 13px 16px;
   border: 0;
   border-radius: 12px;
-  background: var(--color-accent);
+  background: #222;
   color: #fff;
   font: inherit;
   font-size: 16px;
   font-weight: 800;
   cursor: pointer;
 }
-.donation-copy:hover { background: var(--color-accent-light); }
+.donation-copy:hover { background: #000; }
 /* 봉사자 방문 그림: 12초 한 바퀴. 걷기 0~9% → 집 A 9~37% → 걷기 37~53% → 집 B 53~81% → 걷기 81~97%
    집 B의 문·주민·서류·딩동은 집 A와 같은 움직임을 44%(5.28초) 늦춰 재생 */
 /* 세 장면을 가로 한 줄로(휴대폰에서도 세 칸) */
@@ -1929,7 +1932,8 @@ body {
   .donation-scene { padding: 5px 4px 6px; border-radius: 10px; }
   .donation-scene-cap { margin-top: 4px; font-size: 11.5px; letter-spacing: -0.02em; }
   .donation-acct { display: block; }
-  .donation-copy { width: 100%; margin-top: 12px; }
+  .donation-copy { width: 100%; margin-top: 14px; }
+  .donation-acct .donation-share { font-size: 13px; }
   .alert { flex-direction: column; gap: 12px; }
   .alert-badge { width: 44px; height: 44px; font-size: 12px; }
   .mail-box { flex-direction: column; }
