@@ -1698,6 +1698,79 @@ body {
   cursor: pointer;
 }
 .donation-copy:hover { background: var(--color-accent-light); }
+/* 봉사자 방문 그림: 12초 한 바퀴. 걷기 0~9% → 집 A 9~37% → 걷기 37~53% → 집 B 53~81% → 걷기 81~97%
+   집 B의 문·주민·서류·딩동은 집 A와 같은 움직임을 44%(5.28초) 늦춰 재생 */
+.donation-scene {
+  padding: 14px 24px 12px;
+  background: #eef6f1;
+  border-bottom: 1px solid var(--color-border);
+}
+.donation-scene svg { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
+.donation-scene-cap { margin: 8px 0 0; text-align: center; font-size: 13px; color: var(--color-muted); }
+.dn-walker { animation: dn-walk 12s linear infinite; }
+.dn-leg { transform-box: fill-box; transform-origin: 50% 0; animation: dn-leg1 12s linear infinite; }
+.dn-leg2 { animation-name: dn-leg2; }
+.dn-door { transform-box: fill-box; transform-origin: 100% 50%; animation: dn-door 12s ease-in-out infinite both; }
+.dn-res { animation: dn-res 12s ease-out infinite both; }
+.dn-paper { animation: dn-paper 12s ease-in-out infinite both; }
+.dn-ding {
+  animation: dn-ding 12s ease-out infinite both;
+  font-size: 11px; font-weight: 800; fill: #c2410c;
+  paint-order: stroke; stroke: #fff; stroke-width: 3px;
+}
+.donation-scene .dn-b { animation-delay: 5.28s; }
+.dn-badge { transform-box: fill-box; transform-origin: 50% 50%; animation: dn-badge-a 12s ease-out infinite both; }
+.dn-badge-b { animation-name: dn-badge-b; }
+.dn-badge text { font-size: 10.5px; font-weight: 800; fill: #fff; }
+@keyframes dn-walk {
+  0% { transform: translateX(-20px); }
+  9%, 37% { transform: translateX(70px); }
+  53%, 81% { transform: translateX(230px); }
+  97%, 100% { transform: translateX(390px); }
+}
+@keyframes dn-leg1 { 0%{transform:rotate(0deg)} 1.75%{transform:rotate(22deg)} 3.5%{transform:rotate(-22deg)} 5.25%{transform:rotate(22deg)} 7%{transform:rotate(-22deg)} 9%{transform:rotate(0deg)} 37%{transform:rotate(0deg)} 38.75%{transform:rotate(22deg)} 40.5%{transform:rotate(-22deg)} 42.25%{transform:rotate(22deg)} 44%{transform:rotate(-22deg)} 45.75%{transform:rotate(22deg)} 47.5%{transform:rotate(-22deg)} 49.25%{transform:rotate(22deg)} 51%{transform:rotate(-22deg)} 53%{transform:rotate(0deg)} 81%{transform:rotate(0deg)} 82.75%{transform:rotate(22deg)} 84.5%{transform:rotate(-22deg)} 86.25%{transform:rotate(22deg)} 88%{transform:rotate(-22deg)} 89.75%{transform:rotate(22deg)} 91.5%{transform:rotate(-22deg)} 93.25%{transform:rotate(22deg)} 95%{transform:rotate(-22deg)} 97%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn-leg2 { 0%{transform:rotate(0deg)} 1.75%{transform:rotate(-22deg)} 3.5%{transform:rotate(22deg)} 5.25%{transform:rotate(-22deg)} 7%{transform:rotate(22deg)} 9%{transform:rotate(0deg)} 37%{transform:rotate(0deg)} 38.75%{transform:rotate(-22deg)} 40.5%{transform:rotate(22deg)} 42.25%{transform:rotate(-22deg)} 44%{transform:rotate(22deg)} 45.75%{transform:rotate(-22deg)} 47.5%{transform:rotate(22deg)} 49.25%{transform:rotate(-22deg)} 51%{transform:rotate(22deg)} 53%{transform:rotate(0deg)} 81%{transform:rotate(0deg)} 82.75%{transform:rotate(-22deg)} 84.5%{transform:rotate(22deg)} 86.25%{transform:rotate(-22deg)} 88%{transform:rotate(22deg)} 89.75%{transform:rotate(-22deg)} 91.5%{transform:rotate(22deg)} 93.25%{transform:rotate(-22deg)} 95%{transform:rotate(22deg)} 97%{transform:rotate(0deg)} 100%{transform:rotate(0deg)} }
+@keyframes dn-ding {
+  0%, 9.5% { opacity: 0; transform: translateY(2px); }
+  10.5% { opacity: 1; transform: translateY(0); }
+  14% { opacity: 1; transform: translateY(-3px); }
+  15.5%, 100% { opacity: 0; transform: translateY(-3px); }
+}
+@keyframes dn-door {
+  0%, 13% { transform: scaleX(1); }
+  16%, 31% { transform: scaleX(0.15); }
+  34.5%, 100% { transform: scaleX(1); }
+}
+@keyframes dn-res {
+  0%, 14.5% { opacity: 0; transform: translateY(3px); }
+  16.5%, 30% { opacity: 1; transform: translateY(0); }
+  32%, 100% { opacity: 0; transform: translateY(3px); }
+}
+@keyframes dn-paper {
+  0%, 19% { opacity: 0; transform: translate(0, 0); }
+  20% { opacity: 1; transform: translate(0, 0); }
+  25% { opacity: 1; transform: translate(-16px, -9px); }
+  27%, 100% { opacity: 0; transform: translate(-16px, -9px); }
+}
+@keyframes dn-badge-a {
+  0%, 26.5% { opacity: 0; transform: scale(0.4); }
+  28% { opacity: 1; transform: scale(1.15); }
+  29.5%, 95% { opacity: 1; transform: scale(1); }
+  97%, 100% { opacity: 0; transform: scale(1); }
+}
+@keyframes dn-badge-b {
+  0%, 70.5% { opacity: 0; transform: scale(0.4); }
+  72% { opacity: 1; transform: scale(1.15); }
+  73.5%, 95% { opacity: 1; transform: scale(1); }
+  97%, 100% { opacity: 0; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .donation-scene * { animation: none !important; }
+  .dn-walker { transform: translateX(70px); }
+  .dn-door.dn-a { transform: scaleX(0.15); }
+  .dn-paper.dn-a { transform: translate(-8px, -4px); }
+  .dn-res.dn-b, .dn-paper.dn-b, .dn-ding, .dn-badge { opacity: 0; }
+}
 /* 쓰는 곳 3칸 + 관리 문구 */
 .donation-uses { padding: 18px 24px 20px; }
 .donation-uses p.donation-k { margin: 0; }
@@ -1791,6 +1864,7 @@ body {
 @media (max-width: 640px) {
   .donation-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 20px; }
   .donation-acct, .donation-uses { padding: 16px 20px; }
+  .donation-scene { padding: 12px 12px 10px; }
   .donation-acct { display: block; }
   .donation-copy { width: 100%; margin-top: 12px; }
   .alert { flex-direction: column; gap: 12px; }
