@@ -36,7 +36,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="style.css?v=20261118b" />
+  <link rel="stylesheet" href="style.css?v=20261118c" />
   <link rel="stylesheet" href="check/check.css?v=20261112h" />
 </head>
 <body>
@@ -180,15 +180,20 @@
           </div>
           <div class="donation-uses">
             <p class="donation-k">후원금은 이렇게 쓰입니다</p>
-            <ul>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 11h6M9.5 14h6M9.5 17h4"/></svg>전단 안내문</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>가가호호 방문<br>아르바이트</li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1 6-1 9 1 3-2 6-2 9-1V19c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6.5V20"/></svg>팜플렛 구매</li>
-            </ul>
-            <p class="donation-note">
-              모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
-              정산 내역은 주민 누구나 보실 수 있게 공지합니다.
-            </p>
+            <!-- 영수증 모양(11-18): 쓰는 곳 2가지 + 관리 안내, 아래는 톱니 가장자리, 오른쪽 위 '투명 관리' 도장 -->
+            <div class="donation-receipt">
+              <div class="donation-paper">
+                <ul>
+                  <li><span class="donation-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg></span>가가호호 방문 아르바이트 비용</li>
+                  <li><span class="donation-ico donation-ico-b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.5 3h10v14"/><path d="M4.5 6.5h8l3 3V21h-11z"/><path d="M12.5 6.5v3h3"/><path d="M7 13.5h6M7 17h6"/></svg></span>각종 전단지 및 안내문 제작</li>
+                </ul>
+                <p class="donation-note">
+                  모든 금액은 카카오뱅크 모임통장에서 전자 영수증과 함께 관리하며,
+                  정산 내역은 주민 누구나 보실 수 있게 공지합니다.
+                </p>
+              </div>
+              <span class="donation-stamp" aria-hidden="true">투명<br>관리</span>
+            </div>
           </div>
         </div>
       </section>
