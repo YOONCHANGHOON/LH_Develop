@@ -1621,7 +1621,6 @@ body {
 
 /* ─── Donation ─── */
 .donation-card {
-  max-width: 680px;
   background: #fff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -1651,11 +1650,15 @@ body {
 .donation-v em { font-style: normal; color: var(--color-muted); font-size: 13px; margin-left: 6px; }
 /* 계좌: 은행 이름 + 큰 번호 + 복사 버튼 */
 .donation-acct {
+  display: grid;
+  grid-template-columns: 1fr auto;  /* PC: 번호는 왼쪽, 복사 버튼은 오른쪽 */
+  align-items: center;
+  column-gap: 24px;
   padding: 20px 24px;
   background: var(--color-bg-alt);
   border-bottom: 1px solid var(--color-border);
 }
-.donation-acct p { margin: 0; }
+.donation-acct p { grid-column: 1; margin: 0; }
 .donation-bank {
   display: flex;
   align-items: center;
@@ -1681,10 +1684,9 @@ body {
 }
 .donation-holder { font-size: 13px; color: var(--color-muted); }
 .donation-copy {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  margin-top: 12px;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  width: 240px;
   padding: 13px 16px;
   border: 0;
   border-radius: 12px;
@@ -1789,6 +1791,8 @@ body {
 @media (max-width: 640px) {
   .donation-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 20px; }
   .donation-acct, .donation-uses { padding: 16px 20px; }
+  .donation-acct { display: block; }
+  .donation-copy { width: 100%; margin-top: 12px; }
   .alert { flex-direction: column; gap: 12px; }
   .alert-badge { width: 44px; height: 44px; font-size: 12px; }
   .mail-box { flex-direction: column; }
