@@ -1701,16 +1701,6 @@ body {
   cursor: pointer;
 }
 .donation-copy:hover { background: #000; }
-/* 세 장면을 가로 한 줄로(휴대폰에서도 세 칸) */
-.donation-scenes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
-.donation-scene {
-  padding: 10px 10px 8px;
-  background: #eef6f1;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-}
-.donation-scene svg { display: block; width: 100%; height: auto; }
-.donation-scene-cap { margin: 6px 0 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); white-space: nowrap; }
 /* 그림 세 장면(가까이 잡은 판, 11-17): ① 전단 안내 6초 · ② 가가호호 방문 7초 · ③ 팜플렛 설치 7초.
    각 장면은 따로 반복하고, 한 바퀴 끝에 살짝 흐렸다가 처음부터. 애니메이션이 없을 때(움직임 줄이기) 보이는 기본 상태 = 장면의 대표 한 컷 */
 .dn-c1 { animation: dn-fade 6s linear infinite both; }
@@ -1760,8 +1750,8 @@ body {
 .dn3-st { animation: dn3-st 7s linear infinite both; }
 @keyframes dn3-st { 0% { transform: translate(-181px, -10px); } 30%, 33% { transform: translate(-13px, -10px); } 39%, 100% { transform: translate(0, 0); } }
 .dn3-pm { animation: dn3-pm 7s ease-out infinite both; }
-.donation-scene .dn3-pm2 { animation-delay: 0.21s; }
-.donation-scene .dn3-pm3 { animation-name: dn3-pm3; }
+.dn-scene .dn3-pm2 { animation-delay: 0.21s; }
+.dn-scene .dn3-pm3 { animation-name: dn3-pm3; }
 @keyframes dn3-pm { 0%, 40% { opacity: 0; transform: translateY(-10px); } 43%, 100% { opacity: 1; transform: translateY(0); } }
 .dn3-pm3 { opacity: 0; }
 @keyframes dn3-pm3 { 0%, 46% { opacity: 0; transform: translateY(-10px); } 49%, 75.9% { opacity: 1; transform: translateY(0); } 76%, 100% { opacity: 0; transform: translateY(0); } }
@@ -1794,7 +1784,7 @@ body {
 .dn3-r .dn-l1 { animation: dn3r-1 7s linear infinite both; }
 .dn3-r .dn-l2 { animation: dn3r-2 7s linear infinite both; }
 @media (prefers-reduced-motion: reduce) {
-  .donation-scene * { animation: none !important; }
+  .dn-scene * { animation: none !important; }
 }
 /* 쓰는 곳 3칸 + 관리 문구 */
 .donation-uses { padding: 18px 24px 20px; }
@@ -1808,7 +1798,7 @@ body {
   gap: 8px;
 }
 .donation-uses li {
-  padding: 14px 6px 12px;
+  padding: 8px 8px 12px;
   border-radius: 12px;
   background: var(--color-bg-alt);
   text-align: center;
@@ -1816,17 +1806,8 @@ body {
   font-weight: 700;
   line-height: 1.4;
 }
-.donation-uses svg {
-  display: block;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto 6px;
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+/* 쓰는 곳 그림(장면 SVG): 칸 너비에 맞춤. 색·선은 그림 안에 적혀 있음 */
+.donation-uses .dn-scene { display: block; width: 100%; height: auto; margin: 0 0 8px; border-radius: 8px; }
 .donation-note {
   margin: 12px 0 0;
   padding: 10px 12px;
@@ -1889,9 +1870,10 @@ body {
 @media (max-width: 640px) {
   .donation-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 20px; }
   .donation-acct, .donation-uses { padding: 16px 20px; }
-  .donation-scenes { gap: 6px; margin-top: 12px; }
-  .donation-scene { padding: 5px 4px 6px; border-radius: 10px; }
-  .donation-scene-cap { margin-top: 4px; font-size: 11.5px; letter-spacing: -0.02em; }
+  /* 휴대폰: 3칸이면 그림이 너무 작아 한 줄에 한 항목(왼쪽 그림 · 오른쪽 이름) */
+  .donation-uses ul { grid-template-columns: 1fr; }
+  .donation-uses li { display: grid; grid-template-columns: 56% 1fr; align-items: center; gap: 12px; padding: 6px 10px 6px 6px; text-align: left; }
+  .donation-uses .dn-scene { margin: 0; }
   .donation-acct { display: block; }
   .donation-copy { width: 100%; margin-top: 14px; }
   .donation-acct .donation-share { font-size: 13px; }
