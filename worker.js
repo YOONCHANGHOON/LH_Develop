@@ -47,12 +47,17 @@ const SHEET_CSV = "https://docs.google.com/spreadsheets/d/1yUVzLTEaM0V595PcRu2vU
 // 자동 저장을 시작하기 전 값. 10/28·10/29는 시트 기록, 10/30~11/01은 명부 날짜별로 새로 체크된 수를 더한 값이다.
 // 10/27은 새 명부 반영 직전 시트 값이고, 그 전 숫자는 4월 제출분을 옮겨 적은 것이라 증가로 보이지 않게 넣지 않는다.
 const TREND_SEED = [["2026-10-27", 219], ["2026-10-28", 227], ["2026-10-29", 236], ["2026-10-30", 245], ["2026-10-31", 255], ["2026-11-01", 266]];
+// 명부에서 빠진 집은 처음 체크한 날의 값부터 뺀다 → 날짜별 '증가'에는 그날 새로 들어온 집만 보인다.
+// (빼지 않으면 빠진 날에 '추가 − 빠짐'이 섞여 보임. 예: 11/21 추가 4·빠짐 3 → +1)
+// 11/21 명부에서 빠진 세 집: 11/16 체크 1·11/17 체크 1·11/19 체크 1 → 저장값 422·431·438·451·457에서 1·2·2·3·3씩 뺌.
+// 또 빠지는 집이 생기면 그 집을 체크한 날부터 마지막 저장일까지 1씩 더 빼서 고친다.
+const TREND_FIX = [["2026-11-16", 421], ["2026-11-17", 429], ["2026-11-18", 436], ["2026-11-19", 448], ["2026-11-20", 454]];
 
 let trendReady = null;
 function ensureTrend(env) {
   trendReady ||= env.DB.batch([
     env.DB.prepare("CREATE TABLE IF NOT EXISTS trend (day TEXT PRIMARY KEY, agree INTEGER)"),
-    ...TREND_SEED.map(([day, agree]) => env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree)),
+    ...[...TREND_SEED, ...TREND_FIX].map(([day, agree]) => env.DB.prepare("INSERT OR REPLACE INTO trend (day, agree) VALUES (?, ?)").bind(day, agree)),
   ]).catch((e) => {
     trendReady = null;
     throw e;
