@@ -183,7 +183,7 @@ function drawSummary(rows) {
 // ─── 전체 동의율 추이 ───
 // 저장된 점(/api/trend: 동의 수가 바뀐 날만)에 지금 시트 값을 끝점으로 붙여 그린다. 못 읽으면 칸 전체를 숨긴 채 둔다.
 // 모든 점을 지금 소유자 수로 나눠서, 분모가 바뀌어도 선이 튀지 않는다.
-const TREND_END = "2026-11-19"; // 접수 마감
+const TREND_END = "2026-11-30"; // 접수 마감 (11/19에서 1차 연장)
 let TREND = null, TREND_ROWS = null, TREND_KEY = "";
 const TREND_READY = DEMO ? Promise.resolve() : fetch("../api/trend").then((r) => r.json()).then((d) => { TREND = d.points; }).catch(() => {});
 const shortDay = (d) => `${+d.slice(5, 7)}/${+d.slice(8, 10)}`;
