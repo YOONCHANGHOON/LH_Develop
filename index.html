@@ -38,8 +38,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="style.css?v=20261118c" />
   <link rel="stylesheet" href="check/check.css?v=20261112h" />
+  <link rel="stylesheet" href="cheer/cheer.css?v=20261122a" />
 </head>
 <body>
+
+  <!-- 동의율 30% 축하 띠: 전체 동의율이 30% 이상일 때만 cheer/cheer.js 가 채워서 보인다 (11-22) -->
+  <div id="cheer" class="cheer-band" hidden></div>
 
   <!-- 맨 위 단톡방 띠 -->
   <a class="kakao-strip" data-track="kakao-top" href="https://open.kakao.com/o/gW0je9He" target="_blank" rel="noopener noreferrer">
@@ -286,6 +290,8 @@
         <p class="intent-now">지난 공모 12% → <strong>지금 <span id="intent-now">집계 중</span></strong> (지난 공모 때 내신 분 포함) · 1차 목표 <strong>30% 이상</strong></p>
         <p class="intent-note">사전의향률만으로 선정이 정해지지는 않습니다. 국토부는 노후도 등 법정 요건, 사업성, 주민 의향률을 종합해 심사했다고 밝혔습니다.</p>
       </section>
+      <!-- 이웃들의 축하 한마디: 30% 이상일 때만 보인다 (cheer/cheer.js, 11-22) -->
+      <section class="quick cheer-card" id="cheer-list" aria-label="이웃들의 축하 한마디" hidden></section>
       <section class="quick intent-hero" id="why-hold" aria-labelledby="why-hold-title">
         <p class="quick-title" id="why-hold-title">왜 &lsquo;보류&rsquo;이고, 왜 동의율이 목표인가</p>
         <p class="intent-lead">위 자료에서 의향률이 <strong>24~40%</strong>였던 강서구 다른 구역 3곳(②③⑤)은 탈락했는데, <strong>12%</strong>였던 우리 구역은 <strong>&lsquo;보류&rsquo;</strong>(탈락 아님)가 되었습니다.</p>
@@ -1063,6 +1069,7 @@
 
   <script src="volunteer/core.js?v=20261029a"></script>
   <script src="check/app.js?v=20261112g"></script>
+  <script src="cheer/cheer.js?v=20261122a" defer></script>
   <script>
     // Scroll reveal
     (function () {
@@ -1116,6 +1123,9 @@
           var t = 0, a = 0;
           Object.keys(byId).forEach(function (k) { if (has(byId[k])) { t += byId[k].total; a += byId[k].agree; } });
           if (t) now.textContent = fmt(a / t * 100);
+          // 30% 축하 띠(cheer/cheer.js)가 같은 숫자로 판단하게 넘겨준다
+          window.CONSENT = { a: a, t: t };
+          window.dispatchEvent(new Event('consent-rate'));
         });
       }).catch(function () { now.textContent = '(불러오지 못함)'; });
     })();
