@@ -4,7 +4,8 @@
 // 봉사자가 입력하는 구글 시트(링크 공유)의 CSV 내보내기 주소. 시트를 고치면 새로고침 때 바로 반영된다.
 // 비워 두거나 시트를 못 읽으면 같은 폴더의 data.csv를 읽는다.
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1yUVzLTEaM0V595PcRu2vUfJWPJzQBDn40beLnsTZO88/export?format=csv&gid=0";
-const TARGET = 30;  // 목표 동의율(%) — 30% 이상 가산점
+const TARGET1 = 30; // 1차 목표 동의율(%) — 30% 이상 가산점. 11/22 전체 30% 넘음 → 금색 '달성' 표시
+const TARGET = 40;  // 지금 목표(2차, %). 남은 인원·막대 끝·그래프 점선이 이 값 기준
 
 // 여러 사람이 손으로 입력하는 시트라 값을 너그럽게 읽는다: 따옴표 안 쉼표, "12명"·"1,234" 같은 숫자, "346 a"·"346a번지" 같은 번지.
 function splitCsvLine(line) {
@@ -104,11 +105,15 @@ function findByName(raw, addr) {
   if (hit.length > 6) return { warn: "'" + raw.trim() + "'(이)가 들어간 건물이 많습니다. 건물 이름을 조금 더 길게 넣어 주세요." };
   return { warn: "이름이 비슷한 건물이 여러 곳입니다: " + hit.map((n) => n + "(" + addr.names[n].join("·") + ")").join(", ") + ". 지번이나 도로명 주소로 다시 찾아 주세요." };
 }
+// 구역 하나가 지금 목표(2차 40%)까지 몇 명 더 필요한지. 동의 현황 지도·목록과 홈 '우리 집 동의율 찾기'가 같이 쓴다
+function needText(r) {
+  const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
+  return need ? `${TARGET}% 넘기려면 ${need}명 더` : `${TARGET}% 달성`;
+}
 function rateLines(r) {
   if (!has(r)) return ["아직 자료가 없습니다."];
   if (!shown(r)) return ["소유자가 적은 구역이라 동의율은 비공개입니다."];
-  const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-  return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + (need ? "30% 넘기려면 " + need + "명 더" : "30% 달성")];
+  return [fmt(pct(r)), "동의 " + r.agree + "명 / 소유자 " + r.total + "명 · " + needText(r)];
 }
 // 조회 결과를 화면에 쓸 줄 목록 [[글, 칸 이름], …]으로 바꾼다. rowOf(구역) = 그 구역의 집계 줄
 function addrLines(res, rowOf) {
