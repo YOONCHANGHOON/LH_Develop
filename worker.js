@@ -31,6 +31,12 @@ export default {
     if (url.pathname === "/api/trend") {
       return trend(env).catch(() => json({ error: "잠시 후 다시 시도해 주세요" }, 500));
     }
+    if (url.pathname === "/api/cheer") {
+      return cheerApi(request, env, url.host).catch((e) => {
+        console.error("cheer:", e && e.message);
+        return json({ error: "잠시 후 다시 시도해 주세요" }, 500);
+      });
+    }
     return env.ASSETS.fetch(request);
   },
   // 매일 23:55·05:55(한국 시간)에 동의 수를 저장한다(wrangler.jsonc 의 triggers.crons).
@@ -619,4 +625,75 @@ async function bump(env, k, day) {
 async function sha256(s) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// ─── 동의율 30% 축하: 박수·축하 한마디 (/api/cheer, 첫 화면 cheer/) ───
+// 박수는 기기마다 한 번만 센다(cid = 브라우저가 만든 임의 번호). 한마디는 바로 공개하되 전화번호·인터넷 주소·욕설은 받지 않고,
+// 같은 기기나 같은 접속에서는 10분에 1개·하루 5개까지만 받는다.
+// 문제 글은 대시보드 D1 > Console 에서  UPDATE cheers SET hidden = 1 WHERE id = 번호;  로 숨긴다(지우지 않음).
+// IP 는 저장하지 않는다 — 도배 제한용으로 접속별 한 방향 값(who, sha256)만 남긴다.
+const CHEER_GAP = 10 * 60e3, CHEER_DAY = 5, CHEER_PAGE = 50, CHEER_NICK = 12, CHEER_MSG = 150, CHEER_AVATARS = 9;
+const CHEER_BAD = ["씨발", "시발", "씨바", "ㅅㅂ", "ㅆㅂ", "병신", "븅신", "ㅂㅅ", "개새", "개색", "좆", "지랄", "ㅈㄹ", "니미", "느금", "염병", "미친놈", "미친년", "닥쳐", "새끼", "ㅅㄲ", "썅", "fuck", "shit"];
+
+let cheerReady = null;
+function ensureCheer(env) {
+  cheerReady ||= env.DB.batch([
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS cheers (id INTEGER PRIMARY KEY AUTOINCREMENT, host TEXT NOT NULL, nick TEXT NOT NULL, av INTEGER NOT NULL, msg TEXT NOT NULL, created TEXT NOT NULL, hidden INTEGER NOT NULL DEFAULT 0, cid TEXT, who TEXT)"),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS cheers_host ON cheers (host, hidden, id)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS claps (host TEXT NOT NULL, cid TEXT NOT NULL, created TEXT NOT NULL, PRIMARY KEY (host, cid))"),
+  ]).catch((e) => {
+    cheerReady = null;
+    throw e;
+  });
+  return cheerReady;
+}
+
+const cheerTidy = (v) => String(v || "").replace(/[\u0000-\u001f\u007f<>]/g, " ").replace(/\s+/g, " ").trim();
+
+// 받을 수 없는 글이면 이유(화면에 그대로 보임), 괜찮으면 ""
+function cheerProblem(s) {
+  const flat = s.toLowerCase().replace(/[\s.\-_·,~!?^*()'"]/g, "");
+  if (/\d{8,}/.test(flat) || /0\d{1,2}\D{0,2}\d{3,4}\D{0,2}\d{4}/.test(s)) return "전화번호는 적을 수 없어요.";
+  if (/https?:|www\.|\.(com|net|kr|org|io|me|ly|link|xyz|co)\b|open\.kakao|@[a-z0-9]/i.test(s)) return "인터넷 주소나 메일 주소는 적을 수 없어요.";
+  if (CHEER_BAD.some((w) => flat.includes(w))) return "고운 말로 적어 주세요.";
+  return "";
+}
+
+async function cheerApi(request, env, host) {
+  await ensureCheer(env);
+  const count = () => env.DB.prepare("SELECT COUNT(*) AS n FROM cheers WHERE host = ? AND hidden = 0").bind(host).first("n");
+  const claps = () => env.DB.prepare("SELECT COUNT(*) AS n FROM claps WHERE host = ?").bind(host).first("n");
+  if (request.method === "GET") {
+    const before = parseInt(new URL(request.url).searchParams.get("before"), 10) || 0;
+    const sql = "SELECT id, nick, av, msg, created AS t FROM cheers WHERE host = ? AND hidden = 0" + (before ? " AND id < ?" : "") + " ORDER BY id DESC LIMIT ?";
+    const [list, n, c] = await Promise.all([env.DB.prepare(sql).bind(...(before ? [host, before, CHEER_PAGE] : [host, CHEER_PAGE])).all(), count(), claps()]);
+    return json({ count: n, claps: c, items: list.results });
+  }
+  if (request.method !== "POST") return json({ error: "잘못된 요청" }, 405);
+  let d;
+  try { d = await request.json(); } catch (e) { return json({ error: "잘못된 요청" }, 400); }
+  const cid = String((d && d.cid) || "").replace(/[^0-9a-z]/gi, "").slice(0, 24);
+  if (cid.length < 8) return json({ error: "잘못된 요청" }, 400);
+  const now = new Date().toISOString();
+  if (d.a === "clap") {
+    await env.DB.prepare("INSERT OR IGNORE INTO claps (host, cid, created) VALUES (?, ?, ?)").bind(host, cid, now).run();
+    return json({ claps: await claps() });
+  }
+  if (d.a !== "write") return json({ error: "잘못된 요청" }, 400);
+  const nick = cheerTidy(d.nick), msg = cheerTidy(d.msg), av = parseInt(d.av, 10);
+  if (!nick || [...nick].length > CHEER_NICK) return json({ error: `별명은 ${CHEER_NICK}자까지 적어 주세요.` }, 400);
+  if ([...msg].length < 2 || [...msg].length > CHEER_MSG) return json({ error: `한마디는 2~${CHEER_MSG}자로 적어 주세요.` }, 400);
+  if (!(av >= 0 && av < CHEER_AVATARS)) return json({ error: "까치를 골라 주세요." }, 400);
+  const bad = cheerProblem(nick + " " + msg);
+  if (bad) return json({ error: bad }, 400);
+  const who = await sha256("cheer|" + host + "|" + (request.headers.get("CF-Connecting-IP") || ""));
+  const dayStart = new Date(Date.parse(kstDay(0) + "T00:00:00+09:00")).toISOString();
+  const { results: mine } = await env.DB.prepare("SELECT created FROM cheers WHERE host = ? AND (cid = ? OR who = ?) AND created >= ? ORDER BY id DESC")
+    .bind(host, cid, who, dayStart).all();
+  if (mine.length && Date.now() - Date.parse(mine[0].created) < CHEER_GAP) return json({ error: "한마디는 10분에 하나씩 남길 수 있어요. 조금 뒤에 다시 남겨 주세요." }, 429);
+  if (mine.length >= CHEER_DAY) return json({ error: `하루에 ${CHEER_DAY}개까지 남길 수 있어요. 내일 또 남겨 주세요.` }, 429);
+  const id = await env.DB.prepare("INSERT INTO cheers (host, nick, av, msg, created, cid, who) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id")
+    .bind(host, nick, av, msg, now, cid, who).first("id");
+  const n = await env.DB.prepare("SELECT COUNT(*) AS n FROM cheers WHERE host = ? AND hidden = 0 AND id <= ?").bind(host, id).first("n");
+  return json({ item: { id, nick, av, msg, t: now }, n });
 }
