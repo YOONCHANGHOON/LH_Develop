@@ -99,7 +99,7 @@
     band.innerHTML =
       '<div class="cb-in' + (first ? ' cb-anim' : '') + '"><div class="cb-wrap">' +
       '<div class="cb-r1"><p class="cb-t">동의율 30%가 넘었습니다</p>' +
-      '<button type="button" class="cb-clap" data-track="cheer-clap" aria-label="축하 박수 보내기">👏 <b class="cb-cn">0</b></button>' +
+      '<button type="button" class="cb-clap' + (get('clapped', false) || REDUCE ? '' : ' nudge') + '" data-track="cheer-clap" aria-label="축하 박수 보내기"><i class="cb-hand" aria-hidden="true">👏</i> <b class="cb-cn">0</b></button>' +
       '<button type="button" class="cb-box" data-track="cheer-box" aria-label="축하 한마디 전체 보기">' + ART.KICON + '<b class="cb-bn">0</b></button>' +
       '<button type="button" class="cb-x" aria-label="축하 띠 닫기">✕</button></div>' +
       '<p class="cb-m2">사전의향률 가산점: 기존 <span class="cb-o">+5.5점</span>에서 <b class="cb-s9">+9.5점</b>으로 <span class="cb-chip">+4점</span> 예상</p>' +
@@ -161,7 +161,7 @@
   // ── 박수 → 밤 축제 ──
   function clap(ev) {
     var btn = ev.currentTarget;
-    btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+    btn.classList.remove('nudge', 'pop'); void btn.offsetWidth; btn.classList.add('pop');
     for (var i = 0; i < 4; i++) {
       var p = document.createElement('i');
       p.className = 'cb-fly'; p.textContent = '👏';
