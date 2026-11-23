@@ -10,6 +10,10 @@
   --g1: #c7e9c0;
   --g2: #6fbf73;
   --g3: #1f7a3f;
+  /* 이미 넘은 목표(1차 30%)는 금색 */
+  --gold: #c48a12;
+  --gold-dk: #8a5d00;
+  --gold-bg: #fff4d6;
 }
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
@@ -116,12 +120,20 @@ body {
 .note { font-size: 13px; color: var(--muted); margin: 0 0 32px; }
 @media (min-width: 640px) { .top h1 { font-size: 30px; } .tile strong { font-size: 28px; } }
 
-/* 전체 동의율: 맨 위, 크게 + 목표 30%까지 막대 */
+/* 전체 동의율: 맨 위, 크게 + 2차 목표 40%까지 막대 (1차 30%까지는 넘으면 금색) */
 .summary { grid-template-columns: 1.35fr 1fr 1fr; }
+.tile.main { position: relative; }
 .tile.main strong { font-size: 30px; }
 .goal-cap { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+.goal-cap .gold { color: var(--gold-dk); }
 .goal { position: relative; display: block; height: 6px; margin-top: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
-.goal b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--g3); border-radius: 3px; transition: width .4s; }
+.goal b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--g3); transition: width .4s; }
+.goal-done { border-radius: 3px; }
+.goal.passed .goal-done { background: var(--gold); border-radius: 3px 0 0 3px; }
+.goal i { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--card); }
+/* 1차 목표를 넘으면 전체 동의율 칸 오른쪽 위 모서리에 금색 도장 */
+.stamp { position: absolute; right: -8px; top: -12px; width: 44px; height: 44px; display: grid; place-items: center; border: 2.5px solid var(--gold); border-radius: 50%; background: var(--gold-bg); color: var(--gold); font-size: 10px; font-weight: 900; line-height: 1.15; text-align: center; transform: rotate(-12deg); pointer-events: none; z-index: 1; }
+.stamp[hidden] { display: none; }
 /* 지도에서 고른 구역 한 줄 정보 */
 .map-pick { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: #eef6f0; font-size: 14px; font-weight: 600; color: var(--accent); }
 /* 휴대폰: 작은 배지(동의율만), 확대 버튼 작게 */
@@ -139,8 +151,13 @@ body {
 .trend-plot text { font-size: 12px; fill: var(--muted); font-variant-numeric: tabular-nums; }
 .trend-plot .grid { stroke: var(--border); stroke-width: 1; }
 .trend-plot .goal-line { stroke: var(--muted); stroke-width: 1; }
+.trend-plot .goal-line.done { stroke: var(--gold); stroke-width: 1.6; }
+.trend-plot .goal-line.next { stroke: var(--g3); stroke-width: 1.4; stroke-dasharray: 5 4; }
+.trend-plot .goal-label.done { fill: var(--gold-dk); font-weight: 700; }
+.trend-plot .goal-label.next { fill: var(--g3); font-weight: 700; }
 .trend-plot .line { fill: none; stroke: var(--g3); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .trend-plot .dot { fill: var(--g3); stroke: var(--card); stroke-width: 2; }
+.trend-plot .dot.done { fill: var(--gold); }
 .trend-plot .pt { fill: var(--g3); }
 .trend-plot .cross { stroke: var(--muted); stroke-width: 1; }
 .trend-plot .end, .trend-plot .tip { font-size: 14px; font-weight: 700; fill: var(--text); }

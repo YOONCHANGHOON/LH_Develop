@@ -1,4 +1,4 @@
-// 시트 읽기·집계·주소 판정(SHEET_CSV_URL, TARGET, parseCsv, has, shown, pct, fmt, resolveAddr …)은 core.js
+// 시트 읽기·집계·주소 판정(SHEET_CSV_URL, TARGET1·TARGET, needText, parseCsv, has, shown, pct, fmt, resolveAddr …)은 core.js
 const MIN_RATE = 10; // 신청 가능 기준(%)
 
 const NS = "http://www.w3.org/2000/svg";
@@ -21,8 +21,8 @@ function applyDemo(rows) {
   });
 }
 
-// 동의율은 초록 한 가지 색의 진하기로만 나타낸다.
-const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET ? "var(--g2)" : "var(--g3)");
+// 동의율은 초록 한 가지 색의 진하기로만 나타낸다. 가장 진한 색 기준은 1차 목표(30%) 그대로 둔다 — 2차(40%)로 올리면 이미 넘은 구역이 옅어져 보여서
+const color = (r) => (!shown(r) ? "var(--g0)" : pct(r) < MIN_RATE ? "var(--g1)" : pct(r) < TARGET1 ? "var(--g2)" : "var(--g3)");
 const rateText = (r) => (!has(r) ? "–" : !shown(r) ? "비공개" : fmt(pct(r)));
 const name = (id) => id;
 // 현장 건물에는 지번이 아니라 도로명 번호판이 붙어 있어, 구역마다 주요 도로를 함께 보여 준다 (건축물대장 기준)
@@ -130,9 +130,8 @@ function markActive() {
   if (!pick) return;
   pick.hidden = !ACTIVE;
   if (ACTIVE) {
-    const need = r && has(r) ? Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree) : 0;
     pick.textContent = ACTIVE + " · " + (!has(r) ? "자료 없음" : !shown(r) ? "소유자가 적어 비공개"
-      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + (need ? "30% 넘기려면 " + need + "명 더" : "30% 달성"));
+      : fmt(pct(r)) + " · 동의 " + r.agree + "/" + r.total + " · " + needText(r));
   }
 }
 
@@ -151,11 +150,9 @@ function drawRank(rows) {
     const fill = document.createElement("b"); fill.style.width = (shown(r) ? Math.min(100, pct(r)) : 0) + "%"; fill.style.background = color(r);
     bar.appendChild(fill);
     const sub = document.createElement("div"); sub.className = "sub";
-    const need = Math.max(0, Math.ceil((r.total * TARGET) / 100) - r.agree);
-    const left = need ? `30% 넘기려면 ${need}명 더` : "30% 달성";
     sub.textContent = (!has(r) ? "소유자 수·접수 숫자 필요"
       : !shown(r) ? `소유자 ${r.total}명 · 인원이 적어 비공개`
-      : `${r.agree} / ${r.total}명 · ${left}`) + (r.memo ? ` · ${r.memo}` : "");
+      : `${r.agree} / ${r.total}명 · ${needText(r)}`) + (r.memo ? ` · ${r.memo}` : "");
     const road = document.createElement("div"); road.className = "road"; road.textContent = ROADS[r.id] || "";
     mid.append(bar, sub, road);
     const p = document.createElement("span"); p.className = "pct" + (shown(r) ? "" : " muted"); p.textContent = shown(r) ? fmt(pct(r)) : "–";
@@ -169,8 +166,17 @@ function drawSummary(rows) {
   rows = rows.filter(has);
   const total = rows.reduce((s, r) => s + r.total, 0);
   const agree = rows.reduce((s, r) => s + r.agree, 0);
-  $("total-rate").textContent = total ? fmt((agree / total) * 100) : "–";
-  if ($("goal-fill")) $("goal-fill").style.width = total ? Math.min(100, ((agree / total) * 100 / TARGET) * 100) + "%" : "0";
+  const rate = total ? (agree / total) * 100 : 0, passed = rate >= TARGET1;
+  $("total-rate").textContent = total ? fmt(rate) : "–";
+  // 막대 끝 = 2차 목표(40%). 1차(30%)까지는 금색(달성), 그 뒤는 초록. 30%를 넘으면 금색 '1차 달성' 도장
+  const at = (v) => Math.min(100, (v / TARGET) * 100) + "%";
+  $("goal-done").style.width = at(Math.min(rate, TARGET1));
+  $("goal-fill").style.left = at(TARGET1);
+  $("goal-fill").style.width = at(Math.max(0, rate - TARGET1));
+  $("goal-tick").style.left = at(TARGET1);
+  $("goal").classList.toggle("passed", passed);
+  $("stamp").hidden = !passed;
+  $("goal-cap").innerHTML = passed ? `<b class="gold">${TARGET1}% ✓</b> · 다음 <b>${TARGET}%</b>` : `1차 목표 ${TARGET1}% 이상`;
   $("total-count").textContent = total ? `${agree} / ${total}` : "–";
   $("to-target").textContent = total ? `${Math.max(0, Math.ceil((total * TARGET) / 100) - agree)}명` : "–";
   const dates = rows.map((r) => r.date).filter(Boolean).sort();
@@ -222,14 +228,18 @@ function drawTrend(rows) {
   const yMin = 10, yMax = Math.max(TARGET, Math.ceil(Math.max(...pts.map(rate)) / 10) * 10);
   const Y = (v) => T + ((yMax - v) / (yMax - yMin)) * (H - T - B);
   const first = pts[0], lastP = pts[pts.length - 1];
+  const passed = rate(lastP) >= TARGET1;
   const svg = mk("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", tabindex: 0,
-    "aria-label": `전체 동의율 추이. ${shortDay(first.day)} ${fmt(rate(first))}에서 ${shortDay(lastP.day)} ${fmt(rate(lastP))}. 1차 목표 ${TARGET}%.` });
+    "aria-label": `전체 동의율 추이. ${shortDay(first.day)} ${fmt(rate(first))}에서 ${shortDay(lastP.day)} ${fmt(rate(lastP))}. 1차 목표 ${TARGET1}%${passed ? " 달성" : ""}, 2차 목표 ${TARGET}%.` });
 
+  // 1차(30%) 선: 넘었으면 금색 실선 '1차 30% 달성 ✓'. 2차(40%) 선: 초록 점선 '2차 목표 40%'
+  // 이름표는 왼쪽(끝점 글자가 오른쪽 위로 와도 겹치지 않게). 1차는 선 아래, 2차는 선 위 — 두 선 사이가 좁아서
   for (let v = yMin; v <= yMax; v += 10) {
-    const goal = v === TARGET;
-    svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: goal ? "goal-line" : "grid" }));
+    const cls = v === TARGET1 ? (passed ? "goal-line done" : "goal-line") : v === TARGET ? "goal-line next" : "grid";
+    svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: cls }));
     svg.append(mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, `${v}%`));
-    if (goal) svg.append(mk("text", { x: L, y: Y(v) - 6 }, "1차 목표")); // 왼쪽: 끝점 글자가 오른쪽 위로 와도 겹치지 않게
+    if (v === TARGET1) svg.append(mk("text", { x: L + 2, y: Y(v) + 14, class: passed ? "goal-label done" : "goal-label" }, passed ? `1차 ${TARGET1}% 달성 ✓` : "1차 목표"));
+    if (v === TARGET) svg.append(mk("text", { x: L + 2, y: Y(v) - 6, class: "goal-label next" }, `2차 목표 ${TARGET}%`));
   }
   const DAY = 864e5;
   for (let t = x0; X(t) < W - R - 90; t += 7 * DAY) { // 오른쪽 끝 날짜 글자와 겹치지 않는 데까지
@@ -248,11 +258,13 @@ function drawTrend(rows) {
   svg.append(mk("polyline", { class: "line", points: pts.map((p) => `${px(p)},${py(p)}`).join(" ") }));
   // 기록이 있는 날마다 점. 하루 간격이 12px 남짓이라 흰 테두리 없이 작게 찍고, 끝점만 크게
   pts.slice(0, -1).forEach((p) => svg.append(mk("circle", { class: "pt", cx: px(p), cy: py(p), r: 3 })));
-  svg.append(mk("circle", { class: "dot", cx: px(lastP), cy: py(lastP), r: 4 }));
+  svg.append(mk("circle", { class: passed ? "dot done" : "dot", cx: px(lastP), cy: py(lastP), r: 4 }));
   // 시작점과 끝점에만 숫자를 붙인다. 끝점 오른쪽에 자리가 없으면 왼쪽 위로
   if (pts.length > 1) svg.append(mk("text", { x: px(first), y: py(first) + 18 }, fmt(rate(first))));
   const roomy = px(lastP) + 96 < W - R;
-  const endY = roomy ? py(lastP) + 5 : Math.max(14, py(lastP) - 28);
+  // 끝점이 목표선(30%·40%) 바로 위에 있으면 숫자가 선에 걸리므로, 오른쪽에 자리가 있어도 선 위로 올린다
+  const onGoal = [TARGET1, TARGET].some((v) => Math.abs(py(lastP) - Y(v)) < 12);
+  const endY = roomy && !onGoal ? py(lastP) + 5 : Math.max(14, py(lastP) - 28);
   const endText = mk("text", { x: px(lastP) + (roomy ? 10 : -6), y: endY, "text-anchor": roomy ? "start" : "end", class: "end" }, fmt(rate(lastP)));
   endText.append(mk("tspan", { class: "sub", dx: 5 }, `${lastP.agree}명`));
   svg.append(endText);

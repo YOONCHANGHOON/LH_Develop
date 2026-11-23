@@ -2383,6 +2383,8 @@ body {
 .intent-cap { margin: 6px 0 10px; font-size: 13px; color: #4a5a53; }
 .quick .intent-now { margin: 0 0 8px; padding: 10px 12px; background: #f1f7f3; border-radius: 8px; font-size: 15px; }
 .quick .intent-now strong { color: var(--color-accent); }
+/* 이미 넘은 목표(1차 30%)는 금색 — 동의 현황 페이지의 '1차 달성' 도장과 같은 색 */
+.goal-done, .quick .intent-now strong.goal-done { color: #8a5d00; }
 .quick .intent-note { margin: 0; font-size: 13px; line-height: 1.55; color: #4a5a53; }
 
 /* 전화번호가 줄 끝에서 "010-" / "8367-2346"처럼 쪼개지지 않게 */
