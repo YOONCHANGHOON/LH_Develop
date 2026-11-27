@@ -538,8 +538,21 @@ function unitsOfLot(idx, lot) {
     if (!by.has(u.b)) by.set(u.b, []);
     by.get(u.b).push({ key: u.key, ho: u.ho });
   }
-  const order = (h) => normHo(h).replace(/^B/, "0");
-  return [...by].map(([b, us]) => ({ b, units: us.sort((x, y) => order(x.ho).localeCompare(order(y.ho), "ko", { numeric: true })) }));
+  return [...by].map(([b, us]) => ({ b, units: us.sort((x, y) => compareHo(x.ho, y.ho)) }));
+}
+
+// 호 순서: 지층·지하 → 1층 → 2층 …, 같은 층 안에서는 호 번호 순.
+// 11-27 전에는 'B101'을 '0101'로 바꿔 글자로 견줬는데, 숫자로 읽으면 101과 같아서 지하101호가 1층101호 뒤에 섞였다
+// (346-25·346-58·347-8·348-13). 층은 '2층101호'처럼 적힌 층을 먼저 쓰고(346-58은 2층101호 = 201호), 없으면 호 번호 앞자리로 본다.
+function hoRank(h) {
+  const n = normHo(h), base = n.replace(/^B/, ""), num = /^\d+$/.test(base) ? +base : NaN;
+  const f = String(h || "").match(/^\s*(\d+)\s*[층충]/);
+  const floor = f ? +f[1] : num >= 100 ? Math.floor(num / 100) : 0;
+  return { b: n.startsWith("B") ? 0 : 1, floor, num: Number.isNaN(num) ? Infinity : num, n };
+}
+function compareHo(x, y) {
+  const a = hoRank(x), b = hoRank(y);
+  return a.b - b.b || a.floor - b.floor || (a.num === b.num ? 0 : a.num < b.num ? -1 : 1) || a.n.localeCompare(b.n, "ko", { numeric: true });
 }
 
 function resolveLink(link, byLot) {

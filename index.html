@@ -1114,7 +1114,7 @@
     (function () {
       var now = document.getElementById('intent-now');
       if (!now || typeof fetchSheet !== 'function') return;
-      fetch('volunteer/addr.json?v=20261029a').then(function (r) { return r.json(); }).then(function (d) {
+      fetch('volunteer/addr.json?v=20261127a').then(function (r) { return r.json(); }).then(function (d) {
         return fetchSheet('volunteer/').then(function (csv) {
           // 지도에 있는 구역(대응표의 구역)만 센다 — 동의 현황 페이지 맨 위 숫자와 같아지게
           var zones = {}, byId = {};

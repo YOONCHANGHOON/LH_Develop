@@ -8,7 +8,7 @@
   let addr = null, lot = null, buildings = [], asof = null;
   let lastAsk = null; // 마지막 등록 확인에 쓴 집·번호(이름 수정 요청 때 서버가 다시 확인)
 
-  fetch("/volunteer/addr.json?v=20261112a").then((r) => r.json()).then((d) => {
+  fetch("/volunteer/addr.json?v=20261127a").then((r) => r.json()).then((d) => {
     addr = d;
     if (document.activeElement === $("lk-q") && $("lk-q").value.trim()) acUpdate(); // 자료가 늦게 와도 치던 글자로 후보를 띄움
   }).catch(() => {});
