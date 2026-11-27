@@ -446,6 +446,7 @@ async function buildLookup(env) {
   // 번지 탭은 모두 같은 열 순서(A 지번·B 건물·C 호·D 이름·E 연락처·F 소유자 수·G 제출)라 위치로 읽는다.
   // 머리글 글자는 손으로 고치다 밀리기도 해서(346-E의 B·C) 이름·연락처·제출 칸만 맞는지 확인한다.
   const c = { b: 1, ho: 2, name: 3, ph: 4, chk: 6 };
+  const picked = [];
   tabs.forEach((rows, t) => {
     const h = rows.findIndex((r) => (r[0] || "").trim() === "지번");
     const head = rows[h] || [];
@@ -455,17 +456,22 @@ async function buildLookup(env) {
     for (const r of rows.slice(h + 1)) {
       const lot = (r[0] || "").trim(), b = (r[c.b] || "").trim(), ho = (r[c.ho] || "").trim();
       if (!/^\d{3}-\d{1,3}$/.test(lot) || !(b || ho || (r[c.name] || "").trim() || (r[c.ph] || "").trim())) continue;
-      const key = lot + "|" + b + "|" + ho;
-      let u = units.get(key);
-      if (!u) {
-        u = { key, lot, b, ho, recs: [] };
-        units.set(key, u);
-        if (!byLot.has(lot)) byLot.set(lot, []);
-        byLot.get(lot).push(u);
-      }
-      u.recs.push({ ph: phonesOf(r[c.ph]), names: namesOf(r[c.name]), ok: r[c.chk] === "TRUE", sup: false });
+      picked.push({ lot, b, ho, r });
     }
   });
+  const sameB = sameBuildingMap(picked);
+  for (const { lot, b: b0, ho, r } of picked) {
+    const b = sameB.get(lot + "|" + b0) || b0;
+    const key = lot + "|" + b + "|" + ho;
+    let u = units.get(key);
+    if (!u) {
+      u = { key, lot, b, ho, recs: [] };
+      units.set(key, u);
+      if (!byLot.has(lot)) byLot.set(lot, []);
+      byLot.get(lot).push(u);
+    }
+    u.recs.push({ ph: phonesOf(r[c.ph]), names: namesOf(r[c.name]), ok: r[c.chk] === "TRUE", sup: false });
+  }
   // 명부: '시트 연결' 칸(예: "345-1 202", "346-91", "345-1 202 (강서빌아트)")이 있는 줄만 그 집에 붙인다.
   const rh = roster[0] || [];
   const rc = { name: rh.indexOf("성명"), ph: rh.indexOf("연락처"), date: rh.indexOf("날짜"), etc: rh.indexOf("기타"), link: rh.indexOf("시트 연결") };
@@ -493,6 +499,36 @@ async function buildLookup(env) {
     if (m) { const v = [+m[1], +m[2]]; if (!asof || v[0] > asof[0] || (v[0] === asof[0] && v[1] > asof[1])) asof = v; }
   }
   return { at: Date.now(), units, byLot, roster: rosterN, linked, unresolved, asof: asof ? asof[0] + "/" + asof[1] : null };
+}
+
+// 같은 건물이 줄마다 다르게 적혀 호 목록이 건물 둘로 갈라지는 걸 막는다. 11-27: 348-8은 '삼원빌라(강서로 61-5)'와
+// '(강서로 61-5)', 346-91은 '귀빈빌라(…)'와 '(…)귀빈빌라'로 적혀 있어서, 삼원빌라를 고르면 지층 호가 안 보였다.
+// 괄호 속 도로명 주소가 같고 괄호 밖 이름이 같으면(띄어쓰기 무시) 한 건물로 본다. 이름 없이 주소만 적힌 줄은
+// 그 주소에 이름이 하나뿐일 때만 그 건물에 붙인다(346-82 엠펠리체 에이동·비동처럼 한 주소에 동이 여럿이면 그대로 둠).
+// 돌려주는 값: "지번|원래 표기" → 대표 표기(이름이 앞에 오는 표기 중 시트에서 먼저 나온 것).
+function sameBuildingMap(picked) {
+  const bsOf = new Map();
+  for (const { lot, b } of picked) {
+    if (!bsOf.has(lot)) bsOf.set(lot, new Set());
+    bsOf.get(lot).add(b);
+  }
+  const out = new Map();
+  for (const [lot, bs] of bsOf) {
+    const ps = [...bs].map((b) => {
+      const m = b.match(/\(([^)]*)\)/);
+      return { b, road: m ? m[1].replace(/\s+/g, "") : "", name: b.replace(/\([^)]*\)/g, "").replace(/\s+/g, "") };
+    }).filter((p) => p.road);
+    for (const p of ps) {
+      const named = ps.filter((q) => q.road === p.road && q.name);
+      const names = [...new Set(named.map((q) => q.name))];
+      const name = p.name || (names.length === 1 ? names[0] : "");
+      if (!name) continue;
+      const same = named.filter((q) => q.name === name);
+      const rep = same.find((q) => !q.b.startsWith("(")) || same[0];
+      if (rep.b !== p.b) out.set(lot + "|" + p.b, rep.b);
+    }
+  }
+  return out;
 }
 
 // 지번 하나에 있는 건물·호 목록(건축물대장 수준의 공개 정보만). 호 없이 소유자만 적힌 건물은 ho "" 하나로 묶인다.
